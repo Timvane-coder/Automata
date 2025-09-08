@@ -4,8 +4,8 @@ import * as libsignal from 'libsignal'
 import { KEY_BUNDLE_TYPE } from '../Defaults'
 import type { KeyPair } from '../Types'
 
-// insure browser & node compatibility
-const { subtle } = globalThis.crypto
+// Ensure browser & node compatibility with proper type assertion
+const { subtle } = (globalThis as any).crypto || globalThis.crypto || require('crypto').webcrypto || {}
 
 /** prefix version byte to the pub keys, required for some curve crypto functions */
 export const generateSignalPubKey = (pubKey: Uint8Array | Buffer) =>
@@ -129,6 +129,29 @@ export async function hkdf(
 	expandedLength: number,
 	info: { salt?: Buffer; info?: string }
 ): Promise<Buffer> {
+	// Fallback for Node.js environment
+	if (!subtle) {
+		const crypto = require('crypto')
+		const webcrypto = crypto.webcrypto || crypto
+		const subtleCrypto = webcrypto.subtle
+		
+		if (!subtleCrypto) {
+			throw new Error('Web Crypto API not available')
+		}
+		
+		// Use the Node.js subtle crypto
+		return hkdfWithSubtle(subtleCrypto, buffer, expandedLength, info)
+	}
+	
+	return hkdfWithSubtle(subtle, buffer, expandedLength, info)
+}
+
+async function hkdfWithSubtle(
+	subtleCrypto: SubtleCrypto,
+	buffer: Uint8Array | Buffer,
+	expandedLength: number,
+	info: { salt?: Buffer; info?: string }
+): Promise<Buffer> {
 	// Ensure we have a Uint8Array for the key material
 	const inputKeyMaterial = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer)
 
@@ -137,10 +160,10 @@ export async function hkdf(
 	const infoBytes = info.info ? new TextEncoder().encode(info.info) : new Uint8Array(0)
 
 	// Import the input key material
-	const importedKey = await subtle.importKey('raw', inputKeyMaterial, { name: 'HKDF' }, false, ['deriveBits'])
+	const importedKey = await subtleCrypto.importKey('raw', inputKeyMaterial, { name: 'HKDF' }, false, ['deriveBits'])
 
 	// Derive bits using HKDF
-	const derivedBits = await subtle.deriveBits(
+	const derivedBits = await subtleCrypto.deriveBits(
 		{
 			name: 'HKDF',
 			hash: 'SHA-256',
@@ -155,17 +178,38 @@ export async function hkdf(
 }
 
 export async function derivePairingCodeKey(pairingCode: string, salt: Buffer): Promise<Buffer> {
+	// Fallback for Node.js environment
+	if (!subtle) {
+		const crypto = require('crypto')
+		const webcrypto = crypto.webcrypto || crypto
+		const subtleCrypto = webcrypto.subtle
+		
+		if (!subtleCrypto) {
+			throw new Error('Web Crypto API not available')
+		}
+		
+		return derivePairingCodeKeyWithSubtle(subtleCrypto, pairingCode, salt)
+	}
+	
+	return derivePairingCodeKeyWithSubtle(subtle, pairingCode, salt)
+}
+
+async function derivePairingCodeKeyWithSubtle(
+	subtleCrypto: SubtleCrypto,
+	pairingCode: string,
+	salt: Buffer
+): Promise<Buffer> {
 	// Convert inputs to formats Web Crypto API can work with
 	const encoder = new TextEncoder()
 	const pairingCodeBuffer = encoder.encode(pairingCode)
 	const saltBuffer = salt instanceof Uint8Array ? salt : new Uint8Array(salt)
 
 	// Import the pairing code as key material
-	const keyMaterial = await subtle.importKey('raw', pairingCodeBuffer, { name: 'PBKDF2' }, false, ['deriveBits'])
+	const keyMaterial = await subtleCrypto.importKey('raw', pairingCodeBuffer, { name: 'PBKDF2' }, false, ['deriveBits'])
 
 	// Derive bits using PBKDF2 with the same parameters
 	// 2 << 16 = 131,072 iterations
-	const derivedBits = await subtle.deriveBits(
+	const derivedBits = await subtleCrypto.deriveBits(
 		{
 			name: 'PBKDF2',
 			salt: saltBuffer,
@@ -177,4 +221,4 @@ export async function derivePairingCodeKey(pairingCode: string, salt: Buffer): P
 	)
 
 	return Buffer.from(derivedBits)
-}
+															 }
