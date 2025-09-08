@@ -47,7 +47,6 @@ import { EnhancedStatisticalWorkbook } from './workbook.js'
 import { QuadraticMathematicalWorkbook } from './QuadraticMathematicalWorkbook.js'
 
 // Import Chess Game
-import { ChessGame } from './chessGame.js' // Adjust path as needed
 
 // Import YouTube functions
 import {
@@ -2106,11 +2105,7 @@ interface UserSession {
     // Quadratic solver session
     quadraticSession?: QuadraticSession
     awaitingQuadraticInput: boolean
-
-    // Chess session states
-    awaitingChessMove: boolean
-    chessGame: ChessGame | null
-    chessGameActive: boolean
+	
 
 
     // RPG session states
@@ -2200,9 +2195,7 @@ const createUserSession = (phoneNumber: string): UserSession => {
         awaitingQuadraticInput: false,
 
         // Chess session states
-        awaitingChessMove: false,
-        chessGame: null,
-        chessGameActive: false,
+        
 
         // RPG session states
         awaitingRPGAnswer: false,
@@ -2274,10 +2267,7 @@ const resetUserSession = (phoneNumber: string): void => {
     session.awaitingQuadraticInput = false
     session.quadraticSession = undefined
 
-    // Reset Chess session
-    session.awaitingChessMove = false
-    session.chessGame = null
-    session.chessGameActive = false
+    
 
     
     // Reset RPG states
@@ -2380,26 +2370,7 @@ const downloadImage = (url: string, filepath: string) => {
 
 
 
-const chessImagesDir = './temp/chess' 
 
-if (!fs.existsSync(chessImagesDir)) {
-    fs.mkdirSync(chessImagesDir, { recursive: true })
-}
-
-// Chess-specific helper functions
-const createChessImagePath = (sessionId: string, moveNumber: number): string => {
-    const timestamp = Date.now()
-    return path.join(chessImagesDir, `chess_${sessionId}_move_${moveNumber}_${timestamp}.png`)
-}
-
-const cleanupChessImage = (filePath: string) => {
-    setTimeout(() => {
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath)
-            console.log(`🧹 Cleaned up chess image: ${path.basename(filePath)}`)
-        }
-    }, 30000) // Clean up after 30 seconds
-}
 
 // Chess Game WhatsApp Adapter Class
 class ChessGameWhatsApp extends ChessGame {
@@ -2633,62 +2604,6 @@ const handleChessMove = async (sock: any, from: string, text: string, sendMessag
                     text: "🏁 Game Over! Type **chess** to start a new game!"
                 }, from)
             }
-            break
-
-        case 'board':
-            const boardImagePath = await session.chessGame.getCurrentBoardImage()
-            if (boardImagePath) {
-                await sock.sendMessage(from, {
-                    image: fs.readFileSync(boardImagePath),
-                    caption: `♟️ *Current Board Position*\n\n${session.chessGame.getGameStatus()}\n\n📈 Moves played: ${session.chessGame.chess.history().length}`
-                })
-                cleanupChessImage(boardImagePath)
-            }
-            break
-
-        case 'history':
-            const history = session.chessGame.gameHistory.length > 0 
-                ? session.chessGame.gameHistory.join(' ')
-                : 'No moves played yet'
-            await sendMessageWithTyping({
-                text: `📜 **Game History:**\n\n${history}\n\n📊 Total moves: ${session.chessGame.chess.history().length}`
-            }, from)
-            break
-
-        case 'status':
-            await sendMessageWithTyping({
-                text: `📊 **Game Status:**\n\n${session.chessGame.getGameStatus()}\n📈 Moves played: ${session.chessGame.chess.history().length}\n🎯 Current turn: ${session.chessGame.chess.turn() === 'w' ? 'White (You)' : 'Black (Computer)'}`
-            }, from)
-            break
-
-        case 'help':
-            await sendMessageWithTyping({
-                text: `♟️ **Chess Game Help**\n\n📋 **Available Commands:**\n• **move** [from] [to] - Make a move\n• **board** - Show current position\n• **history** - Show move history\n• **status** - Show game status\n• **resign** - End the game\n• **help** - Show this help\n\n💡 **Move Examples:**\n• move e2 e4 (King's pawn opening)\n• move g1 f3 (Develop knight)\n• move f1 c4 (Develop bishop)\n\n🎯 **Square Format:**\n• Files: a-h (columns)\n• Ranks: 1-8 (rows)\n• Example: e2, f3, d4\n\n🏳️ You play as White, computer plays as Black`
-            }, from)
-            break
-
-        case 'resign':
-            session.chessGameActive = false
-            session.awaitingChessMove = false
-            await sendMessageWithTyping({
-                text: `🏳️ **Game Resigned**\n\nYou have resigned the game.\n\n📜 Game History: ${session.chessGame.gameHistory.join(' ')}\n\nType **chess** to start a new game!`
-            }, from)
-            break
-
-        default:
-            // Try to parse as direct move (e.g., "e2 e4" or "e2e4")
-            if (parts.length >= 2 && /^[a-h][1-8]$/.test(parts[0]) && /^[a-h][1-8]$/.test(parts[1])) {
-                // Recursively call with "move" prefix
-                await handleChessMove(sock, from, `move ${parts[0]} ${parts[1]}`, sendMessageWithTyping)
-            } else {
-                await sendMessageWithTyping({
-                    text: "❌ Unknown chess command!\n\n📋 **Available Commands:**\n• **move** [from] [to]\n• **board** - Show position\n• **history** - Show moves\n• **status** - Game status\n• **help** - Detailed help\n• **resign** - End game\n\n💡 **Quick move:** You can also type just the squares: *e2 e4*"
-                }, from)
-            }
-            break
-    }
-}
-
 
 // Generic League Functions
 function getLeagueInfo(league: string): LeagueInfo {
