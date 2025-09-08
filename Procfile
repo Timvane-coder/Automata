@@ -1,1 +1,1 @@
-web: tsx ./Example/example.ts
+web: node --loader tsx/esm Example/example.ts
