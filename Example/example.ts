@@ -93,6 +93,10 @@ app.get('/', function (req, res) {
   res.send('your Jojosc music Whatsapp website is online at musicdynansty-3147b60a229f.herokuapp');
 });
 
+app.listen(PORT, () => {
+  console.log('App listened on port:', PORT)
+});
+
 
 // FootballDataExplorer class
 class FootballDataExplorer {
@@ -8254,8 +8258,6 @@ startSock().catch(error => {
     process.exit(1)
 })
 
-app.listen(PORT, () => {
-  console.log('App listened on port:', PORT)
-})
+
 
 
