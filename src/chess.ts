@@ -121,7 +121,8 @@ class Chessboard implements ChessboardProps {
                                 const piece = this.chess.get(coords);
                                 // Draw the chess piece on the square
                                 if (piece) {
-                                        const image = await loadImage(path.join(__dirname, `../public/${this.style}/${piece.color}${piece.type}.png`));
+                                        const imagePath = path.join(__dirname, "../public/" + this.style + "/" + piece.color + piece.type + ".png");
+                                        const image = await loadImage(imagePath);
                                         await ctx.drawImage(image, x, y, this.size / 8, this.size / 8);
                                 }
                         }
