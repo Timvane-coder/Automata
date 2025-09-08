@@ -5,7 +5,7 @@ import { KEY_BUNDLE_TYPE } from '../Defaults'
 import type { KeyPair } from '../Types'
 
 // insure browser & node compatibility
-const { subtle } = globalThis.crypto
+const subtle: SubtleCrypto = (globalThis.crypto ?? require('crypto').webcrypto).subtle
 
 /** prefix version byte to the pub keys, required for some curve crypto functions */
 export const generateSignalPubKey = (pubKey: Uint8Array | Buffer) =>
