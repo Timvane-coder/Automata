@@ -83,17 +83,6 @@ import {
 } from './gameData.js'
 
 
-import express from 'express'
-
-
-const app = new express();
-let PORT = process.env.PORT || 3000
-
-app.get('/', function (req, res) {
-  res.send('your Jojosc music Whatsapp website is online at musicdynansty-3147b60a229f.herokuapp');
-});
-
-
 // FootballDataExplorer class
 class FootballDataExplorer {
     constructor() {
@@ -1227,6 +1216,13 @@ class FootballDataExplorer {
 // Logger setup
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./wa-logs.txt'))
 logger.level = 'trace'
+
+// Add connection monitoring
+let lastHeartbeat = Date.now()
+let isConnected = false
+
+
+
 
 // Pre-configured media URLs and local files
 const mediaLibrary = {
@@ -6863,10 +6859,6 @@ const convertToSticker = async (sock: any, msg: any, from: string) => {
 }
 
 
-// Heartbeat variables
-let lastHeartbeat = Date.now()
-let isConnected = false
-
 // Heartbeat function to check connection health
 const startHeartbeat = (sock: any) => {
     setInterval(async () => {
@@ -6883,14 +6875,12 @@ const startHeartbeat = (sock: any) => {
     }, 15000) // Check every 15 seconds
 }
 
-// Main socket connection function
+
+
 const startSock = async () => {
     const { state, saveCreds } = await useMultiFileAuthState('baileys_auth_info')
-
-    // Fetch latest WhatsApp Web version
     const { version, isLatest } = await fetchLatestBaileysVersion()
     console.log(`Using WA v${version.join('.')}, isLatest: ${isLatest}`)
-
     const sock = makeWASocket({
         version,
         logger,
@@ -6905,37 +6895,25 @@ const startSock = async () => {
             return { conversation: 'Hello' }
         }
     })
-
-    // Helper function to send message with typing indicator
     const sendMessageWithTyping = async (msg: AnyMessageContent, jid: string) => {
         await sock.presenceSubscribe(jid)
         await delay(500)
-
         await sock.sendPresenceUpdate('composing', jid)
         await delay(2000)
-
         await sock.sendPresenceUpdate('paused', jid)
         await sock.sendMessage(jid, msg)
     }
-
-    // Event handlers
     sock.ev.process(async (events) => {
-
-        // Connection updates
         if (events['connection.update']) {
             const update = events['connection.update']
             const { connection, lastDisconnect, qr } = update
-
             if (qr && !usePairingCode) {
                 console.log('\n📱 QR Code:')
                 QRCode.generate(qr, { small: true })
                 console.log('Scan the QR code above with WhatsApp on your phone\n')
             }
-
             if (connection === 'close') {
-                isConnected = false // Update heartbeat status
                 const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
-
                 if (shouldReconnect) {
                     console.log('Connection closed, reconnecting...')
                     setTimeout(() => startSock(), 3000)
@@ -6945,30 +6923,20 @@ const startSock = async () => {
                 }
             } else if (connection === 'open') {
                 console.log('✅ Connected to WhatsApp!')
-                isConnected = true // Update heartbeat status
-                lastHeartbeat = Date.now() // Reset heartbeat timer
-                
-                // Start heartbeat monitoring
-                startHeartbeat(sock)
             } else if (connection === 'connecting') {
+            
                 console.log('🔄 Connecting to WhatsApp...')
-                isConnected = false // Update heartbeat status
             }
-
             console.log('Connection update:', { connection, lastDisconnect: lastDisconnect?.error })
         }
-
-        // Handle pairing code
         if (events['connection.update'] && usePairingCode && !sock.authState.creds.registered) {
             try {
                 const phoneNumber = await question('📞 Please enter your phone number (with country code, e.g., +1234567890): ')
                 const cleanNumber = phoneNumber.replace(/[^0-9]/g, '')
-
                 if (cleanNumber.length < 10) {
                     console.log('❌ Invalid phone number format')
                     return
                 }
-
                 console.log('🔄 Requesting pairing code...')
                 const code = await sock.requestPairingCode(cleanNumber)
                 console.log(`\n🔐 Pairing code: ${code}`)
@@ -6980,38 +6948,25 @@ const startSock = async () => {
                 setTimeout(() => startSock(), 2000)
             }
         }
-
         if (events['creds.update']) {
             await saveCreds()
             console.log('💾 Credentials saved')
         }
-
-        // Handle incoming messages and poll responses
         if (events['messages.upsert']) {
             const upsert = events['messages.upsert']
-
-            // Update heartbeat on message activity
-            if (isConnected) {
-                lastHeartbeat = Date.now()
-            }
-
             if (upsert.type === 'notify') {
                 for (const msg of upsert.messages) {
-                    // Handle poll responses
                     if (msg.message?.pollUpdateMessage) {
                         const pollUpdate = msg.message.pollUpdateMessage
                         const selectedOptions = pollUpdate.vote?.selectedOptions || []
-
                         if (selectedOptions.length > 0) {
                             const from = msg.key.remoteJid
                             if (from) {
-                                // Map poll option to command
                                 const optionIndex = selectedOptions[0]
                                 const pollCommands = [
                                     'help', 'time', 'info', 'random', 'ping',
                                     'image', 'video', 'audio', 'document', 'contact', 'location', 'welcome'
                                 ]
-
                                 if (optionIndex < pollCommands.length) {
                                     const command = pollCommands[optionIndex]
                                     console.log(`🗳️ Poll response: ${command} from ${from}`)
@@ -7021,23 +6976,15 @@ const startSock = async () => {
                         }
                         continue
                     }
-
-                    // Handle regular text messages
                     const text = msg.message?.conversation ||
-                                msg.message?.extendedTextMessage?.text ||
-                                ''
-
+                        msg.message?.extendedTextMessage?.text || ''
                     if (text) {
                         const from = msg.key.remoteJid
                         const isFromMe = msg.key.fromMe
-
                         console.log(`📨 ${isFromMe ? 'You' : from}: ${text}`)
-
                         if (!isFromMe && from) {
                             await sock.readMessages([msg.key])
-
                             const isCommand = await handleCommand(text, from, msg, sock, sendMessageWithTyping)
-
                             if (!isCommand && doReplies) {
                                 console.log('🤖 Sending auto-reply...')
                                 await sendMessageWithTyping(
@@ -7050,42 +6997,28 @@ const startSock = async () => {
                 }
             }
         }
-
-        // Handle other events
         if (events['messages.update']) {
             console.log('📬 Message updates:', events['messages.update'].length)
         }
-
         if (events['message-receipt.update']) {
             console.log('📨 Receipt updates:', events['message-receipt.update'].length)
         }
-
         if (events['messages.reaction']) {
             console.log('😊 Reactions:', events['messages.reaction'].length)
         }
-
         if (events['presence.update']) {
             const presence = events['presence.update']
             console.log(`👤 ${presence.id} is ${presence.presences?.[presence.id]?.lastKnownPresence || 'unknown'}`)
-            
-            // Update heartbeat on presence activity
-            if (isConnected) {
-                lastHeartbeat = Date.now()
-            }
         }
-
         if (events['chats.update']) {
             console.log('💬 Chat updates:', events['chats.update'].length)
         }
-
         if (events['contacts.update']) {
             console.log('👥 Contact updates:', events['contacts.update'].length)
         }
     })
-
     return sock
 }
-
 
 
 // Enhanced Command handler function with YouTube, Football, Statistical Analysis, Calculator, and Quadratic support
@@ -7376,18 +7309,10 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
     if (!isValidCommand) {
         return false
     }
-
-    // Update heartbeat on command activity
-    if (isConnected) {
-        lastHeartbeat = Date.now()
-    }
-
     
     console.log(`🎯 Command received: ${command} from ${from.slice(-4)}`)
     
     const cleanCommand = command.replace('/', '')
-
-
 
     const sender = from.split('@')[0]
     const pushName = msg.pushName || 'User'
@@ -8253,9 +8178,3 @@ startSock().catch(error => {
     console.error('❌ Failed to start bot:', error)
     process.exit(1)
 })
-
-app.listen(PORT, () => {
-  console.log('App listened on port:', PORT)
-})
-
-

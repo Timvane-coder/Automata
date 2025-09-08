@@ -1,0 +1,182 @@
+// ========== ADVENTURE LOCATIONS ==========
+export const ADVENTURE_LOCATIONS = {
+    forest: {
+        name: "🌲 Mystic Forest",
+        minLevel: 1,
+        baseRewards: { money: [10, 50], exp: [15, 45], wood: [1, 3] },
+        specialRewards: { uncommon: 0.3, mythic: 0.05 },
+        healthCost: [5, 15],
+        armorCost: [2, 8],
+        events: ["treespirit", "hiddenchest", "wolfpack", "ancientrune", "enchantedgrove"]
+    },
+    dungeon: {
+        name: "🏰 Ancient Dungeon",
+        minLevel: 1,
+        baseRewards: { money: [50, 150], exp: [30, 80], rock: [1, 4] },
+        specialRewards: { uncommon: 0.4, mythic: 0.1, legendary: 0.02 },
+        healthCost: [15, 30],
+        armorCost: [5, 15],
+        events: ["traproom", "pressurehall", "treasurevault", "bossencounter", "secretcrypt"]
+    },
+    mountains: {
+        name: "⛰️ Dragon Peaks",
+        minLevel: 1,
+        baseRewards: { money: [100, 300], exp: [50, 120], diamond: [0, 2] },
+        specialRewards: { mythic: 0.15, legendary: 0.05, diamond: 0.2 },
+        healthCost: [20, 40],
+        armorCost: [8, 20],
+        events: ["avalanche", "mountainpass", "crystalcave", "dragonencounter", "summitascend"]
+    },
+    island: {
+        name: "🏝️ Tropical Island",
+        minLevel: 1,
+        baseRewards: { money: [30, 100], exp: [20, 60], string: [1, 5] },
+        specialRewards: { uncommon: 0.35, mythic: 0.07 },
+        healthCost: [10, 20],
+        armorCost: [3, 10],
+        events: ["buriedtreasure", "pirateambush", "losttemple", "seacreature", "stormyweather"]
+    },
+    hauntedhouse: {
+        name: "👻 Haunted House",
+        minLevel: 1,
+        baseRewards: { money: [70, 200], exp: [40, 100], potion: [1, 3] },
+        specialRewards: { mythic: 0.12, legendary: 0.03 },
+        healthCost: [18, 35],
+        armorCost: [7, 18],
+        events: ["ghostapparition", "secretpassage", "cursedroom", "poltergeist", "ancientcurse"]
+    },
+    ocean: {
+        name: "🌊 Abyssal Depths",
+        minLevel: 1,
+        baseRewards: { money: [40, 120], exp: [25, 70], coral: [1, 4] },
+        specialRewards: { uncommon: 0.35, mythic: 0.08, legendary: 0.03 },
+        healthCost: [12, 25],
+        armorCost: [4, 12],
+        events: ["shipwreck", "merfolkencounter", "tidalwave", "krakenbattle", "abyssaldive"]
+    },
+    city: {
+        name: "🏙️ Arcane Metropolis",
+        minLevel: 1,
+        baseRewards: { money: [80, 250], exp: [35, 90], gear: [1, 3] },
+        specialRewards: { uncommon: 0.4, mythic: 0.1, legendary: 0.04 },
+        healthCost: [15, 30],
+        armorCost: [6, 15],
+        events: ["thiefchase", "marketbustle", "golempatrol", "towerbreach", "guildconspiracy"]
+    },
+    temple: {
+        name: "🛐 Sacred Temple",
+        minLevel: 1,
+        baseRewards: { money: [60, 180], exp: [30, 80], relic: [1, 3] },
+        specialRewards: { mythic: 0.13, legendary: 0.05 },
+        healthCost: [17, 32],
+        armorCost: [6, 16],
+        events: ["ritualprayer", "relicvault", "guardianclash", "divinevision", "holyexorcism"]
+    },
+    desert: {
+        name: "🏜️ Shifting Sands",
+        minLevel: 1,
+        baseRewards: { money: [50, 150], exp: [25, 65], sandstone: [1, 4] },
+        specialRewards: { uncommon: 0.35, mythic: 0.09, legendary: 0.03 },
+        healthCost: [14, 28],
+        armorCost: [5, 13],
+        events: ["sandstorm", "oasismirage", "ruinunearthed", "sphinxriddle", "deserttrek"]
+    },
+    siliconvalley: {
+        name: "💾 Silicon Nexus",
+        minLevel: 1,
+        baseRewards: { money: [90, 300], exp: [40, 100], chip: [1, 3] },
+        specialRewards: { uncommon: 0.45, mythic: 0.12, legendary: 0.05 },
+        healthCost: [10, 25],
+        armorCost: [5, 14],
+        events: ["hackattempt", "startuppitch", "aisentinel", "quantumbreak", "techsummit"]
+    }
+};
+
+// ========== EVENT DIFFICULTIES ==========
+export const EVENT_DIFFICULTIES = {
+    forest: {
+        'treespirit': 'easy',
+        'hiddenchest': 'fundamental',
+        'wolfpack': 'medium',
+        'ancientrune': 'hard',
+        'enchantedgrove': 'advance'
+    },
+    dungeon: {
+        'traproom': 'easy',
+        'pressurehall': 'fundamental',
+        'treasurevault': 'medium',
+        'bossencounter': 'hard',
+        'secretcrypt': 'advance'
+    },
+    mountains: {
+        'avalanche': 'easy',
+        'mountainpass': 'fundamental',
+        'crystalcave': 'medium',
+        'dragonencounter': 'hard',
+        'summitascend': 'advance'
+    },
+    island: {
+        'buriedtreasure': 'easy',
+        'pirateambush': 'fundamental',
+        'losttemple': 'medium',
+        'seacreature': 'hard',
+        'stormyweather': 'advance'
+    },
+    hauntedhouse: {
+        'ghostapparition': 'easy',
+        'secretpassage': 'fundamental',
+        'cursedroom': 'medium',
+        'poltergeist': 'hard',
+        'ancientcurse': 'advance'
+    },
+    ocean: {
+        'shipwreck': 'easy',
+        'merfolkencounter': 'fundamental',
+        'tidalwave': 'medium',
+        'krakenbattle': 'hard',
+        'abyssaldive': 'advance'
+    },
+    city: {
+        'thiefchase': 'easy',
+        'marketbustle': 'fundamental',
+        'golempatrol': 'medium',
+        'towerbreach': 'hard',
+        'guildconspiracy': 'advance'
+    },
+    temple: {
+        'ritualprayer': 'easy',
+        'relicvault': 'fundamental',
+        'guardianclash': 'medium',
+        'divinevision': 'hard',
+        'holyexorcism': 'advance'
+    },
+    desert: {
+        'sandstorm': 'easy',
+        'oasismirage': 'fundamental',
+        'ruinunearthed': 'medium',
+        'sphinxriddle': 'hard',
+        'deserttrek': 'advance'
+    },
+    siliconvalley: {
+        'hackattempt': 'easy',
+        'startuppitch': 'fundamental',
+        'aisentinel': 'medium',
+        'quantumbreak': 'hard',
+        'techsummit': 'advance'
+    }
+};
+
+// Progression Order
+export const LOCATION_ORDER = ['forest', 'dungeon', 'island', 'hauntedhouse', 'mountains', 'ocean', 'city', 'temple', 'desert', 'siliconvalley'];
+
+// Difficulties
+export const DIFFICULTIES = ['easy', 'fundamental', 'medium', 'hard', 'advance'];
+
+// Difficulty Index
+export const DIFFICULTY_INDEX = {
+    easy: 0,
+    fundamental: 1,
+    medium: 2,
+    hard: 3,
+    advance: 4
+};

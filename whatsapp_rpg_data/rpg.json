@@ -1,0 +1,122 @@
+{
+  "265990117051": {
+    "userId": "265990117051",
+    "phoneNumber": "265990117051",
+    "level": 1,
+    "exp": 25,
+    "health": 100,
+    "money": 120,
+    "currentDifficulty": "easy",
+    "currentLocation": "forest",
+    "correctAnswersInCurrentEvent": 1,
+    "failedAttemptsInCurrentEvent": 0,
+    "wood": 10,
+    "rock": 5,
+    "string": 8,
+    "iron": 0,
+    "gold": 0,
+    "diamond": 0,
+    "emerald": 0,
+    "trash": 0,
+    "potion": 3,
+    "sword": 0,
+    "armor": 0,
+    "pickaxe": 0,
+    "fishingrod": false,
+    "sworddurability": 0,
+    "armordurability": 0,
+    "pickaxedurability": 0,
+    "fishingroddurability": 0,
+    "common": 1,
+    "uncommon": 0,
+    "mythic": 0,
+    "legendary": 0,
+    "pet": 0,
+    "horse": 0,
+    "cat": 0,
+    "fox": 0,
+    "dog": 0,
+    "horseexp": 0,
+    "catexp": 0,
+    "foxexp": 0,
+    "dogexp": 0,
+    "lastadventure": 1757197980160,
+    "lastfishing": 0,
+    "forestKnowledge": {
+      "questionsAnswered": 1,
+      "correctAnswers": 1,
+      "categories": {
+        "general": {
+          "answered": 1,
+          "correct": 1
+        }
+      }
+    },
+    "dungeonKnowledge": {
+      "questionsAnswered": 0,
+      "correctAnswers": 0,
+      "categories": {}
+    },
+    "islandKnowledge": {
+      "questionsAnswered": 0,
+      "correctAnswers": 0,
+      "categories": {}
+    },
+    "hauntedhouseKnowledge": {
+      "questionsAnswered": 0,
+      "correctAnswers": 0,
+      "categories": {}
+    },
+    "mountainsKnowledge": {
+      "questionsAnswered": 0,
+      "correctAnswers": 0,
+      "categories": {}
+    },
+    "currentQuestion": null,
+    "awaitingAnswer": false,
+    "completedLocations": {
+      "forest": {
+        "easy": false,
+        "medium": false,
+        "hard": false,
+        "nightmare": false
+      },
+      "dungeon": {
+        "easy": false,
+        "medium": false,
+        "hard": false,
+        "nightmare": false
+      },
+      "island": {
+        "easy": false,
+        "medium": false,
+        "hard": false,
+        "nightmare": false
+      },
+      "hauntedhouse": {
+        "easy": false,
+        "medium": false,
+        "hard": false,
+        "nightmare": false
+      },
+      "mountains": {
+        "easy": false,
+        "medium": false,
+        "hard": false,
+        "nightmare": false
+      }
+    },
+    "lastSessionId": null,
+    "sessionStartTime": null,
+    "totalAdventures": 0,
+    "totalQuestionsAnswered": 0,
+    "totalCorrectAnswers": 0,
+    "achievements": [],
+    "commandsUsed": 0,
+    "sessionsStarted": 0,
+    "itemsCrafted": 0,
+    "moneySpent": 0,
+    "created": "2025-09-06T22:26:14.673Z",
+    "updated": "2025-09-06T22:33:00.164Z"
+  }
+}

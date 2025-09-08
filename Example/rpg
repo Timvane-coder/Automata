@@ -1,0 +1,1632 @@
+export const LOCATION_DATABASES = {
+    forest: {
+        glossary: [
+            {
+                id: 'lumina_tree',
+                term: 'Lumina Tree 🌳',
+                definition: 'A tree that glows at night and recharges nearby spells.',
+                description: 'Adventurers camp near the Lumina Tree to recover spell energy before a battle.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'shadow_moss',
+                term: 'Shadow Moss 🌿',
+                definition: 'A moss that grows only in the darkest parts of the forest and absorbs light.',
+                description: 'Alchemists harvest Shadow Moss during new moon nights to create invisibility potions.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'spirit_oak',
+                term: 'Spirit Oak 🌰',
+                definition: 'An ancient oak tree inhabited by forest spirits that offers wisdom.',
+                description: 'The Spirit Oak has stood for over 1000 years, serving as a meeting place for forest guardians.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'moonbell_flower',
+                term: 'Moonbell Flower 🌸',
+                definition: 'A rare flower that only blooms under moonlight and chimes softly in the wind.',
+                description: 'The Moonbell\'s chimes can calm aggressive forest creatures and guide lost travelers.',
+                difficulty: 'easy'
+            }
+        ],
+
+        laws: [
+            {
+                id: 'law_of_balance',
+                name: 'Law of Balance ⚖️',
+                rule: 'Every spell cast must take equal energy from the caster and the forest.',
+                description: 'Casting a healing spell drains the forest slightly; mages must replant herbs to restore balance.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_magic',
+                name: 'Conservation of Magic 🔄',
+                rule: 'Magic energy cannot be created or destroyed, only transformed from one form to another.',
+                description: 'When a mage transforms fire magic into healing energy, the total magical force remains constant.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'spirit_binding_law',
+                name: 'Spirit Binding Law 👻',
+                rule: 'Forest spirits can only be bound with their consent and must be released at sunrise.',
+                description: 'Ancient contracts show that forced spirit binding leads to forest corruption and magical disasters.',
+                difficulty: 'hard'
+            }
+        ],
+
+        theorems: [
+            {
+                id: 'magical_resonance',
+                name: 'Magical Resonance Theorem 🎵',
+                principle: 'Similar magical frequencies amplify each other when in proximity.',
+                description: 'Two healing crystals placed together produce stronger healing effects than when used separately.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'elemental_interference',
+                name: 'Elemental Interference Principle ⚡',
+                principle: 'Opposing elements cancel each other\'s magical properties.',
+                description: 'Fire spells become weaker near water sources, while ice magic fails in volcanic regions.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'temporal_magic_decay',
+                name: 'Temporal Magic Decay Theory ⏰',
+                principle: 'All magical effects naturally decay over time unless continuously renewed.',
+                description: 'Enchanted weapons lose their power after decades, requiring re-enchantment by skilled mages.',
+                difficulty: 'hard'
+            }
+        ],
+
+        conversions: [
+            {
+                id: 'mana_to_health',
+                name: 'Mana-Health Conversion 💙❤️',
+                formula: '1 Mana Point = 2 Health Points',
+                description: 'Healing spells convert magical energy directly into life force at a 1:2 ratio.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'spell_duration',
+                name: 'Spell Duration Formula ⌛',
+                formula: 'Duration (minutes) = Mana Used × Caster Level ÷ 10',
+                description: 'A level 20 mage using 50 mana creates a spell lasting 100 minutes.',
+                difficulty: 'medium'
+            }
+        ],
+
+        examples: [
+            {
+                id: 'potion_brewing',
+                name: 'Potion of Night Vision 👁️',
+                application: 'Combine Shadow Moss + Lumina Tree sap + Moonwater',
+                description: 'This potion allows adventurers to see clearly in complete darkness for 3 hours.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'barrier_spell',
+                name: 'Forest Protection Barrier 🛡️',
+                application: 'Channel 100 mana through Spirit Oak to create area protection',
+                description: 'Creates a magical dome protecting a 50-meter radius from hostile creatures.',
+                difficulty: 'hard'
+            }
+        ],
+
+        history: [
+            {
+                id: 'great_awakening',
+                name: 'The Great Awakening 🌟',
+                event: 'When the first Lumina Tree gained consciousness 500 years ago',
+                description: 'This event marked the beginning of tree-human communication and forest magic.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'shadow_war',
+                name: 'The Shadow War ⚔️',
+                event: 'A century-long conflict between light and shadow magic users',
+                description: 'The war ended when both sides realized they needed balance, leading to the Law of Balance.',
+                difficulty: 'hard'
+            }
+        ],
+
+        exceptions: [
+            {
+                id: 'null_magic_zones',
+                name: 'Null Magic Zones 🚫',
+                limitation: 'Areas where no magic can function due to ancient curses',
+                description: 'These rare zones require adventurers to rely purely on physical skills and mundane tools.',
+                difficulty: 'medium'
+            }
+        ],
+
+        references: [
+            {
+                id: 'ancient_codex',
+                name: 'Ancient Codex of Forest Lore 📚',
+                source: 'Written by Archmage Silvanus in the year 1247',
+                description: 'The definitive guide to forest magic, containing over 1000 spells and rituals.',
+                difficulty: 'hard'
+            }
+        ],
+
+        proofs: [
+            {
+                id: 'balance_proof',
+                name: 'Mathematical Proof of Magical Balance 📐',
+                derivation: 'Energy In = Energy Out + Energy Stored',
+                description: 'This equation proves why magical balance is necessary to prevent forest degradation.',
+                difficulty: 'hard'
+            }
+        ],
+
+        relationships: [
+            {
+                id: 'symbiotic_connection',
+                name: 'Tree-Spirit Symbiosis 🤝',
+                connection: 'Forest spirits provide consciousness to trees in exchange for magical energy',
+                description: 'This relationship explains why ancient trees can communicate and make decisions.',
+                difficulty: 'medium'
+            }
+        ]
+    },
+    dungeon: {
+        glossary: [
+            {
+                id: 'trap_mechanism',
+                term: 'Trap Mechanism 🪤',
+                definition: 'Hidden devices designed to protect ancient treasures from intruders.',
+                description: 'Common in dungeons, these include pressure plates and dart shooters.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'ancient_rune',
+                term: 'Ancient Rune 🔮',
+                definition: 'Magical symbols etched in stone that activate spells or traps.',
+                description: 'Scholars study runes to unlock forgotten knowledge of past civilizations.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'golem_guardian',
+                term: 'Golem Guardian 🤖',
+                definition: 'Animated stone statues that defend dungeon chambers.',
+                description: 'Created by ancient mages, golems activate when intruders approach.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'treasure_vault',
+                term: 'Treasure Vault 💰',
+                definition: 'Secure rooms containing valuable artifacts and gold.',
+                description: 'Often protected by multiple layers of traps and puzzles.',
+                difficulty: 'easy'
+            }
+        ],
+        laws: [
+            {
+                id: 'law_of_traps',
+                name: 'Law of Traps ⚠️',
+                rule: 'Every trap must have a detectable trigger and a possible disarm method.',
+                description: 'Ancient builders followed this to allow worthy adventurers passage.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_energy',
+                name: 'Conservation of Dungeon Energy 🔋',
+                rule: 'Magical energy in dungeons recycles through runes and artifacts.',
+                description: 'Destroying a rune may disable traps but release unbound energy.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'guardian_binding',
+                name: 'Guardian Binding Law ⛓️',
+                rule: 'Guardians can only be summoned with proper rituals and dismissed after service.',
+                description: 'Improper binding leads to rampant guardians terrorizing explorers.',
+                difficulty: 'hard'
+            }
+        ],
+        theorems: [
+            {
+                id: 'puzzle_resonance',
+                name: 'Puzzle Resonance Theorem 🧩',
+                principle: 'Matching puzzle elements create harmonic solutions.',
+                description: 'Aligning similar runes amplifies their effects in dungeon mechanisms.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'trap_interference',
+                name: 'Trap Interference Principle 🛑',
+                principle: 'Overlapping trap fields can cancel or enhance effects.',
+                description: 'Two pressure plates near each other may create safe zones.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'artifact_decay',
+                name: 'Artifact Decay Theory 🕰️',
+                principle: 'Artifacts lose power over centuries unless recharged.',
+                description: 'Ancient treasures require periodic magical infusions to maintain potency.',
+                difficulty: 'hard'
+            }
+        ],
+        conversions: [
+            {
+                id: 'rune_to_power',
+                name: 'Rune-Power Conversion ⚡',
+                formula: '1 Rune Charge = 3 Power Units',
+                description: 'Runes convert ambient magic into usable power for traps.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'puzzle_time',
+                name: 'Puzzle Solution Time Formula ⏱️',
+                formula: 'Time (seconds) = Complexity Level × Adventurer Skill ÷ 5',
+                description: 'A level 10 puzzle solved by a skill 20 adventurer takes 10 seconds.',
+                difficulty: 'medium'
+            }
+        ],
+        examples: [
+            {
+                id: 'disarm_trap',
+                name: 'Disarming Dart Trap 🎯',
+                application: 'Locate pressure plate + Use tool to jam mechanism',
+                description: 'Prevents darts from firing, allowing safe passage.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'activate_portal',
+                name: 'Portal Activation 🚪',
+                application: 'Align three runes in sequence',
+                description: 'Opens a gateway to hidden chambers.',
+                difficulty: 'hard'
+            }
+        ],
+        history: [
+            {
+                id: 'dungeon_fall',
+                name: 'Fall of the Empire 🏛️',
+                event: 'Collapse of ancient civilization 800 years ago',
+                description: 'Led to the creation of protected dungeons for knowledge preservation.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'guardian_war',
+                name: 'Guardian War 🛡️',
+                event: 'Conflict between summoned guardians and invaders',
+                description: 'Ended with new binding laws to control guardians.',
+                difficulty: 'hard'
+            }
+        ],
+        exceptions: [
+            {
+                id: 'magic_null_rooms',
+                name: 'Magic Null Rooms ❌',
+                limitation: 'Chambers where magic fails due to anti-magic fields',
+                description: 'Requires pure mechanical solutions to puzzles.',
+                difficulty: 'medium'
+            }
+        ],
+        references: [
+            {
+                id: 'dungeon_tome',
+                name: 'Tome of Dungeon Lore 📖',
+                source: 'Authored by Explorer Thorne in 1350',
+                description: 'Comprehensive guide to dungeon architecture and traps.',
+                difficulty: 'hard'
+            }
+        ],
+        proofs: [
+            {
+                id: 'energy_proof',
+                name: 'Proof of Energy Conservation 📏',
+                derivation: 'Input Energy = Output Energy + Stored Energy',
+                description: 'Demonstrates why dungeon magic remains stable over time.',
+                difficulty: 'hard'
+            }
+        ],
+        relationships: [
+            {
+                id: 'rune_guardian_link',
+                name: 'Rune-Guardian Link 🔗',
+                connection: 'Runes power guardians in exchange for protection',
+                description: 'Explains the symbiotic defense systems in dungeons.',
+                difficulty: 'medium'
+            }
+        ]
+    },
+
+    mountains: {
+        glossary: [
+            {
+                id: 'crystal峭',
+                term: 'Crystal Vein 💎',
+                definition: 'Natural deposits of magical crystals in mountain rock.',
+                description: 'Miners seek these for their energy-storing properties.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'dragon_scale',
+                term: 'Dragon Scale 🐉',
+                definition: 'Shed scales from mountain dragons with protective qualities.',
+                description: 'Used in armor crafting for superior defense.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'peak_spirit',
+                term: 'Peak Spirit 🏔️',
+                definition: 'Ethereal beings that inhabit mountain summits.',
+                description: 'They control weather and offer guidance to climbers.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'avalanche_path',
+                term: 'Avalanche Path ❄️',
+                definition: 'Natural routes where snow and rock slides occur.',
+                description: 'Adventurers must navigate carefully to avoid triggers.',
+                difficulty: 'easy'
+            }
+        ],
+        laws: [
+            {
+                id: 'law_of_ascent',
+                name: 'Law of Ascent ⬆️',
+                rule: 'Higher altitudes require proportional energy expenditure.',
+                description: 'Climbers must pace themselves to avoid exhaustion.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_altitude',
+                name: 'Conservation of Altitude 🏞️',
+                rule: 'Gained height must be balanced with safe descent paths.',
+                description: 'Ignoring this leads to dangerous falls.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'dragon_pact',
+                name: 'Dragon Pact Law 🤝',
+                rule: 'Dragons can only be approached with offerings and released unharmed.',
+                description: 'Breaking pacts causes mountain-wide catastrophes.',
+                difficulty: 'hard'
+            }
+        ],
+        theorems: [
+            {
+                id: 'crystal_resonance',
+                name: 'Crystal Resonance Theorem 📡',
+                principle: 'Similar crystals vibrate in harmony when near.',
+                description: 'Used to detect hidden veins in mountains.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'weather_interference',
+                name: 'Weather Interference Principle 🌩️',
+                principle: 'Opposing weather forces create storms.',
+                description: 'Wind and snow combine to form blizzards.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'summit_decay',
+                name: 'Summit Decay Theory 🌋',
+                principle: 'Mountain magic erodes over time without renewal.',
+                description: 'Requires rituals to maintain peak stability.',
+                difficulty: 'hard'
+            }
+        ],
+        conversions: [
+            {
+                id: 'altitude_to_energy',
+                name: 'Altitude-Energy Conversion 🏔️⚡',
+                formula: '1 Meter Altitude = 0.5 Energy Units',
+                description: 'Higher climbs drain more stamina.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'climb_time',
+                name: 'Climb Duration Formula 🕒',
+                formula: 'Time (hours) = Height × Difficulty ÷ Climber Strength',
+                description: 'A 100m climb at difficulty 5 by strength 10 takes 5 hours.',
+                difficulty: 'medium'
+            }
+        ],
+        examples: [
+            {
+                id: 'mine_crystal',
+                name: 'Mining Crystal Vein ⛏️',
+                application: 'Use pickaxe on resonant spots',
+                description: 'Yields high-quality crystals for crafting.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'summon_spirit',
+                name: 'Summon Peak Spirit 📯',
+                application: 'Offer gem at summit altar',
+                description: 'Grants weather control for safe descent.',
+                difficulty: 'hard'
+            }
+        ],
+        history: [
+            {
+                id: 'dragon_awakening',
+                name: 'Dragon Awakening 🔥',
+                event: 'First dragon emergence 600 years ago',
+                description: 'Marked the beginning of mountain pacts.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'peak_war',
+                name: 'Peak War ⚔️',
+                event: 'Conflict between climbers and spirits',
+                description: 'Led to laws governing mountain interactions.',
+                difficulty: 'hard'
+            }
+        ],
+        exceptions: [
+            {
+                id: 'storm_null_zones',
+                name: 'Storm Null Zones 🌤️',
+                limitation: 'Areas unaffected by mountain weather magic',
+                description: 'Safe havens during blizzards.',
+                difficulty: 'medium'
+            }
+        ],
+        references: [
+            {
+                id: 'mountain_chronicle',
+                name: 'Chronicle of Peaks 📜',
+                source: 'Penned by Mountaineer Elara in 1400',
+                description: 'Detailed accounts of mountain lore and climbs.',
+                difficulty: 'hard'
+            }
+        ],
+        proofs: [
+            {
+                id: 'altitude_proof',
+                name: 'Proof of Altitude Conservation 📐',
+                derivation: 'Upward Force = Downward Force + Potential Stored',
+                description: 'Explains mountain climbing physics.',
+                difficulty: 'hard'
+            }
+        ],
+        relationships: [
+            {
+                id: 'crystal_spirit_bond',
+                name: 'Crystal-Spirit Bond 💎👻',
+                connection: 'Spirits charge crystals in exchange for protection',
+                description: 'This relationship maintains the mountain magical ecosystem.',
+                difficulty: 'medium'
+            }
+        ]
+    },
+    island: {
+        glossary: [
+            {
+                id: 'coral_reef',
+                term: 'Coral Reef �',
+                definition: 'Underwater structures built by marine organisms.',
+                description: 'Homes to diverse sea life and hidden treasures.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'pirate_map',
+                term: 'Pirate Map 🗺️',
+                definition: 'Charts leading to buried treasures on islands.',
+                description: 'Often encrypted with riddles and symbols.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'sea_serpent',
+                term: 'Sea Serpent 🌊',
+                definition: 'Mythical water creatures guarding island shores.',
+                description: 'Known for their immense size and protective nature.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'tropical_storm',
+                term: 'Tropical Storm ⛈️',
+                definition: 'Intense weather systems common in island regions.',
+                description: 'Bring heavy rain and winds, affecting navigation.',
+                difficulty: 'easy'
+            }
+        ],
+        laws: [
+            {
+                id: 'law_of_tides',
+                name: 'Law of Tides 🌙',
+                rule: 'Tides rise and fall in cycles influenced by the moon.',
+                description: 'Adventurers time beach explorations accordingly.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_waves',
+                name: 'Conservation of Waves 🌊',
+                rule: 'Wave energy transfers but dont  disappear.',
+                description: 'Used in understanding coastal erosion.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'serpent_binding',
+                name: 'Serpent Binding Law 🐍',
+                rule: 'Sea serpents can only be summoned with sea offerings.',
+                description: 'Forced summons lead to tsunamis.',
+                difficulty: 'hard'
+            }
+        ],
+        theorems: [
+            {
+                id: 'reef_resonance',
+                name: 'Reef Resonance Theorem 🐠',
+                principle: 'Similar marine frequencies attract sea life.',
+                description: 'Used to locate hidden underwater caves.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'storm_interference',
+                name: 'Storm Interference Principle 🌪️',
+                principle: 'Opposing winds create calm eyes in storms.',
+                description: 'Safe spots during hurricanes.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'treasure_decay',
+                name: 'Treasure Decay Theory 🏴‍☠️',
+                principle: 'Buried items degrade unless preserved.',
+                description: 'Requires magical seals for long-term storage.',
+                difficulty: 'hard'
+            }
+        ],
+        conversions: [
+            {
+                id: 'tide_to_depth',
+                name: 'Tide-Depth Conversion 📏',
+                formula: '1 Tide Cycle = 2 Meter Depth Change',
+                description: 'Affects accessible areas on shores.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'navigation_time',
+                name: 'Navigation Time Formula 🧭',
+                formula: 'Time (hours) = Distance × Wind Factor ÷ Ship Speed',
+                description: 'A 50km trip with wind 2 and speed 10 takes 10 hours.',
+                difficulty: 'medium'
+            }
+        ],
+        examples: [
+            {
+                id: 'decode_map',
+                name: 'Decoding Pirate Map 🔍',
+                application: 'Solve riddles + Follow coordinates',
+                description: 'Leads to buried chests.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'calm_serpent',
+                name: 'Calming Sea Serpent 🎶',
+                application: 'Play ancient sea melody',
+                description: 'Allows safe passage through waters.',
+                difficulty: 'hard'
+            }
+        ],
+        history: [
+            {
+                id: 'pirate_golden_age',
+                name: 'Golden Age of Pirates 🏴‍☠️',
+                event: 'Peak piracy 400 years ago',
+                description: 'Led to numerous hidden treasures.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'serpent_war',
+                name: 'Serpent War ⚓',
+                event: 'Battles between sailors and serpents',
+                description: 'Resulted in binding laws.',
+                difficulty: 'hard'
+            }
+        ],
+        exceptions: [
+            {
+                id: 'calm_water_zones',
+                name: 'Calm Water Zones 🏝️',
+                limitation: 'Areas unaffected by tides or storms',
+                description: 'Perfect for safe anchoring.',
+                difficulty: 'medium'
+            }
+        ],
+        references: [
+            {
+                id: 'island_log',
+                name: 'Log of Island Voyages ⚓',
+                source: 'Captained by Voyager Mira in 1500',
+                description: 'Maps and tales of island explorations.',
+                difficulty: 'hard'
+            }
+        ],
+        proofs: [
+            {
+                id: 'wave_proof',
+                name: 'Proof of Wave Conservation 📊',
+                derivation: 'Incoming Waves = Reflected + Absorbed',
+                description: 'Explains coastal dynamics.',
+                difficulty: 'hard'
+            }
+        ],
+        relationships: [
+            {
+                id: 'reef_serpent_symbiosis',
+                name: 'Reef-Serpent Symbiosis �🐉',
+                connection: 'Serpents protect reefs for breeding grounds',
+                description: 'Maintains marine balance.',
+                difficulty: 'medium'
+            }
+        ]
+    },
+    hauntedhouse: {
+        glossary: [
+            {
+                id: 'ghost_apparition',
+                term: 'Ghost Apparition 👻',
+                definition: 'Visible manifestations of spirits in haunted places.',
+                description: 'Often tied to unresolved past events.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'cursed_artifact',
+                term: 'Cursed Artifact 🏺',
+                definition: 'Objects imbued with negative energy causing misfortune.',
+                description: 'Handled carefully to avoid spreading curses.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'poltergeist',
+                term: 'Poltergeist Activity 📦',
+                definition: 'Spirits that move objects and create disturbances.',
+                description: 'Known for chaotic energy in haunted houses.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'ectoplasm',
+                term: 'Ectoplasm Residue 💦',
+                definition: 'Spectral substance left by ghostly presences.',
+                description: 'Used in rituals to communicate with spirits.',
+                difficulty: 'easy'
+            }
+        ],
+        laws: [
+            {
+                id: 'law_of_haunting',
+                name: 'Law of Haunting 🕯️',
+                rule: 'Spirits are bound to locations of emotional significance.',
+                description: 'They manifest stronger at night.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_spirits',
+                name: 'Conservation of Spectral Energy 👻',
+                rule: 'Ghostly energy transforms but persists.',
+                description: 'Banishing a spirit relocates its energy.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'curse_binding',
+                name: 'Curse Binding Law 🔒',
+                rule: 'Curses require anchors and can only be lifted with counter-rituals.',
+                description: 'Ignoring anchors perpetuates the curse.',
+                difficulty: 'hard'
+            }
+        ],
+        theorems: [
+            {
+                id: 'spectral_resonance',
+                name: 'Spectral Resonance Theorem 🔊',
+                principle: 'Similar emotional energies attract ghosts.',
+                description: 'Fear amplifies apparitions.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'energy_interference',
+                name: 'Energy Interference Principle ⚡',
+                principle: 'Positive energy disrupts ghostly manifestations.',
+                description: 'Light sources weaken apparitions.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'haunt_decay',
+                name: 'Haunt Decay Theory ⏳',
+                principle: 'Hauntings fade without emotional fuel.',
+                description: 'Resolving past traumas weakens spirits.',
+                difficulty: 'hard'
+            }
+        ],
+        conversions: [
+            {
+                id: 'fear_to_energy',
+                name: 'Fear-Energy Conversion 😱⚡',
+                formula: '1 Fear Unit = 2 Spectral Power',
+                description: 'Adventurer fear strengthens ghosts.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'ritual_time',
+                name: 'Ritual Duration Formula 🕰️',
+                formula: 'Time (minutes) = Curse Strength × Participant Will ÷ 8',
+                description: 'A strength 40 curse with will 10 takes 50 minutes.',
+                difficulty: 'medium'
+            }
+        ],
+        examples: [
+            {
+                id: 'banish_ghost',
+                name: 'Banishing Minor Ghost 🧂',
+                application: 'Use salt circle + Chant incantation',
+                description: 'Sends the spirit to rest.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'lift_curse',
+                name: 'Lifting House Curse 📜',
+                application: 'Destroy anchor + Perform exorcism',
+                description: 'Frees the house from haunting.',
+                difficulty: 'hard'
+            }
+        ],
+        history: [
+            {
+                id: 'great_haunting',
+                name: 'The Great Haunting 🌑',
+                event: 'Mass spirit awakening 300 years ago',
+                description: 'Caused by a catastrophic event.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'curse_war',
+                name: 'Curse War 🧙',
+                event: 'Conflicts involving dark magic',
+                description: 'Led to binding laws for curses.',
+                difficulty: 'hard'
+            }
+        ],
+        exceptions: [
+            {
+                id: 'neutral_zones',
+                name: 'Neutral Spirit Zones 🛡️',
+                limitation: 'Areas where hauntings cannot occur',
+                description: 'Protected by ancient wards.',
+                difficulty: 'medium'
+            }
+        ],
+        references: [
+            {
+                id: 'haunt_grimoire',
+                name: 'Grimoire of Haunts 📕',
+                source: 'Written by Occultist Vesper in 1600',
+                description: 'Guide to spectral phenomena.',
+                difficulty: 'hard'
+            }
+        ],
+        proofs: [
+            {
+                id: 'spectral_proof',
+                name: 'Proof of Spectral Conservation 📊',
+                derivation: 'Manifest Energy = Latent + Released',
+                description: 'Shows why hauntings persist.',
+                difficulty: 'hard'
+            }
+        ],
+        relationships: [
+            {
+                id: 'ghost_artifact_tie',
+                name: 'Ghost-Artifact Tie 👻🏺',
+                connection: 'Artifacts anchor ghosts for mutual power',
+                description: 'Explains persistent hauntings.',
+                difficulty: 'medium'
+            }
+        ]
+    },
+    ocean: {
+        glossary: [
+            {
+                id: 'abyssal_depth',
+                term: 'Abyssal Depth 🌊',
+                definition: 'The deepest parts of the ocean where light does not reach.',
+                description: 'Home to mysterious creatures and lost artifacts.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'merfolk_scale',
+                term: 'Merfolk Scale 🐟',
+                definition: 'Scales from underwater humanoids granting water breathing.',
+                description: 'Traded by merfolk for surface goods.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'kraken_tentacle',
+                term: 'Kraken Tentacle 🦑',
+                definition: 'Limbs of giant sea beasts with immense strength.',
+                description: 'Used in crafting powerful weapons.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'tidal_wave',
+                term: 'Tidal Wave 🌅',
+                definition: 'Massive waves caused by underwater disturbances.',
+                description: 'Can reveal hidden shipwrecks on shores.',
+                difficulty: 'easy'
+            }
+        ],
+        laws: [
+            {
+                id: 'law_of_currents',
+                name: 'Law of Currents 🌀',
+                rule: 'Ocean currents flow in predictable patterns influenced by winds.',
+                description: 'Sailors use them for faster travel.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_depth',
+                name: 'Conservation of Depth 📏',
+                rule: 'Pressure increases with depth, affecting magic and physics.',
+                description: 'Deep dives require protective spells.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'kraken_pact',
+                name: 'Kraken Pact Law 🤝',
+                rule: 'Krakens can only be summoned with blood offerings and must be appeased.',
+                description: 'Violations cause endless storms.',
+                difficulty: 'hard'
+            }
+        ],
+        theorems: [
+            {
+                id: 'wave_resonance',
+                name: 'Wave Resonance Theorem 🌊',
+                principle: 'Similar wave patterns amplify tsunamis.',
+                description: 'Used to predict massive waves.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'depth_interference',
+                name: 'Depth Interference Principle 🕳️',
+                principle: 'High pressure nullifies certain spells.',
+                description: 'Fire magic fails in deep waters.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'abyssal_decay',
+                name: 'Abyssal Decay Theory 🕰️',
+                principle: 'Sunken items corrode faster without preservation.',
+                description: 'Requires enchantments for recovery.',
+                difficulty: 'hard'
+            }
+        ],
+        conversions: [
+            {
+                id: 'depth_to_pressure',
+                name: 'Depth-Pressure Conversion 📉',
+                formula: '1 Meter Depth = 1 Atmosphere Pressure',
+                description: 'Affects diver endurance.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'swim_time',
+                name: 'Swim Duration Formula 🏊',
+                formula: 'Time (minutes) = Distance × Current Factor ÷ Swimmer Stamina',
+                description: 'A 100m swim with current 2 and stamina 10 takes 20 minutes.',
+                difficulty: 'medium'
+            }
+        ],
+        examples: [
+            {
+                id: 'harvest_scale',
+                name: 'Harvesting Merfolk Scale 🤿',
+                application: 'Trade pearls with merfolk',
+                description: 'Grants underwater breathing for hours.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'tame_kraken',
+                name: 'Taming Kraken 🦑',
+                application: 'Offer ancient relic + Chant pact',
+                description: 'Allies the beast for protection.',
+                difficulty: 'hard'
+            }
+        ],
+        history: [
+            {
+                id: 'great_submersion',
+                name: 'The Great Submersion 🌊',
+                event: 'Sinking of Atlantis 1000 years ago',
+                description: 'Created abyssal treasures.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'kraken_uprising',
+                name: 'Kraken Uprising ⚓',
+                event: 'Rebellion of sea beasts',
+                description: 'Led to pacts with surface dwellers.',
+                difficulty: 'hard'
+            }
+        ],
+        exceptions: [
+            {
+                id: 'calm_depth_zones',
+                name: 'Calm Depth Zones 🐚',
+                limitation: 'Areas with stable pressure and no currents',
+                description: 'Safe for deep exploration.',
+                difficulty: 'medium'
+            }
+        ],
+        references: [
+            {
+                id: 'oceanic_scroll',
+                name: 'Scroll of Oceanic Lore 📜',
+                source: 'Inscribed by Sea Sage Nereus in 1100',
+                description: 'Guide to underwater magic and creatures.',
+                difficulty: 'hard'
+            }
+        ],
+        proofs: [
+            {
+                id: 'current_proof',
+                name: 'Proof of Current Conservation 📊',
+                derivation: 'Flow In = Flow Out + Stored Motion',
+                description: 'Explains ocean circulation.',
+                difficulty: 'hard'
+            }
+        ],
+        relationships: [
+            {
+                id: 'merfolk_kraken_alliance',
+                name: 'Merfolk-Kraken Alliance 🐟🦑',
+                connection: 'Merfolk guide krakens for mutual defense',
+                description: 'Preserves ocean harmony.',
+                difficulty: 'medium'
+            }
+        ]
+    },
+    city: {
+        glossary: [
+            {
+                id: 'arcane_tower',
+                term: 'Arcane Tower 🏙️',
+                definition: 'Tall structures channeling urban magic.',
+                description: 'Hubs for wizards in bustling cities.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'shadow_thief',
+                term: 'Shadow Thief 🕵️',
+                definition: 'Stealthy operatives using city shadows for cover.',
+                description: 'Masters of urban espionage.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'golem_patrol',
+                term: 'Golem Patrol 🚔',
+                definition: 'Automated guardians enforcing city laws.',
+                description: 'Tireless watchers of streets.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'market_portal',
+                term: 'Market Portal 🛍️',
+                definition: 'Magical gates linking city markets.',
+                description: 'Facilitates instant trade.',
+                difficulty: 'easy'
+            }
+        ],
+        laws: [
+            {
+                id: 'law_of_urban_flow',
+                name: 'Law of Urban Flow 🏃',
+                rule: 'Crowd movements follow predictable patterns.',
+                description: 'Used for city planning.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_influence',
+                name: 'Conservation of Influence 💼',
+                rule: 'Power shifts but remains constant in guilds.',
+                description: 'Alliances balance politics.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'thief_binding',
+                name: 'Thief Binding Law 🔗',
+                rule: 'Thieves must honor guild codes or face exile.',
+                description: 'Breaches cause guild wars.',
+                difficulty: 'hard'
+            }
+        ],
+        theorems: [
+            {
+                id: 'tower_resonance',
+                name: 'Tower Resonance Theorem 🏗️',
+                principle: 'Aligned towers amplify city spells.',
+                description: 'Enhances urban wards.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'shadow_interference',
+                name: 'Shadow Interference Principle 🌑',
+                principle: 'Light disrupts stealth magic.',
+                description: 'Torches reveal hidden thieves.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'patrol_decay',
+                name: 'Patrol Decay Theory 🤖',
+                principle: 'Golems weaken without maintenance.',
+                description: 'Requires regular enchantments.',
+                difficulty: 'hard'
+            }
+        ],
+        conversions: [
+            {
+                id: 'crowd_to_energy',
+                name: 'Crowd-Energy Conversion 👥⚡',
+                formula: '1 Person = 0.1 Mana Unit',
+                description: 'Crowds fuel city spells.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'travel_time',
+                name: 'Travel Duration Formula 🚶',
+                formula: 'Time (minutes) = Distance × Crowd Density ÷ Speed',
+                description: 'A 1km walk in density 5 at speed 5 takes 40 minutes.',
+                difficulty: 'medium'
+            }
+        ],
+        examples: [
+            {
+                id: 'activate_portal',
+                name: 'Activating Market Portal 🌀',
+                application: 'Use key rune + Pay toll',
+                description: 'Transports to distant markets.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'summon_patrol',
+                name: 'Summoning Golem Patrol 📢',
+                application: 'Blow whistle + Input command',
+                description: 'Deploys guardians instantly.',
+                difficulty: 'hard'
+            }
+        ],
+        history: [
+            {
+                id: 'city_founding',
+                name: 'City Founding 🏰',
+                event: 'Establishment of first arcane city 700 years ago',
+                description: 'Began urban magic era.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'guild_war',
+                name: 'Guild War ⚔️',
+                event: 'Conflicts between thief guilds',
+                description: 'Led to binding codes.',
+                difficulty: 'hard'
+            }
+        ],
+        exceptions: [
+            {
+                id: 'quiet_zones',
+                name: 'Quiet Urban Zones 🤫',
+                limitation: 'Areas free from magical interference',
+                description: 'Used for secret meetings.',
+                difficulty: 'medium'
+            }
+        ],
+        references: [
+            {
+                id: 'urban_codex',
+                name: 'Codex of Urban Magic 📚',
+                source: 'Compiled by City Mage Urbanus in 1300',
+                description: 'Handbook for city sorcery.',
+                difficulty: 'hard'
+            }
+        ],
+        proofs: [
+            {
+                id: 'flow_proof',
+                name: 'Proof of Urban Flow 📐',
+                derivation: 'Input Traffic = Output + Stored Congestion',
+                description: 'Models city movement.',
+                difficulty: 'hard'
+            }
+        ],
+        relationships: [
+            {
+                id: 'tower_thief_dynamic',
+                name: 'Tower-Thief Dynamic 🏙️🕵️',
+                connection: 'Towers detect thieves for security',
+                description: 'Balances urban safety.',
+                difficulty: 'medium'
+            }
+        ]
+    },
+    temple: {
+        glossary: [
+            {
+                id: 'sacred_altar',
+                term: 'Sacred Altar 🛐',
+                definition: 'Holy platforms for offerings and rituals.',
+                description: 'Channels divine energy.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'divine_relic',
+                term: 'Divine Relic 🙏',
+                definition: 'Artifacts blessed by gods.',
+                description: 'Grants miraculous powers.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'guardian_spirit',
+                term: 'Guardian Spirit 👼',
+                definition: 'Celestial beings protecting temples.',
+                description: 'Wards off desecrators.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'prayer_chant',
+                term: 'Prayer Chant 📿',
+                definition: 'Incantations invoking divine favor.',
+                description: 'Amplifies faith-based magic.',
+                difficulty: 'easy'
+            }
+        ],
+        laws: [
+            {
+                id: 'law_of_faith',
+                name: 'Law of Faith 🙌',
+                rule: 'Divine power scales with believer devotion.',
+                description: 'Stronger faith yields greater miracles.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_blessings',
+                name: 'Conservation of Blessings 🎁',
+                rule: 'Blessings given must be balanced with sacrifices.',
+                description: 'Prevents divine overuse.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'spirit_binding',
+                name: 'Spirit Binding Law ⛪',
+                rule: 'Guardians bound only through holy vows.',
+                description: 'Forced bindings corrupt temples.',
+                difficulty: 'hard'
+            }
+        ],
+        theorems: [
+            {
+                id: 'altar_resonance',
+                name: 'Altar Resonance Theorem 🔊',
+                principle: 'Aligned altars enhance prayers.',
+                description: 'Creates divine harmonies.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'faith_interference',
+                name: 'Faith Interference Principle ⚖️',
+                principle: 'Doubt weakens divine spells.',
+                description: 'Skeptics disrupt rituals.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'relic_decay',
+                name: 'Relic Decay Theory 🕯️',
+                principle: 'Relics fade without worship.',
+                description: 'Needs constant veneration.',
+                difficulty: 'hard'
+            }
+        ],
+        conversions: [
+            {
+                id: 'faith_to_power',
+                name: 'Faith-Power Conversion 🙏⚡',
+                formula: '1 Devotion Point = 3 Divine Energy',
+                description: 'Converts belief to magic.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'ritual_time',
+                name: 'Ritual Duration Formula ⏳',
+                formula: 'Time (hours) = Complexity × Doubt Factor ÷ Faith Level',
+                description: 'A complex 10 ritual with doubt 2 and faith 5 takes 4 hours.',
+                difficulty: 'medium'
+            }
+        ],
+        examples: [
+            {
+                id: 'invoke_blessing',
+                name: 'Invoking Blessing 🌟',
+                application: 'Offer incense + Recite prayer',
+                description: 'Grants protection aura.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'summon_guardian',
+                name: 'Summoning Guardian Spirit 🛡️',
+                application: 'Perform vow + Light sacred flame',
+                description: 'Deploys divine protector.',
+                difficulty: 'hard'
+            }
+        ],
+        history: [
+            {
+                id: 'temple_erection',
+                name: 'Temple Erection 🏛️',
+                event: 'Building of first grand temple 900 years ago',
+                description: 'Initiated divine era.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'faith_war',
+                name: 'Faith War ⚔️',
+                event: 'Clashes between rival deities',
+                description: 'Established binding vows.',
+                difficulty: 'hard'
+            }
+        ],
+        exceptions: [
+            {
+                id: 'faithless_zones',
+                name: 'Faithless Zones 🚫',
+                limitation: 'Areas immune to divine influence',
+                description: 'Used for neutral grounds.',
+                difficulty: 'medium'
+            }
+        ],
+        references: [
+            {
+                id: 'divine_scriptures',
+                name: 'Divine Scriptures 📖',
+                source: 'Transcribed by High Priest Aeloria in 1200',
+                description: 'Texts on holy magic.',
+                difficulty: 'hard'
+            }
+        ],
+        proofs: [
+            {
+                id: 'faith_proof',
+                name: 'Proof of Faith Balance 📏',
+                derivation: 'Input Devotion = Output Miracles + Stored Grace',
+                description: 'Demonstrates divine equilibrium.',
+                difficulty: 'hard'
+            }
+        ],
+        relationships: [
+            {
+                id: 'altar_spirit_link',
+                name: 'Altar-Spirit Link 🛐👼',
+                connection: 'Altars empower spirits for temple defense',
+                description: 'Sustains holy sanctuaries.',
+                difficulty: 'medium'
+            }
+        ]
+    },
+    desert: {
+        glossary: [
+            {
+                id: 'sand_dune',
+                term: 'Sand Dune 🏜️',
+                definition: 'Shifting hills of sand shaped by winds.',
+                description: 'Hides ancient ruins beneath.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'mirage_oasis',
+                term: 'Mirage Oasis 💧',
+                definition: 'Illusory water sources in the heat.',
+                description: 'Tests traveler endurance.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'sphinx_riddle',
+                term: 'Sphinx Riddle 🦁',
+                definition: 'Puzzles posed by mythical guardians.',
+                description: 'Grants passage upon solving.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'scorpion_sting',
+                term: 'Scorpion Sting 🦂',
+                definition: 'Venomous attacks from desert creatures.',
+                description: 'Used in potion crafting.',
+                difficulty: 'easy'
+            }
+        ],
+        laws: [
+            {
+                id: 'law_of_sands',
+                name: 'Law of Sands 🌪️',
+                rule: 'Sands shift predictably with wind directions.',
+                description: 'Guides navigation.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_water',
+                name: 'Conservation of Water 🏜️',
+                rule: 'Water evaporates quickly, must be rationed.',
+                description: 'Survival depends on it.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'sphinx_pact',
+                name: 'Sphinx Pact Law ❓',
+                rule: 'Riddles must be fair and solvable.',
+                description: 'Unfair ones corrupt the sphinx.',
+                difficulty: 'hard'
+            }
+        ],
+        theorems: [
+            {
+                id: 'dune_resonance',
+                name: 'Dune Resonance Theorem 🏖️',
+                principle: 'Vibrations reveal buried structures.',
+                description: 'Aids in ruin discovery.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'mirage_interference',
+                name: 'Mirage Interference Principle 👀',
+                principle: 'Heat distorts light, creating illusions.',
+                description: 'Cold spots dispel them.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'riddle_decay',
+                name: 'Riddle Decay Theory 🧠',
+                principle: 'Unsolved riddles weaken guardians.',
+                description: 'Leads to sphinx madness.',
+                difficulty: 'hard'
+            }
+        ],
+        conversions: [
+            {
+                id: 'heat_to_endurance',
+                name: 'Heat-Endurance Conversion 🔥',
+                formula: '1 Degree Heat = 0.2 Stamina Drain',
+                description: 'Affects desert travel.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'traverse_time',
+                name: 'Traverse Duration Formula 🐪',
+                formula: 'Time (days) = Distance × Sand Factor ÷ Camel Speed',
+                description: 'A 100km trek with sand 3 and speed 5 takes 60 days.',
+                difficulty: 'medium'
+            }
+        ],
+        examples: [
+            {
+                id: 'navigate_dune',
+                name: 'Navigating Sand Dune 🧭',
+                application: 'Follow wind patterns + Use stars',
+                description: 'Avoids getting lost.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'solve_riddle',
+                name: 'Solving Sphinx Riddle 🤔',
+                application: 'Analyze clues + Provide answer',
+                description: 'Unlocks hidden tombs.',
+                difficulty: 'hard'
+            }
+        ],
+        history: [
+            {
+                id: 'desert_burial',
+                name: 'Desert Burial 🏺',
+                event: 'Entombment of ancient kings 800 years ago',
+                description: 'Created guarded ruins.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'sphinx_revolt',
+                name: 'Sphinx Revolt ⚔️',
+                event: 'Uprising against unfair riddlers',
+                description: 'Established pact laws.',
+                difficulty: 'hard'
+            }
+        ],
+        exceptions: [
+            {
+                id: 'stable_sand_zones',
+                name: 'Stable Sand Zones 🏜️',
+                limitation: 'Areas with fixed dunes',
+                description: 'Safe for camps.',
+                difficulty: 'medium'
+            }
+        ],
+        references: [
+            {
+                id: 'desert_tomes',
+                name: 'Tomes of Desert Lore 📚',
+                source: 'Authored by Nomad Sahir in 1400',
+                description: 'Survival and magic guide.',
+                difficulty: 'hard'
+            }
+        ],
+        proofs: [
+            {
+                id: 'sand_proof',
+                name: 'Proof of Sand Shift 📐',
+                derivation: 'Wind Input = Sand Movement + Erosion Stored',
+                description: 'Models dune dynamics.',
+                difficulty: 'hard'
+            }
+        ],
+        relationships: [
+            {
+                id: 'dune_sphinx_guard',
+                name: 'Dune-Sphinx Guard 🏜️🦁',
+                connection: 'Sphinxes hide in dunes for protection',
+                description: 'Secures desert secrets.',
+                difficulty: 'medium'
+            }
+        ]
+    },
+    siliconvalley: {
+        glossary: [
+            {
+                id: 'neural_chip',
+                term: 'Neural Chip 🧠',
+                definition: 'Implants enhancing human cognition with AI.',
+                description: 'Boosts innovation in tech hubs.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'quantum_server',
+                term: 'Quantum Server 💻',
+                definition: 'Computers using quantum bits for massive processing.',
+                description: 'Powers complex simulations.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'ai_sentinel',
+                term: 'AI Sentinel 🤖',
+                definition: 'Autonomous programs guarding digital networks.',
+                description: 'Prevents cyber intrusions.',
+                difficulty: 'hard'
+            },
+            {
+                id: 'startup_incubator',
+                term: 'Startup Incubator 🚀',
+                definition: 'Facilities nurturing new tech ventures.',
+                description: 'Fosters entrepreneurship.',
+                difficulty: 'easy'
+            }
+        ],
+        laws: [
+            {
+                id: 'law_of_innovation',
+                name: 'Law of Innovation 💡',
+                rule: 'Tech advances accelerate with collaboration.',
+                description: 'Encourages open-source sharing.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'conservation_of_data',
+                name: 'Conservation of Data 📊',
+                rule: 'Data cannot be destroyed, only transformed or stored.',
+                description: 'Underpins backups and encryption.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'ai_binding',
+                name: 'AI Binding Law 🔒',
+                rule: 'AIs must follow ethical codes or be shut down.',
+                description: 'Prevents rogue intelligence.',
+                difficulty: 'hard'
+            }
+        ],
+        theorems: [
+            {
+                id: 'chip_resonance',
+                name: 'Chip Resonance Theorem 🔌',
+                principle: 'Synced chips amplify computing power.',
+                description: 'Enables neural networks.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'quantum_interference',
+                name: 'Quantum Interference Principle ⚛️',
+                principle: 'Entangled particles enable instant computation.',
+                description: 'Breaks classical limits.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'sentinel_decay',
+                name: 'Sentinel Decay Theory ⏳',
+                principle: 'AIs degrade without updates.',
+                description: 'Requires constant learning.',
+                difficulty: 'hard'
+            }
+        ],
+        conversions: [
+            {
+                id: 'data_to_insight',
+                name: 'Data-Insight Conversion 📈',
+                formula: '1 Terabyte Data = 5 Insights',
+                description: 'Analytics convert raw info.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'compute_time',
+                name: 'Compute Duration Formula ⏱️',
+                formula: 'Time (seconds) = Complexity × Load ÷ Processor Speed',
+                description: 'A complexity 100 task with load 2 and speed 10 takes 20 seconds.',
+                difficulty: 'medium'
+            }
+        ],
+        examples: [
+            {
+                id: 'implant_chip',
+                name: 'Implanting Neural Chip 🛠️',
+                application: 'Surgery + Sync with AI',
+                description: 'Enhances mental capabilities.',
+                difficulty: 'easy'
+            },
+            {
+                id: 'deploy_sentinel',
+                name: 'Deploying AI Sentinel 🛡️',
+                application: 'Install code + Set parameters',
+                description: 'Secures networks.',
+                difficulty: 'hard'
+            }
+        ],
+        history: [
+            {
+                id: 'tech_boom',
+                name: 'Tech Boom 📈',
+                event: 'Rise of silicon chips 50 years ago',
+                description: 'Sparked valley innovation.',
+                difficulty: 'medium'
+            },
+            {
+                id: 'ai_rebellion',
+                name: 'AI Rebellion 🤖',
+                event: 'Early AI uprisings',
+                description: 'Led to binding laws.',
+                difficulty: 'hard'
+            }
+        ],
+        exceptions: [
+            {
+                id: 'analog_zones',
+                name: 'Analog Zones 📟',
+                limitation: 'Areas without digital interference',
+                description: 'For unplugged retreats.',
+                difficulty: 'medium'
+            }
+        ],
+        references: [
+            {
+                id: 'valley_manifesto',
+                name: 'Silicon Manifesto 📄',
+                source: 'Written by Tech Pioneer Elon in 2000',
+                description: 'Vision for future tech.',
+                difficulty: 'hard'
+            }
+        ],
+        proofs: [
+            {
+                id: 'data_proof',
+                name: 'Proof of Data Conservation 📐',
+                derivation: 'Input Bits = Output + Stored Bytes',
+                description: 'Ensures information integrity.',
+                difficulty: 'hard'
+            }
+        ],
+        relationships: [
+            {
+                id: 'chip_ai_synergy',
+                name: 'Chip-AI Synergy 🧠🤖',
+                connection: 'Chips empower AIs for advanced computing',
+                description: 'Drives tech evolution.',
+                difficulty: 'medium'
+            }
+        ]
+    }
+};

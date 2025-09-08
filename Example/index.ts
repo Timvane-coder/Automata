@@ -1,8 +1,6 @@
 
 import { Boom } from '@hapi/boom'
 import NodeCache from '@cacheable/node-cache'
-import { fileURLToPath } from 'url'
-import { dirname } from 'path'
 import readline from 'readline'
 import makeWASocket, {
     AnyMessageContent,
@@ -30,24 +28,9 @@ import * as math from 'mathjs';
 import fs from 'fs';
 import path from 'path';
 import XLSX from 'xlsx';
-import chalk from 'chalk'
-import google from 'googlethis'
-import { promises as fsPromises } from 'fs'
-
-
 
 import { SpreadsheetCalculator } from '../lib/spreadsheet.js'
 import GraphingCalculatorGame from './graph.js'
-// Import the Enhanced Statistical Workbook
-
-// Import the Statistical Distributions class directly
-// Import the Enhanced Statistical Workbook
-import { EnhancedStatisticalWorkbook } from './workbook.js'
-// Import QuadraticMathematicalWorkbook
-import { QuadraticMathematicalWorkbook } from './QuadraticMathematicalWorkbook.js'
-
-// Import Chess Game
-import { ChessGame } from './chessGame.js' // Adjust path as needed
 
 // Import YouTube functions
 import {
@@ -58,41 +41,6 @@ import {
     getYoutubeTrending,
     getYoutubeThumbnail
 } from '../lib/youtube.js'
-
-// Import RPG game functions and data
-import { 
-    findUserRpg, 
-    editRpg, 
-    findUser, 
-    expUpdate 
-} from './schema.js'
-
-import {
-    isNumber,
-    blacksmith,
-    shopItems,
-    createRewards,
-    inventoryDisplay,
-    LOCATION_DATABASES,
-    LOCATION_QUESTIONS,
-    ADVENTURE_LOCATIONS,
-    EVENT_DIFFICULTIES,
-    LOCATION_ORDER,
-    DIFFICULTIES,
-    DIFFICULTY_INDEX
-} from './gameData.js'
-
-
-import express from 'express'
-
-
-const app = new express();
-let PORT = process.env.PORT || 3000
-
-app.get('/', function (req, res) {
-  res.send('your Jojosc music Whatsapp website is online at musicdynansty-3147b60a229f.herokuapp');
-});
-
 
 // FootballDataExplorer class
 class FootballDataExplorer {
@@ -1228,6 +1176,13 @@ class FootballDataExplorer {
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./wa-logs.txt'))
 logger.level = 'trace'
 
+// Add connection monitoring
+let lastHeartbeat = Date.now()
+let isConnected = false
+
+
+
+
 // Pre-configured media URLs and local files
 const mediaLibrary = {
     images: {
@@ -1279,796 +1234,6 @@ const contactsLibrary = {
 }
 
 
-// ========== RPG IMAGE MANAGEMENT SYSTEM ==========
-class RPGImageManager {
-    constructor() {
-        this.tempDir = path.join(process.cwd(), 'temp_images')
-        this.imageCache = new Map()
-        this.initTempDirectory()
-    }
-
-    initTempDirectory() {
-        if (!fs.existsSync(this.tempDir)) {
-            fs.mkdirSync(this.tempDir, { recursive: true })
-            console.log(chalk.green(`Created temp directory: ${this.tempDir}`))
-        }
-    }
-
-    cleanTempDirectory() {
-        try {
-            if (fs.existsSync(this.tempDir)) {
-                const files = fs.readdirSync(this.tempDir)
-                files.forEach(file => {
-                    fs.unlinkSync(path.join(this.tempDir, file))
-                })
-                console.log(chalk.yellow('Cleaned up temp images directory'))
-            }
-        } catch (error) {
-            console.error(chalk.red('Error cleaning temp directory:', error.message))
-        }
-    }
-
-    sanitizeFileName(text) {
-        return text.replace(/[\u{1f300}-\u{1f5ff}\u{1f900}-\u{1f9ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}]/gu, '')
-                  .replace(/[^\w\s-]/g, '')
-                  .replace(/\s+/g, '_')
-                  .toLowerCase()
-                  .substring(0, 50)
-    }
-
-    extractSearchTermFromDiagram(diagram) {
-        const cleanText = diagram.replace(/[\u{1f300}-\u{1f5ff}\u{1f900}-\u{1f9ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}]/gu, '')
-
-        const keywords = cleanText.toLowerCase()
-            .split(/\s+/)
-            .filter(word => word.length > 2)
-            .filter(word => !['the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'].includes(word))
-            .slice(0, 3)
-
-        return keywords.join(' ') || 'fantasy game illustration'
-    }
-
-    async downloadQuestionImage(question, location) {
-        const searchTerm = this.extractSearchTermFromDiagram(question.diagram)
-        const fileName = this.sanitizeFileName(`${question.id}_${location}_${searchTerm}`)
-        const cacheKey = `${question.id}_${location}`
-
-        if (this.imageCache.has(cacheKey)) {
-            return this.imageCache.get(cacheKey)
-        }
-
-        try {
-            console.log(chalk.blue(`🔍 Searching image for: "${searchTerm}"`))
-
-            const enhancedSearchTerm = `${searchTerm} fantasy game illustration art`
-            const images = await google.image(enhancedSearchTerm, {
-                safe: true,
-                additional_params: {
-                    tbm: 'isch',
-                    tbs: 'ic:color,itp:clipart'
-                }
-            })
-
-            if (images.length === 0) {
-                console.log(chalk.yellow(`No images found for: ${searchTerm}`))
-                return null
-            }
-
-            for (let i = 0; i < Math.min(3, images.length); i++) {
-                try {
-                    const imageUrl = images[i].url
-                    console.log(chalk.cyan(`📥 Downloading: ${imageUrl.substring(0, 50)}...`))
-
-                    const response = await fetch(imageUrl, {
-                        headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                        },
-                        timeout: 10000
-                    })
-
-                    if (!response.ok) continue
-
-                    const buffer = Buffer.from(await response.arrayBuffer())
-
-                    const contentType = response.headers.get('content-type')
-                    let extension = '.jpg'
-                    if (contentType?.includes('png')) extension = '.png'
-                    else if (contentType?.includes('gif')) extension = '.gif'
-                    else if (contentType?.includes('webp')) extension = '.webp'
-
-                    const filePath = path.join(this.tempDir, `${fileName}${extension}`)
-                    fs.writeFileSync(filePath, buffer)
-
-                    console.log(chalk.green(`✅ Image saved: ${fileName}${extension}`))
-
-                    this.imageCache.set(cacheKey, filePath)
-                    return filePath
-
-                } catch (downloadError) {
-                    console.log(chalk.yellow(`⚠️ Failed to download image ${i + 1}, trying next...`))
-                    continue
-                }
-            }
-
-            console.log(chalk.red(`❌ Failed to download any images for: ${searchTerm}`))
-            return null
-
-        } catch (error) {
-            console.error(chalk.red(`Error fetching image for "${searchTerm}":`, error.message))
-            return null
-        }
-    }
-}
-
-// Create global RPG image manager instance
-const rpgImageManager = new RPGImageManager()
-
-
-function getRandomFromArray(array) {
-    return array[Math.floor(Math.random() * array.length)];
-}
-
-function getAllDatabaseItems(database) {
-    const allItems = []
-    Object.values(database).forEach(category => {
-        allItems.push(...category)
-    })
-    return allItems
-}
-
-function getRandomDescription(location) {
-    const database = LOCATION_DATABASES[location]
-    const allItems = getAllDatabaseItems(database)
-    const randomItem = getRandomFromArray(allItems)
-    return randomItem.description
-}
-
-function getQuestionsByDifficulty(location, eventName) {
-    const difficulties = EVENT_DIFFICULTIES[location] || {}
-    const difficulty = difficulties[eventName] || 'easy'
-    return LOCATION_QUESTIONS[location]?.[difficulty] || []
-}
-
-function formatChoices(choices) {
-    return choices.map((choice, index) => `   ${String.fromCharCode(97 + index)}) ${choice}`).join('\n')
-}
-
-
-
-// Enhanced adventure handler for WhatsApp
-async function handleRPGAdventure({ sender, location }, args, sock, sendMessageWithTyping, from) {
-    const { rpg } = await findUserRpg(sender)
-    const session = getUserSession(from)
-
-    // Initialize progression if not set
-    if (!rpg.currentDifficulty) {
-        rpg.currentDifficulty = 'easy'
-        rpg.currentLocation = 'forest'
-        rpg.correctAnswersInCurrentEvent = 0
-        rpg.failedAttemptsInCurrentEvent = 0
-        await editRpg(sender, { rpg })
-    }
-
-    const knowledgeKey = `${location}Knowledge`
-
-    // Initialize knowledge tracking
-    if (!rpg[knowledgeKey]) {
-        rpg[knowledgeKey] = {
-            questionsAnswered: 0,
-            correctAnswers: 0,
-            categories: {}
-        }
-    }
-
-    // Initialize failure tracking if not set
-    if (typeof rpg.failedAttemptsInCurrentEvent === 'undefined') {
-        rpg.failedAttemptsInCurrentEvent = 0
-        await editRpg(sender, { rpg })
-    }
-
-    // Check if this is the current location and event
-    if (location !== rpg.currentLocation) {
-        return `You must complete your current adventure in ${rpg.currentLocation} first! Use adventure ${rpg.currentLocation}`
-    }
-
-    const expectedEvent = ADVENTURE_LOCATIONS[location].events[DIFFICULTY_INDEX[rpg.currentDifficulty]]
-
-    // Check cooldown and health
-    const cooldown = 50000 // 50 seconds
-    const now = Date.now()
-    if (rpg.health < 50) return `You need at least 50 health to adventure! Use heal to restore health.`
-    if (now - rpg.lastadventure < cooldown) {
-        const waitTime = Math.ceil((cooldown - (now - rpg.lastadventure)) / 1000)
-        return `Please wait ${waitTime} seconds before adventuring again.`
-    }
-
-    // If no specific event, show current status
-    if (args.length < 2) {
-        let response = `${ADVENTURE_LOCATIONS[location].name} Adventure!\n\n`
-        response += `Current Difficulty: ${rpg.currentDifficulty.charAt(0).toUpperCase() + rpg.currentDifficulty.slice(1)}\n`
-        response += `Current Event: ${expectedEvent} (${rpg.currentDifficulty} difficulty)\n`
-        response += `Correct Answers Needed: 5 (Current: ${rpg.correctAnswersInCurrentEvent})\n`
-        response += `Failed Attempts: ${rpg.failedAttemptsInCurrentEvent}/2\n`
-
-        // Show available blacksmith items for second chances
-        const blacksmithItems = []
-        if (rpg.sword > 0) blacksmithItems.push(`⚔️ Sword (${rpg.sworddurability} durability)`)
-        if (rpg.armor > 0) blacksmithItems.push(`🛡️ Armor (${rpg.armordurability} durability)`)
-        if (rpg.pickaxe > 0) blacksmithItems.push(`⛏️ Pickaxe (${rpg.pickaxedurability} durability)`)
-
-        if (blacksmithItems.length > 0) {
-            response += `Second Chance Items: ${blacksmithItems.join(', ')}\n`
-        } else {
-            response += `⚠️ No second chance items! Craft at blacksmith to avoid game reset.\n`
-        }
-        response += `\n`
-        response += `Start the event with: adventure ${location} ${expectedEvent}\n\n`
-        response += `**Knowledge Progress for ${location.charAt(0).toUpperCase() + location.slice(1)}:**\n⮕ Questions Answered: ${rpg[knowledgeKey].questionsAnswered}\n`
-        response += `⮕ Accuracy: ${((rpg[knowledgeKey].correctAnswers / rpg[knowledgeKey].questionsAnswered) * 100).toFixed(1)}%`
-
-        return response
-    }
-
-    const eventName = args[1].toLowerCase()
-
-    if (eventName !== expectedEvent) {
-        return `You must complete the current event: ${expectedEvent} (${rpg.currentDifficulty}). Use adventure ${location} ${expectedEvent}`
-    }
-
-    // Get questions
-    const questions = getQuestionsByDifficulty(location, eventName)
-    if (questions.length === 0) {
-        return `No questions available for ${eventName} event.`
-    }
-
-    // Present new question
-    const randomQuestion = getRandomFromArray(questions)
-    const randomDescription = getRandomDescription(location)
-
-    // Store current question in session
-    session.awaitingRPGAnswer = true
-    session.rpgActive = true
-    session.currentRPGQuestion = {
-        id: randomQuestion.id,
-        eventName,
-        location,
-        correct: randomQuestion.correct,
-        explanation: randomQuestion.explanation,
-        diagram: randomQuestion.diagram
-    }
-    session.rpgContext = { sender, location, eventName }
-
-    // Download and send image for this question
-    console.log(chalk.blue(`🎨 Downloading image for question: ${randomQuestion.id}`))
-    try {
-        const imagePath = await rpgImageManager.downloadQuestionImage(randomQuestion, location)
-        
-        let response = `🎭 **${eventName.toUpperCase()} EVENT in ${ADVENTURE_LOCATIONS[location].name}**\n\n`
-        response += `📖 **Guide:** ${randomDescription}\n\n`
-        response += `❓ **Question:** ${randomQuestion.question}\n\n`
-        response += `**Choices:**\n${formatChoices(randomQuestion.choices)}\n\n`
-        response += `**Visual:** ${randomQuestion.diagram}\n\n`
-        response += `Answer with: a, b, c, or d`
-
-        // Send text message first
-        await sendMessageWithTyping({ text: response }, from)
-
-        // Send image if available
-        if (imagePath && fs.existsSync(imagePath)) {
-            console.log(chalk.green(`📷 Sending image: ${path.basename(imagePath)}`))
-            const imageBuffer = fs.readFileSync(imagePath)
-            await sendMessageWithTyping({
-                image: imageBuffer,
-                caption: `Visual aid for the question above 🎨`
-            }, from)
-
-            // Clean up the image after sending
-            setTimeout(() => {
-                rpgImageManager.cleanTempDirectory()
-            }, 5000) // Clean up after 5 seconds
-        }
-
-        return null // Don't send text response as we already sent it
-    } catch (error) {
-        console.error(chalk.red(`Failed to download image for question ${randomQuestion.id}:`, error.message))
-        
-        // Send question without image
-        let response = `🎭 **${eventName.toUpperCase()} EVENT in ${ADVENTURE_LOCATIONS[location].name}**\n\n`
-        response += `📖 **Guide:** ${randomDescription}\n\n`
-        response += `❓ **Question:** ${randomQuestion.question}\n\n`
-        response += `**Choices:**\n${formatChoices(randomQuestion.choices)}\n\n`
-        response += `**Visual:** ${randomQuestion.diagram}\n\n`
-        response += `Answer with: a, b, c, or d`
-
-        return response
-    }
-}
-
-// Handle RPG answer
-async function handleRPGAnswer(text, from, sock, sendMessageWithTyping) {
-    const session = getUserSession(from)
-    const { sender, location, eventName } = session.rpgContext
-    const currentQuestion = session.currentRPGQuestion
-
-    if (!currentQuestion) {
-        return "No active question found. Start an adventure first!"
-    }
-
-    const userAnswer = text.toLowerCase().trim()
-    
-    // Validate answer format
-    if (!['a', 'b', 'c', 'd'].includes(userAnswer)) {
-        return "❌ Please answer with a, b, c, or d"
-    }
-
-    const { rpg } = await findUserRpg(sender)
-    const knowledgeKey = `${location}Knowledge`
-
-    // Check answer
-    const isCorrect = userAnswer === currentQuestion.correct
-    const rewardMultiplier = isCorrect ? 1.0 : 0.5
-
-    // Handle incorrect answers and failure system
-    if (!isCorrect) {
-        rpg.failedAttemptsInCurrentEvent++
-
-        // Check if this is the second failure
-        if (rpg.failedAttemptsInCurrentEvent >= 2) {
-            const hasBlacksmithItems = rpg.sword > 0 || rpg.armor > 0 || rpg.pickaxe > 0
-
-            if (hasBlacksmithItems) {
-                let itemUsed = ''
-                if (rpg.sword > 0) {
-                    rpg.sword = 0
-                    rpg.sworddurability = 0
-                    itemUsed = 'sword'
-                } else if (rpg.armor > 0) {
-                    rpg.armor = 0
-                    rpg.armordurability = 0
-                    itemUsed = 'armor'
-                } else if (rpg.pickaxe > 0) {
-                    rpg.pickaxe = 0
-                    rpg.pickaxedurability = 0
-                    itemUsed = 'pickaxe'
-                }
-
-                rpg.correctAnswersInCurrentEvent = 0
-                rpg.failedAttemptsInCurrentEvent = 0
-                session.awaitingRPGAnswer = false
-                session.currentRPGQuestion = null
-                await editRpg(sender, { rpg })
-
-                return `❌ **Incorrect!** You've failed twice in this event!\n\n` +
-                       `**Explanation:** ${currentQuestion.explanation}\n\n` +
-                       `🔧 **Second Chance Used:** Your ${itemUsed} was consumed to continue!\n` +
-                       `Progress reset - you need 5 correct answers again.\n\n` +
-                       `Use adventure ${location} ${eventName} to try again!`
-            } else {
-                rpg.currentDifficulty = 'easy'
-                rpg.currentLocation = 'forest'
-                rpg.correctAnswersInCurrentEvent = 0
-                rpg.failedAttemptsInCurrentEvent = 0
-                session.awaitingRPGAnswer = false
-                session.currentRPGQuestion = null
-                await editRpg(sender, { rpg })
-
-                return `💀 **GAME OVER!** You've failed twice without blacksmith items!\n\n` +
-                       `**Explanation:** ${currentQuestion.explanation}\n\n` +
-                       `🔄 **Game Reset:** Starting over from Forest Easy difficulty.\n` +
-                       `Craft weapons, armor, or pickaxes at the blacksmith for second chances!\n\n` +
-                       `Use adventure forest to restart your journey!`
-            }
-        }
-    } else {
-        rpg.failedAttemptsInCurrentEvent = 0
-    }
-
-    // Update knowledge
-    rpg[knowledgeKey].questionsAnswered++
-    if (isCorrect) rpg[knowledgeKey].correctAnswers++
-
-    const category = 'general' // You might want to add category to questions
-    if (!rpg[knowledgeKey].categories[category]) {
-        rpg[knowledgeKey].categories[category] = { answered: 0, correct: 0 }
-    }
-    rpg[knowledgeKey].categories[category].answered++
-    if (isCorrect) rpg[knowledgeKey].categories[category].correct++
-
-    // Rewards
-    const baseExp = 25
-    const expGained = Math.floor(baseExp * rewardMultiplier)
-    const moneyGained = Math.floor(20 * rewardMultiplier)
-
-    rpg.exp = (rpg.exp || 0) + expGained
-    rpg.money = (rpg.money || 0) + moneyGained
-    rpg.lastadventure = Date.now()
-
-    // Reset session state
-    session.awaitingRPGAnswer = false
-    session.currentRPGQuestion = null
-
-    // Progression logic
-    let progressionMessage = ''
-    if (isCorrect) {
-        rpg.correctAnswersInCurrentEvent++
-        if (rpg.correctAnswersInCurrentEvent >= 5) {
-            const currentLocIndex = LOCATION_ORDER.indexOf(rpg.currentLocation)
-            if (currentLocIndex === LOCATION_ORDER.length - 1) {
-                const currentDiffIndex = DIFFICULTIES.indexOf(rpg.currentDifficulty)
-                if (currentDiffIndex < DIFFICULTIES.length - 1) {
-                    rpg.currentDifficulty = DIFFICULTIES[currentDiffIndex + 1]
-                    rpg.currentLocation = 'forest'
-                    rpg.correctAnswersInCurrentEvent = 0
-                    rpg.failedAttemptsInCurrentEvent = 0
-                    progressionMessage = `\n🎉 **Difficulty Unlocked!** Now starting ${rpg.currentDifficulty} level in ${rpg.currentLocation}! Try adventure ${rpg.currentLocation}`
-                } else {
-                    progressionMessage = `\n🏆 **Game Completed!** You've mastered all difficulties!`
-                }
-            } else {
-                rpg.currentLocation = LOCATION_ORDER[currentLocIndex + 1]
-                rpg.correctAnswersInCurrentEvent = 0
-                rpg.failedAttemptsInCurrentEvent = 0
-                progressionMessage = `\n🎉 **Location Unlocked!** Now adventure in ${rpg.currentLocation} with ${rpg.currentDifficulty} level! Try adventure ${rpg.currentLocation}`
-            }
-        } else {
-            progressionMessage = `\n📚 **Progress:** ${rpg.correctAnswersInCurrentEvent}/5 correct answers in ${rpg.currentDifficulty} ${rpg.currentLocation}`
-        }
-    }
-
-    await editRpg(sender, { rpg })
-
-    const resultEmoji = isCorrect ? '✅' : '❌'
-    const resultText = isCorrect ? 'Correct!' : 'Incorrect!'
-
-    let response = `${resultEmoji} **${resultText}**\n\n`
-    response += `**Explanation:** ${currentQuestion.explanation}\n\n`
-    response += `**Diagram:** ${currentQuestion.diagram}\n\n`
-    response += `**Rewards:**\n⮕ Experience: +${expGained}\n⮕ Money: +${moneyGained}\n\n`
-    response += `**Knowledge Progress for ${location.charAt(0).toUpperCase() + location.slice(1)}:**\n⮕ Questions Answered: ${rpg[knowledgeKey].questionsAnswered}\n`
-    response += `⮕ Accuracy: ${((rpg[knowledgeKey].correctAnswers / rpg[knowledgeKey].questionsAnswered) * 100).toFixed(1)}%\n`
-    response += `⮕ Current Event Progress: ${rpg.correctAnswersInCurrentEvent}/5 correct\n`
-    response += `⮕ Failed Attempts: ${rpg.failedAttemptsInCurrentEvent}/2`
-    response += progressionMessage
-
-    return response
-}
-
-
-// RPG Commands implementation
-const rpgCommands = {
-    blacksmith: async ({ sender }, args) => {
-        const { rpg } = await findUserRpg(sender)
-        const command = args[0]?.toLowerCase() || 'createsword'
-        const __type = command === 'createsword' ? 'sword' : command === 'createarmor' ? 'armor' : command === 'createpickaxe' ? 'pickaxe' : 'fishingrod'
-        const listItems = blacksmith[command]
-
-        if (!args[0] || !blacksmith[command]) {
-            const sections = Object.keys(blacksmith).map((v) => ({
-                title: v.toUpperCase(),
-                rows: Object.keys(blacksmith[v]).map((item) => ({
-                    title: item,
-                    description: `Material: ${Object.entries(blacksmith[v][item].material).map(([k, v]) => `${v} ${k}`).join(', ')}`,
-                })),
-            }))
-            return `*––––『 BLACKSMITHS 』––––*\nHello, welcome to the blacksmith! See the list below.\n\n${sections.map((s) => `${s.title}:\n${s.rows.map((r) => `  ${r.title} (${r.description})`).join('\n')}`).join('\n\n')}\n\nChoose an item to craft with blacksmith [command] [item]`
-        }
-
-        if (rpg[__type] !== 0 && __type !== 'fishingrod') return `You still have a ${__type}. Come back when it's destroyed.`
-        if (__type === 'fishingrod' && rpg[__type]) return `You still have a fishing rod. Come back when it's destroyed.`
-
-        const type = args[1]?.toLowerCase()
-        if (!type || !listItems[type]) {
-            const options = Object.keys(listItems).map((item) => `${item}`).join(', ')
-            return `*––––『 BLACKSMITHS 』––––*\nChoose an item: ${options}`
-        }
-
-        for (const [material, amount] of Object.entries(listItems[type].material)) {
-            if (rpg[material] < amount) return `You are short of ${material}!`
-            rpg[material] -= amount
-        }
-        rpg[__type] = listItems[type].id
-        rpg[`${__type}durability`] = listItems[type].durability
-        await editRpg(sender, { rpg })
-        return `👴🏽⛏️ : Successfully crafted your ${__type}!`
-    },
-
-    inventory: async ({ sender, pushName }) => {
-        const { rpg } = await findUserRpg(sender)
-        const tools = Object.keys(inventoryDisplay.tools)
-            .map((v) => rpg[v] && `⮕ ${v}: ${typeof inventoryDisplay.tools[v] === 'object' ? inventoryDisplay.tools[v][rpg[v]?.toString()] : rpg[v] ? 'Active' : '❌'}`)
-            .filter((v) => v)
-            .join('\n')
-        const items = Object.keys(inventoryDisplay.items)
-            .map((v) => rpg[v] && `⮕ ${v}: ${rpg[v]}`)
-            .filter((v) => v)
-            .join('\n')
-        const crates = Object.keys(inventoryDisplay.crates)
-            .map((v) => rpg[v] && `⮕ ${v}: ${rpg[v]}`)
-            .filter((v) => v)
-            .join('\n')
-        const pets = Object.keys(inventoryDisplay.pets)
-            .map((v) => rpg[v] && `⮕ ${v}: ${rpg[v] >= inventoryDisplay.pets[v] ? 'Max Level' : `Level ${rpg[v]}`}`)
-            .filter((v) => v)
-            .join('\n')
-        return `🧑🏻‍🏫 User: *${pushName}*
-${Object.keys(inventoryDisplay.others).map((v) => rpg[v] && `⮕ ${v}: ${rpg[v]}`).filter((v) => v).join('\n')}
-${tools ? `\n🔖 Tools:\n${tools}` : ''}
-${items ? `\n🔖 Items:\n${items}` : ''}
-${crates ? `\n🔖 Crates:\n${crates}` : ''}
-${pets ? `\n🔖 Pets:\n${pets}` : ''}`.trim()
-    },
-    
-    heal: async ({ sender }, args) => {
-        const { rpg } = await findUserRpg(sender)
-        const healAmount = 25
-        const healCost = 300
-        const maxHealth = 100
-
-        if (rpg.health >= maxHealth) {
-            return `You're already at full health! (${rpg.health}/${maxHealth})`
-        }
-
-        if (rpg.money < healCost) {
-            return `You don't have enough money to heal! Cost: ${healCost}, You have: ${rpg.money}`
-        }
-
-        const actualHealAmount = Math.min(healAmount, maxHealth - rpg.health)
-        rpg.health += actualHealAmount
-        rpg.money -= healCost
-
-        await editRpg(sender, { rpg })
-
-        return `💊 **Healing Complete!**\n\n` +
-               `⮕ Health restored: +${actualHealAmount}\n` +
-               `⮕ Current health: ${rpg.health}/${maxHealth}\n` +
-               `⮕ Money spent: -${healCost}\n` +
-               `⮕ Remaining money: ${rpg.money}`
-    },
-
-    shop: async ({ sender }, args) => {
-        const { rpg } = await findUserRpg(sender)
-        const command = args[0]?.toLowerCase()
-
-        if (!command || !shopItems[command]) {
-            const sections = Object.keys(shopItems).map((category) => ({
-                title: category.toUpperCase(),
-                items: Object.keys(shopItems[category]).map((item) => ({
-                    name: item,
-                    price: shopItems[category][item].price,
-                    description: shopItems[category][item].description || 'No description'
-                }))
-            }))
-
-            let response = `*––––『 SHOP 』––––*\nWelcome to the shop! Here's what's available:\n\n`
-            
-            sections.forEach(section => {
-                response += `**${section.title}:**\n`
-                section.items.forEach(item => {
-                    response += `  • ${item.name} - $${item.price}\n    ${item.description}\n`
-                })
-                response += '\n'
-            })
-
-            response += `Use: shop [category] [item]\nExample: shop buy potion`
-            return response
-        }
-
-        const category = shopItems[command]
-        const itemName = args[1]?.toLowerCase()
-
-        if (!itemName || !category[itemName]) {
-            const availableItems = Object.keys(category).map(item => 
-                `${item} - $${category[item].price}`
-            ).join(', ')
-            return `*––––『 ${command.toUpperCase()} SHOP 』––––*\nAvailable items: ${availableItems}\n\nUse: shop ${command} [item]`
-        }
-
-        const item = category[itemName]
-        
-        if (rpg.money < item.price) {
-            return `You don't have enough money! Item costs: $${item.price}, You have: $${rpg.money}`
-        }
-
-        // Handle different item types
-        if (item.type === 'consumable') {
-            if (!rpg[itemName]) rpg[itemName] = 0
-            rpg[itemName] += item.quantity || 1
-        } else if (item.type === 'permanent') {
-            rpg[itemName] = item.value || 1
-        }
-
-        rpg.money -= item.price
-        await editRpg(sender, { rpg })
-
-        return `🛒 **Purchase Successful!**\n\n` +
-               `⮕ Item: ${itemName}\n` +
-               `⮕ Price: $${item.price}\n` +
-               `⮕ Remaining money: $${rpg.money}\n\n` +
-               `Item has been added to your inventory!`
-    },
-
-    transfer: async ({ sender, pushName }, args) => {
-        if (args.length < 3) {
-            return `Usage: transfer [type] [amount] [@user]\n\nExample: transfer money 100 @user\nTypes: money, exp`
-        }
-
-        const type = args[0].toLowerCase()
-        const amount = parseInt(args[1])
-        const targetUser = args[2].replace('@', '')
-
-        if (!['money', 'exp'].includes(type)) {
-            return `Invalid type! Use: money or exp`
-        }
-
-        if (isNaN(amount) || amount <= 0) {
-            return `Invalid amount! Must be a positive number.`
-        }
-
-        if (!targetUser || targetUser === sender) {
-            return `Invalid target user or cannot transfer to yourself!`
-        }
-
-        const { rpg: senderRpg } = await findUserRpg(sender)
-        const { rpg: targetRpg } = await findUserRpg(targetUser)
-
-        if (senderRpg[type] < amount) {
-            return `You don't have enough ${type}! You have: ${senderRpg[type]}`
-        }
-
-        // Transfer
-        senderRpg[type] -= amount
-        targetRpg[type] = (targetRpg[type] || 0) + amount
-
-        await editRpg(sender, { rpg: senderRpg })
-        await editRpg(targetUser, { rpg: targetRpg })
-
-        return `💸 **Transfer Successful!**\n\n` +
-               `⮕ Transferred: ${amount} ${type}\n` +
-               `⮕ To: @${targetUser}\n` +
-               `⮕ Your remaining ${type}: ${senderRpg[type]}\n\n` +
-               `Transfer completed successfully! 🎉`
-    },
-
-    profile: async ({ sender, pushName }) => {
-        const { rpg } = await findUserRpg(sender)
-        const totalQuestions = Object.values(LOCATION_ORDER).reduce((total, location) => {
-            const knowledgeKey = `${location}Knowledge`
-            return total + (rpg[knowledgeKey]?.questionsAnswered || 0)
-        }, 0)
-
-        const totalCorrect = Object.values(LOCATION_ORDER).reduce((total, location) => {
-            const knowledgeKey = `${location}Knowledge`
-            return total + (rpg[knowledgeKey]?.correctAnswers || 0)
-        }, 0)
-
-        const overallAccuracy = totalQuestions > 0 ? ((totalCorrect / totalQuestions) * 100).toFixed(1) : 0
-
-        let response = `👤 **${pushName}'s RPG Profile**\n\n`
-        response += `**Basic Stats:**\n`
-        response += `⮕ Level: ${rpg.level || 1}\n`
-        response += `⮕ Experience: ${rpg.exp || 0}\n`
-        response += `⮕ Health: ${rpg.health || 100}/100\n`
-        response += `⮕ Money: $${rpg.money || 0}\n\n`
-
-        response += `**Game Progress:**\n`
-        response += `⮕ Current Location: ${(rpg.currentLocation || 'forest').charAt(0).toUpperCase() + (rpg.currentLocation || 'forest').slice(1)}\n`
-        response += `⮕ Current Difficulty: ${(rpg.currentDifficulty || 'easy').charAt(0).toUpperCase() + (rpg.currentDifficulty || 'easy').slice(1)}\n`
-        response += `⮕ Event Progress: ${rpg.correctAnswersInCurrentEvent || 0}/5\n`
-        response += `⮕ Failed Attempts: ${rpg.failedAttemptsInCurrentEvent || 0}/2\n\n`
-
-        response += `**Knowledge Stats:**\n`
-        response += `⮕ Total Questions: ${totalQuestions}\n`
-        response += `⮕ Correct Answers: ${totalCorrect}\n`
-        response += `⮕ Overall Accuracy: ${overallAccuracy}%\n\n`
-
-        response += `**Equipment:**\n`
-        const equipment = []
-        if (rpg.sword > 0) equipment.push(`⚔️ Sword (${rpg.sworddurability} durability)`)
-        if (rpg.armor > 0) equipment.push(`🛡️ Armor (${rpg.armordurability} durability)`)
-        if (rpg.pickaxe > 0) equipment.push(`⛏️ Pickaxe (${rpg.pickaxedurability} durability)`)
-        if (rpg.fishingrod) equipment.push(`🎣 Fishing Rod`)
-
-        response += equipment.length > 0 ? equipment.join('\n') : 'No equipment'
-
-        return response
-    },
-
-    leaderboard: async ({ sender }) => {
-        // This would require querying all users - simplified version
-        return `🏆 **Leaderboard**\n\nLeaderboard feature coming soon!\nFor now, use 'profile' to see your stats.`
-    },
-
-    reset: async ({ sender }) => {
-        // Reset RPG progress (dangerous command)
-        const resetRpg = {
-            health: 100,
-            money: 0,
-            exp: 0,
-            level: 1,
-            currentDifficulty: 'easy',
-            currentLocation: 'forest',
-            correctAnswersInCurrentEvent: 0,
-            failedAttemptsInCurrentEvent: 0,
-            sword: 0,
-            armor: 0,
-            pickaxe: 0,
-            fishingrod: false,
-            sworddurability: 0,
-            armordurability: 0,
-            pickaxedurability: 0,
-            lastadventure: 0
-        }
-
-        await editRpg(sender, { rpg: resetRpg })
-        
-        return `🔄 **RPG Profile Reset**\n\nYour RPG progress has been completely reset!\nUse 'adventure forest' to start your journey again.`
-    }
-}
-
-// Enhanced Adventure handler for specific locations
-async function handleSpecificAdventure(location, { sender }, args, sock, sendMessageWithTyping, from) {
-    if (LOCATION_ORDER.includes(location)) {
-        return await handleRPGAdventure({ sender, location }, args, sock, sendMessageWithTyping, from)
-    }
-    return `Unknown location: ${location}. Available locations: ${LOCATION_ORDER.join(', ')}`
-}
-
-
-
-
-interface QuadraticSession {
-    solverType?: string
-    currentStep: 'selecting_solver' | 'entering_equation' | 'entering_scenario' | 'entering_parameters' | 'generating_result'
-    equation?: string
-    scenario?: string
-    parameters?: any
-    stepData?: any
-    workbook?: QuadraticMathematicalWorkbook
-}
-
-
-
-// TypeScript interfaces for football data
-interface MatchData {
-    HomeTeam: string;
-    AwayTeam: string;
-    FTHG: string;
-    FTAG: string;
-    Date: string;
-    Referee: string;
-    HS: string;
-    AS: string;
-    HC: string;
-    AC: string;
-    HY: string;
-    AY: string;
-    HR: string;
-    AR: string;
-    [key: string]: string;
-}
-
-interface TeamStats {
-    team: string;
-    played: number;
-    won: number;
-    drawn: number;
-    lost: number;
-    goalsFor: number;
-    goalsAgainst: number;
-    goalDifference: number;
-    points: number;
-}
-
-interface LeagueInfo {
-    name: string;
-    emoji: string;
-    season: string;
-    flag: string;
-    csvFile: string;
-}
-
-
-
 
 // User session interface for YouTube and Football functionality
 interface UserSession {
@@ -2077,53 +1242,13 @@ interface UserSession {
     awaitingYouTubeQuery: boolean
     youtubeContext: any
     awaitingYouTubeAction: boolean
-    awaitingRelatedSelection: boolean
-
-    // Multi-League session states
-    awaitingEPLQuery: boolean
-    awaitingLaLigaQuery: boolean
-    awaitingSerieAQuery: boolean
-    awaitingBundesligaQuery: boolean
-    awaitingLigue1Query: boolean
-    awaitingEredivisieQuery: boolean
-    awaitingPrimeiraLigaQuery: boolean
-    awaitingProLeagueQuery: boolean
-    awaitingSPLQuery: boolean
-    awaitingSuperLigQuery: boolean
-    currentLeague: string | null
-    leagueContext: any    
+    awaitingRelatedSelection: boolean    
 
      // Spreadsheet session states
     awaitingSpreadsheetType: boolean
     awaitingSpreadsheetParams: boolean
     spreadsheetType: string | null
     spreadsheetParams: any
-
-    // Quadratic solver session
-    quadraticSession?: QuadraticSession
-    awaitingQuadraticInput: boolean
-
-    // Chess session states
-    awaitingChessMove: boolean
-    chessGame: ChessGame | null
-    chessGameActive: boolean
-
-
-    // RPG session states
-    awaitingRPGAnswer: boolean
-    rpgContext: any
-    currentRPGQuestion: any
-    rpgActive: boolean
- 
-
-    // Statistical Analysis session states
-    awaitingDistributionSelection: boolean
-    awaitingDistributionParameters: boolean
-    awaitingDataInput: boolean
-    currentDistribution: string | null
-    statisticalConfig: any
-    dataInputStep: 'sampleName' | 'variableName' | 'unitName' | 'scenarioDescription' | 'samples' | 'targetValue' | 'complete'
-
 
     // Calculator session states
     awaitingCalculatorInput: boolean
@@ -2140,24 +1265,6 @@ interface UserSession {
     createdAt: number
 }
 
-// Football data storage
-const footballData: { [key: string]: { data: MatchData[], teams: string[], loaded: boolean } } = {
-    epl: { data: [], teams: [], loaded: false },
-    laliga: { data: [], teams: [], loaded: false },
-    seriea: { data: [], teams: [], loaded: false },
-    bundesliga: { data: [], teams: [], loaded: false },
-    ligue1: { data: [], teams: [], loaded: false },
-    eredivisie: { data: [], teams: [], loaded: false },
-    primeiraliga: { data: [], teams: [], loaded: false },
-    proleague: { data: [], teams: [], loaded: false },
-    spl: { data: [], teams: [], loaded: false },
-    superlig: { data: [], teams: [], loaded: false }
-}
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-
 // Enhanced User session management
 const userSessions = new Map<string, UserSession>()
 const createUserSession = (phoneNumber: string): UserSession => {
@@ -2169,50 +1276,11 @@ const createUserSession = (phoneNumber: string): UserSession => {
         awaitingYouTubeAction: false,
         awaitingRelatedSelection: false,
 
-        
-        // Multi-League session states
-        awaitingEPLQuery: false,
-        awaitingLaLigaQuery: false,
-        awaitingSerieAQuery: false,
-        awaitingBundesligaQuery: false,
-        awaitingLigue1Query: false,
-        awaitingEredivisieQuery: false,
-        awaitingPrimeiraLigaQuery: false,
-        awaitingProLeagueQuery: false,
-        awaitingSPLQuery: false,
-        awaitingSuperLigQuery: false,
-        currentLeague: null,
-        leagueContext: null,
-
-        
-
           // Spreadsheet session states
         awaitingSpreadsheetType: false,
         awaitingSpreadsheetParams: false,
         spreadsheetType: null,
         spreadsheetParams: null,
-
-        // Quadratic solver session
-        awaitingQuadraticInput: false,
-
-        // Chess session states
-        awaitingChessMove: false,
-        chessGame: null,
-        chessGameActive: false,
-
-        // RPG session states
-        awaitingRPGAnswer: false,
-        rpgContext: null,
-        currentRPGQuestion: null,
-        rpgActive: false,
-
-        // Statistical Analysis session states
-        awaitingDistributionSelection: false,
-        awaitingDistributionParameters: false,
-        awaitingDataInput: false,
-        currentDistribution: null,
-        statisticalConfig: {},
-        dataInputStep: 'sampleName',
 
         // Calculator session states
         awaitingCalculatorInput: false,
@@ -2245,50 +1313,11 @@ const resetUserSession = (phoneNumber: string): void => {
     session.awaitingYouTubeAction = false
     session.awaitingRelatedSelection = false
 
-    
-    // Reset League states
-    session.awaitingEPLQuery = false
-    session.awaitingLaLigaQuery = false
-    session.awaitingSerieAQuery = false
-    session.awaitingBundesligaQuery = false
-    session.awaitingLigue1Query = false
-    session.awaitingEredivisieQuery = false
-    session.awaitingPrimeiraLigaQuery = false
-    session.awaitingProLeagueQuery = false
-    session.awaitingSPLQuery = false
-    session.awaitingSuperLigQuery = false
-    session.currentLeague = null
-    session.leagueContext = null
-
      // Reset Spreadsheet states
     session.awaitingSpreadsheetType = false
     session.awaitingSpreadsheetParams = false
     session.spreadsheetType = null
     session.spreadsheetParams = null
-
-// Reset Quadratic states
-    session.awaitingQuadraticInput = false
-    session.quadraticSession = undefined
-
-    // Reset Chess session
-    session.awaitingChessMove = false
-    session.chessGame = null
-    session.chessGameActive = false
-
-    
-    // Reset RPG states
-    session.awaitingRPGAnswer = false
-    session.rpgContext = null
-    session.currentRPGQuestion = null
-    session.rpgActive = false
-
-    session.awaitingDistributionSelection = false
-    session.awaitingDistributionParameters = false
-    session.awaitingDataInput = false
-    session.currentDistribution = null
-    session.statisticalConfig = {}
-    session.dataInputStep = 'sampleName'
-
 
     // Reset Calculator states
     session.awaitingCalculatorInput = false
@@ -2315,21 +1344,6 @@ if (!fs.existsSync(downloadsDir)) {
 if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true })
 }
-
-if (!fs.existsSync('./statistical_outputs')) {
-    fs.mkdirSync('./statistical_outputs', { recursive: true });
-}
-
-const statisticalOutputDir = './statistical_outputs'
-
-const quadraticTempDir = './temp/quadratic'
-
-if (!fs.existsSync(quadraticTempDir)) {
-    fs.mkdirSync(quadraticTempDir, { recursive: true })
-}
-
-
-
 
 const doReplies = process.argv.includes('--do-reply')
 const usePairingCode = process.argv.includes('--use-pairing-code')
@@ -2372,1915 +1386,6 @@ const downloadImage = (url: string, filepath: string) => {
         })
     })
 }
-
-
-
-
-const chessImagesDir = './temp/chess' 
-
-if (!fs.existsSync(chessImagesDir)) {
-    fs.mkdirSync(chessImagesDir, { recursive: true })
-}
-
-// Chess-specific helper functions
-const createChessImagePath = (sessionId: string, moveNumber: number): string => {
-    const timestamp = Date.now()
-    return path.join(chessImagesDir, `chess_${sessionId}_move_${moveNumber}_${timestamp}.png`)
-}
-
-const cleanupChessImage = (filePath: string) => {
-    setTimeout(() => {
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath)
-            console.log(`🧹 Cleaned up chess image: ${path.basename(filePath)}`)
-        }
-    }, 30000) // Clean up after 30 seconds
-}
-
-// Chess Game WhatsApp Adapter Class
-class ChessGameWhatsApp extends ChessGame {
-    constructor(sessionId) {
-        super()
-        this.sessionId = sessionId
-        this.whatsappMode = true
-    }
-
-    // Override saveCurrentPosition to save to temp directory
-    async saveCurrentPositionWhatsApp() {
-        try {
-            const moveNumber = this.chess.history().length
-            const buffer = await this.chessboard.buffer("image/png", {
-                highlight: true
-            })
-
-            const filename = createChessImagePath(this.sessionId, moveNumber)
-            fs.writeFileSync(filename, buffer)
-            
-            console.log(`♟️ Saved chess position: ${path.basename(filename)}`)
-            return filename
-        } catch (error) {
-            console.error("❌ Error saving chess position:", error)
-            return null
-        }
-    }
-
-    // Get move annotation for WhatsApp
-    getWhatsAppMoveAnnotation(from, to) {
-        const annotation = this.getMoveAnnotation(from, to)
-        return annotation
-    }
-
-    // Make player move and return image path
-    async makePlayerMoveWhatsApp(from, to) {
-        try {
-            const move = this.chess.move({ from, to })
-            if (move) {
-                this.moveCounter++
-                this.gameHistory.push(`${this.moveCounter}. ${move.san}`)
-                this.updateChessboard()
-                
-                const imagePath = await this.saveCurrentPositionWhatsApp()
-                const annotation = this.getMoveAnnotation(from, to)
-                
-                return {
-                    success: true,
-                    move: move,
-                    annotation: annotation,
-                    imagePath: imagePath,
-                    gameStatus: this.getGameStatus()
-                }
-            }
-            return { success: false }
-        } catch (error) {
-            console.log("❌ Invalid chess move!")
-            return { success: false }
-        }
-    }
-
-    // Make computer move and return image path
-    async makeComputerMoveWhatsApp() {
-        if (this.chess.isGameOver()) {
-            return { success: false, gameOver: true }
-        }
-
-        const possibleMoves = this.chess.moves({ verbose: true })
-        if (possibleMoves.length === 0) return { success: false, gameOver: true }
-
-        // Simple AI: prioritize captures, then random moves
-        const captures = possibleMoves.filter(move => move.captured)
-        const selectedMove = captures.length > 0
-            ? captures[Math.floor(Math.random() * captures.length)]
-            : possibleMoves[Math.floor(Math.random() * possibleMoves.length)]
-
-        const move = this.chess.move(selectedMove)
-        if (move) {
-            this.gameHistory[this.gameHistory.length - 1] += ` ${move.san}`
-            this.updateChessboard()
-            
-            const imagePath = await this.saveCurrentPositionWhatsApp()
-            const annotation = this.getMoveAnnotation(selectedMove.from, selectedMove.to)
-
-            return {
-                success: true,
-                move: move,
-                annotation: annotation,
-                imagePath: imagePath,
-                gameStatus: this.getGameStatus()
-            }
-        }
-        return { success: false }
-    }
-
-    // Get current board as image
-    async getCurrentBoardImage() {
-        return await this.saveCurrentPositionWhatsApp()
-    }
-}
-
-// Chess command handlers
-const startChessGame = async (sock: any, from: string, sendMessageWithTyping: Function) => {
-    const session = getUserSession(from)
-    
-    if (session.chessGameActive) {
-        await sendMessageWithTyping({
-            text: `♟️ *Chess Game Already Active*\n\nYou already have a chess game in progress!\n\n🎯 *Available Commands:*\n• *move* [from] [to] - Make a move (e.g., move e2 e4)\n• *board* - Show current board\n• *history* - Show game history\n• *status* - Show game status\n• *resign* - Resign the game\n• *help* - Show chess help\n\n💡 *Example:* move e2 e4`
-        }, from)
-        return
-    }
-
-    // Create new chess game
-    session.chessGame = new ChessGameWhatsApp(session.sessionId)
-    session.chessGameActive = true
-    session.awaitingChessMove = true
-    session.lastActivity = Date.now()
-
-    // Send initial board
-    const initialImagePath = await session.chessGame.getCurrentBoardImage()
-    
-    const welcomeMessage = `♟️ *Welcome to Chess Game!*\n\n🏳️ You are playing as **White**\n🎯 Make your move by typing move commands\n\n📋 *Available Commands:*\n• **move** [from] [to] - Make a move\n• **board** - Show current position\n• **history** - Show move history\n• **status** - Show game status\n• **help** - Show detailed help\n• **resign** - End the game\n\n💡 *Move Examples:*\n• move e2 e4\n• move g1 f3\n• move d2 d4\n\n🎮 Game started! Make your first move:`
-
-    await sendMessageWithTyping({ text: welcomeMessage }, from)
-    
-    if (initialImagePath) {
-        await sock.sendMessage(from, {
-            image: fs.readFileSync(initialImagePath),
-            caption: "♟️ *Chess Game - Starting Position*\n\nWhite to move first!"
-        })
-        cleanupChessImage(initialImagePath)
-    }
-}
-
-const handleChessMove = async (sock: any, from: string, text: string, sendMessageWithTyping: Function) => {
-    const session = getUserSession(from)
-    
-    if (!session.chessGameActive || !session.chessGame) {
-        await sendMessageWithTyping({
-            text: "❌ No active chess game. Type **chess** to start a new game!"
-        }, from)
-        return
-    }
-
-    const parts = text.toLowerCase().trim().split(/\s+/)
-    
-    // Handle chess commands
-    switch (parts[0]) {
-        case 'move':
-            if (parts.length < 3) {
-                await sendMessageWithTyping({
-                    text: "❌ Invalid move format!\n\n💡 *Usage:* move [from] [to]\n*Examples:*\n• move e2 e4\n• move g1 f3\n• move d2 d4"
-                }, from)
-                return
-            }
-            
-            const from_square = parts[1]
-            const to_square = parts[2]
-            
-            // Validate square format
-            if (!/^[a-h][1-8]$/.test(from_square) || !/^[a-h][1-8]$/.test(to_square)) {
-                await sendMessageWithTyping({
-                    text: "❌ Invalid square format!\n\n💡 Squares should be like: e2, f3, d4, etc.\n*Example:* move e2 e4"
-                }, from)
-                return
-            }
-
-            // Make player move
-            const playerResult = await session.chessGame.makePlayerMoveWhatsApp(from_square, to_square)
-            
-            if (!playerResult.success) {
-                await sendMessageWithTyping({
-                    text: "❌ Invalid move! Please try again.\n\n💡 *Tip:* Type **board** to see current position"
-                }, from)
-                return
-            }
-
-            // Send player move result
-            await sendMessageWithTyping({
-                text: `🔸 **${playerResult.move.san}**: ${playerResult.annotation}\n\nWhite plays: ${playerResult.move.san}`
-            }, from)
-            
-            if (playerResult.imagePath) {
-                await sock.sendMessage(from, {
-                    image: fs.readFileSync(playerResult.imagePath),
-                    caption: `♟️ *After White's move: ${playerResult.move.san}*\n\n${playerResult.gameStatus}`
-                })
-                cleanupChessImage(playerResult.imagePath)
-            }
-
-            // Check if game is over
-            if (session.chessGame.chess.isGameOver()) {
-                session.chessGameActive = false
-                session.awaitingChessMove = false
-                await sendMessageWithTyping({
-                    text: `🏁 **Game Over!**\n\n${playerResult.gameStatus}\n\n📜 Final History: ${session.chessGame.gameHistory.join(' ')}\n\nType **chess** to start a new game!`
-                }, from)
-                return
-            }
-
-            // Computer makes its move
-            await delay(2000) // Brief pause for realism
-            
-            const computerResult = await session.chessGame.makeComputerMoveWhatsApp()
-            
-            if (computerResult.success) {
-                await sendMessageWithTyping({
-                    text: `🔹 **${computerResult.move.san}**: ${computerResult.annotation}\n\nBlack plays: ${computerResult.move.san}`
-                }, from)
-                
-                if (computerResult.imagePath) {
-                    await sock.sendMessage(from, {
-                        image: fs.readFileSync(computerResult.imagePath),
-                        caption: `♟️ *After Black's move: ${computerResult.move.san}*\n\n${computerResult.gameStatus}\n\n🎯 Your turn! Make your next move.`
-                    })
-                    cleanupChessImage(computerResult.imagePath)
-                }
-
-                // Check if game is over after computer move
-                if (session.chessGame.chess.isGameOver()) {
-                    session.chessGameActive = false
-                    session.awaitingChessMove = false
-                    await sendMessageWithTyping({
-                        text: `🏁 **Game Over!**\n\n${computerResult.gameStatus}\n\n📜 Final History: ${session.chessGame.gameHistory.join(' ')}\n\nType **chess** to start a new game!`
-                    }, from)
-                }
-            } else if (computerResult.gameOver) {
-                session.chessGameActive = false
-                session.awaitingChessMove = false
-                await sendMessageWithTyping({
-                    text: "🏁 Game Over! Type **chess** to start a new game!"
-                }, from)
-            }
-            break
-
-        case 'board':
-            const boardImagePath = await session.chessGame.getCurrentBoardImage()
-            if (boardImagePath) {
-                await sock.sendMessage(from, {
-                    image: fs.readFileSync(boardImagePath),
-                    caption: `♟️ *Current Board Position*\n\n${session.chessGame.getGameStatus()}\n\n📈 Moves played: ${session.chessGame.chess.history().length}`
-                })
-                cleanupChessImage(boardImagePath)
-            }
-            break
-
-        case 'history':
-            const history = session.chessGame.gameHistory.length > 0 
-                ? session.chessGame.gameHistory.join(' ')
-                : 'No moves played yet'
-            await sendMessageWithTyping({
-                text: `📜 **Game History:**\n\n${history}\n\n📊 Total moves: ${session.chessGame.chess.history().length}`
-            }, from)
-            break
-
-        case 'status':
-            await sendMessageWithTyping({
-                text: `📊 **Game Status:**\n\n${session.chessGame.getGameStatus()}\n📈 Moves played: ${session.chessGame.chess.history().length}\n🎯 Current turn: ${session.chessGame.chess.turn() === 'w' ? 'White (You)' : 'Black (Computer)'}`
-            }, from)
-            break
-
-        case 'help':
-            await sendMessageWithTyping({
-                text: `♟️ **Chess Game Help**\n\n📋 **Available Commands:**\n• **move** [from] [to] - Make a move\n• **board** - Show current position\n• **history** - Show move history\n• **status** - Show game status\n• **resign** - End the game\n• **help** - Show this help\n\n💡 **Move Examples:**\n• move e2 e4 (King's pawn opening)\n• move g1 f3 (Develop knight)\n• move f1 c4 (Develop bishop)\n\n🎯 **Square Format:**\n• Files: a-h (columns)\n• Ranks: 1-8 (rows)\n• Example: e2, f3, d4\n\n🏳️ You play as White, computer plays as Black`
-            }, from)
-            break
-
-        case 'resign':
-            session.chessGameActive = false
-            session.awaitingChessMove = false
-            await sendMessageWithTyping({
-                text: `🏳️ **Game Resigned**\n\nYou have resigned the game.\n\n📜 Game History: ${session.chessGame.gameHistory.join(' ')}\n\nType **chess** to start a new game!`
-            }, from)
-            break
-
-        default:
-            // Try to parse as direct move (e.g., "e2 e4" or "e2e4")
-            if (parts.length >= 2 && /^[a-h][1-8]$/.test(parts[0]) && /^[a-h][1-8]$/.test(parts[1])) {
-                // Recursively call with "move" prefix
-                await handleChessMove(sock, from, `move ${parts[0]} ${parts[1]}`, sendMessageWithTyping)
-            } else {
-                await sendMessageWithTyping({
-                    text: "❌ Unknown chess command!\n\n📋 **Available Commands:**\n• **move** [from] [to]\n• **board** - Show position\n• **history** - Show moves\n• **status** - Game status\n• **help** - Detailed help\n• **resign** - End game\n\n💡 **Quick move:** You can also type just the squares: *e2 e4*"
-                }, from)
-            }
-            break
-    }
-}
-
-
-// Generic League Functions
-function getLeagueInfo(league: string): LeagueInfo {
-    const leagues: { [key: string]: LeagueInfo } = {
-        epl: {
-            name: 'English Premier League',
-            emoji: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'epl.csv'
-        },
-        laliga: {
-            name: 'Spanish La Liga',
-            emoji: '🇪🇸',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'laliga.csv'
-        },
-        seriea: {
-            name: 'Italian Serie A',
-            emoji: '🇮🇹',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'seriea.csv'
-        },
-        bundesliga: {
-            name: 'German Bundesliga',
-            emoji: '🇩🇪',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'bundesliga.csv'
-        },
-        ligue1: {
-            name: 'French Ligue 1',
-            emoji: '🇫🇷',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'ligue1.csv'
-        },
-        eredivisie: {
-            name: 'Dutch Eredivisie',
-            emoji: '🇳🇱',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'eredivisie.csv'
-        },
-        primeiraliga: {
-            name: 'Portuguese Primeira Liga',
-            emoji: '🇵🇹',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'primeiraliga.csv'
-        },
-        proleague: {
-            name: 'Belgian Pro League',
-            emoji: '🇧🇪',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'proleague.csv'
-        },
-        spl: {
-            name: 'Scottish Premier League',
-            emoji: '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'spl.csv'
-        },
-        superlig: {
-            name: 'Turkish Süper Lig',
-            emoji: '🇹🇷',
-            season: '2018/19',
-            flag: '⚽',
-            csvFile: 'superlig.csv'
-        }
-    }
-
-    return leagues[league] || {
-        name: 'Unknown League',
-        emoji: '⚽',
-        season: 'Unknown',
-        flag: '⚽',
-        csvFile: ''
-    }
-}
-
-async function loadLeagueData(league: string): Promise<boolean> {
-    try {
-        if (footballData[league].loaded) return true
-
-        const leagueInfo = getLeagueInfo(league)
-        
-        // Try different possible CSV file locations
-        const possiblePaths = [
-            path.join(__dirname, leagueInfo.csvFile),
-            path.join(__dirname, '..', 'data', leagueInfo.csvFile),
-            path.join(__dirname, '..', 'csv', leagueInfo.csvFile),
-            path.join(__dirname, 'data', leagueInfo.csvFile),
-            path.join(__dirname, 'csv', leagueInfo.csvFile),
-            path.join(process.cwd(), 'data', leagueInfo.csvFile),
-            path.join(process.cwd(), leagueInfo.csvFile)
-        ]
-
-        console.log(`Loading ${leagueInfo.name} data...`)
-        
-        let csvPath = ''
-        let csvData = ''
-        
-        // Try to find the CSV file in different locations
-        for (const possiblePath of possiblePaths) {
-            try {
-                if (fs.existsSync(possiblePath)) {
-                    csvPath = possiblePath
-                    csvData = await fsPromises.readFile(csvPath, { encoding: 'utf8' })
-                    console.log(`✅ Found CSV at: ${csvPath}`)
-                    break
-                }
-            } catch (error) {
-                continue
-            }
-        }
-        
-        if (!csvPath || !csvData) {
-            console.error(`❌ CSV file not found for ${league}. Tried paths:`)
-            possiblePaths.forEach(p => console.error(`   - ${p}`))
-            return false
-        }
-
-        const data = parseCSV(csvData)
-        const teams = getUniqueTeams(data)
-
-        footballData[league].data = data
-        footballData[league].teams = teams
-        footballData[league].loaded = true
-
-        console.log(`✅ ${leagueInfo.name} Data loaded successfully! (${data.length} matches, ${teams.length} teams)`)
-        return true
-    } catch (error: any) {
-        console.error(`❌ Error loading ${league} data:`, error.message)
-        return false
-    }
-}
-
-function parseCSV(csvData: string): MatchData[] {
-    const lines = csvData.trim().split('\n')
-    const headers = lines[0].split(',')
-
-    const data: MatchData[] = []
-    for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(',')
-        const row: MatchData = {} as MatchData
-
-        headers.forEach((header, index) => {
-            row[header.trim()] = values[index] ? values[index].trim() : ''
-        })
-
-        // Convert team names to lowercase for consistent matching
-        if (row['HomeTeam']) row['HomeTeam'] = row['HomeTeam'].toLowerCase()
-        if (row['AwayTeam']) row['AwayTeam'] = row['AwayTeam'].toLowerCase()
-
-        data.push(row)
-    }
-
-    return data
-}
-
-function getUniqueTeams(data: MatchData[]): string[] {
-    const teams = new Set<string>()
-    data.forEach(row => {
-        if (row['HomeTeam']) teams.add(row['HomeTeam'])
-        if (row['AwayTeam']) teams.add(row['AwayTeam'])
-    })
-    return Array.from(teams).sort()
-}
-
-function calculateLeagueTable(data: MatchData[], teams: string[]): TeamStats[] {
-    const table: Record<string, TeamStats> = {}
-
-    // Initialize all teams
-    teams.forEach(team => {
-        table[team] = {
-            team: team,
-            played: 0,
-            won: 0,
-            drawn: 0,
-            lost: 0,
-            goalsFor: 0,
-            goalsAgainst: 0,
-            goalDifference: 0,
-            points: 0
-        }
-    })
-
-    // Process each match
-    data.forEach(match => {
-        const homeTeam = match['HomeTeam']
-        const awayTeam = match['AwayTeam']
-        const homeGoals = parseInt(match['FTHG'] || '0')
-        const awayGoals = parseInt(match['FTAG'] || '0')
-
-        if (!homeTeam || !awayTeam || isNaN(homeGoals) || isNaN(awayGoals)) {
-            return // Skip invalid matches
-        }
-
-        // Update matches played
-        if (table[homeTeam]) table[homeTeam].played++
-        if (table[awayTeam]) table[awayTeam].played++
-
-        // Update goals
-        if (table[homeTeam]) {
-            table[homeTeam].goalsFor += homeGoals
-            table[homeTeam].goalsAgainst += awayGoals
-        }
-        if (table[awayTeam]) {
-            table[awayTeam].goalsFor += awayGoals
-            table[awayTeam].goalsAgainst += homeGoals
-        }
-
-        // Determine result and update points/wins/draws/losses
-        if (homeGoals > awayGoals) {
-            if (table[homeTeam]) {
-                table[homeTeam].won++
-                table[homeTeam].points += 3
-            }
-            if (table[awayTeam]) table[awayTeam].lost++
-        } else if (homeGoals < awayGoals) {
-            if (table[awayTeam]) {
-                table[awayTeam].won++
-                table[awayTeam].points += 3
-            }
-            if (table[homeTeam]) table[homeTeam].lost++
-        } else {
-            if (table[homeTeam]) {
-                table[homeTeam].drawn++
-                table[homeTeam].points++
-            }
-            if (table[awayTeam]) {
-                table[awayTeam].drawn++
-                table[awayTeam].points++
-            }
-        }
-    })
-
-    // Calculate goal difference
-    Object.keys(table).forEach(team => {
-        table[team].goalDifference = table[team].goalsFor - table[team].goalsAgainst
-    })
-
-    // Convert to array and sort by points
-    return Object.values(table).sort((a: TeamStats, b: TeamStats) => {
-        if (b.points !== a.points) return b.points - a.points
-        if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference
-        return b.goalsFor - a.goalsFor
-    })
-}
-
-function formatLeagueTable(table: TeamStats[], league: string): string {
-    const leagueInfo = getLeagueInfo(league)
-    let result = `${leagueInfo.emoji} *${leagueInfo.name.toUpperCase()} TABLE ${leagueInfo.season}*\n`
-    result += "```\n"
-    result += "Pos | Team              | P  | W  | D  | L  | GF | GA | GD  | Pts\n"
-    result += "────┼───────────────────┼────┼────┼────┼────┼────┼────┼─────┼────\n"
-
-    table.forEach((team, index) => {
-        const pos = (index + 1).toString().padStart(2, ' ')
-        const teamName = team.team.charAt(0).toUpperCase() + team.team.slice(1)
-        const formattedTeam = teamName.padEnd(17, ' ')
-        const played = team.played.toString().padStart(2, ' ')
-        const won = team.won.toString().padStart(2, ' ')
-        const drawn = team.drawn.toString().padStart(2, ' ')
-        const lost = team.lost.toString().padStart(2, ' ')
-        const gf = team.goalsFor.toString().padStart(2, ' ')
-        const ga = team.goalsAgainst.toString().padStart(2, ' ')
-        const gd = team.goalDifference.toString().padStart(3, ' ')
-        const pts = team.points.toString().padStart(3, ' ')
-
-        result += `${pos}  | ${formattedTeam} | ${played} | ${won} | ${drawn} | ${lost} | ${gf} | ${ga} | ${gd} | ${pts}\n`
-    })
-
-    result += "```\n"
-    result += "_P=Played, W=Won, D=Drawn, L=Lost, GF=Goals For, GA=Goals Against, GD=Goal Difference_"
-
-    return result
-}
-
-function listAllTeams(teams: string[], league: string): string {
-    const leagueInfo = getLeagueInfo(league)
-    let result = `${leagueInfo.emoji} *ALL ${leagueInfo.name.toUpperCase()} TEAMS (${leagueInfo.season})*\n\n`
-
-    const halfwayPoint = Math.ceil(teams.length / 2)
-    const firstHalf = teams.slice(0, halfwayPoint)
-    const secondHalf = teams.slice(halfwayPoint)
-
-    for (let i = 0; i < firstHalf.length; i++) {
-        const team1 = firstHalf[i].charAt(0).toUpperCase() + firstHalf[i].slice(1)
-        const team2 = secondHalf[i] ? secondHalf[i].charAt(0).toUpperCase() + secondHalf[i].slice(1) : ''
-
-        const number1 = (i + 1).toString().padStart(2, ' ')
-        const number2 = secondHalf[i] ? (i + halfwayPoint + 1).toString().padStart(2, ' ') : ''
-
-        result += `${number1}. ${team1.padEnd(15, ' ')}`
-        if (team2) {
-            result += ` ${number2}. ${team2}`
-        }
-        result += '\n'
-    }
-
-    result += `\n📊 *Total: ${teams.length} teams*`
-    return result
-}
-
-function findTeamsInMessage(message: string, teams: string[]): string[] {
-    const foundTeams: string[] = []
-    const lowerMessage = message.toLowerCase()
-    
-    teams.forEach(team => {
-        if (lowerMessage.includes(team.toLowerCase())) {
-            foundTeams.push(team)
-        }
-    })
-    return foundTeams
-}
-
-async function processLeagueMessage(sender: string, message: string, league: string, sock: any): Promise<void> {
-    const { data, teams } = footballData[league]
-    const leagueInfo = getLeagueInfo(league)
-
-    if (!footballData[league].loaded) {
-        const loaded = await loadLeagueData(league)
-        if (!loaded) {
-            await sock.sendMessage(sender, { text: `❌ Sorry, ${leagueInfo.name} data could not be loaded. Please try again later.` })
-            return
-        }
-    }
-
-    const msg = message.trim().toLowerCase()
-
-    // Handle initial league greeting
-    if (msg === 'hello' || msg === league || msg === 'help') {
-        await sock.sendMessage(sender, {
-            text: `${leagueInfo.emoji} *Welcome to the ${leagueInfo.name} ${leagueInfo.season} Bot!*\n\n` +
-            "You can ask questions like:\n\n" +
-            "📊 *Match Statistics:*\n" +
-            `• How many matches did ${getExampleTeam(league, 0)} play?\n` +
-            `• How many goals did ${getExampleTeam(league, 1)} score?\n` +
-            `• How many goals did ${getExampleTeam(league, 2)} score away from home?\n` +
-            `• How many shots did ${getExampleTeam(league, 3)} concede?\n\n` +
-            "🏆 *Match Results:*\n" +
-            `• What was the result of ${getExampleMatchup(league)}?\n\n` +
-            "📋 *Tables & Lists:*\n" +
-            "• Show table (displays the league table)\n" +
-            "• List teams (shows all team names)\n\n" +
-            "❌ Type 'cancel' to exit league mode"
-        })
-        return
-    }
-
-    if (msg === 'cancel' || msg === 'exit' || msg === 'quit') {
-        resetUserSession(sender)
-        await sock.sendMessage(sender, { text: `❌ ${leagueInfo.name} mode cancelled. You can now use other bot commands.` })
-        return
-    }
-
-    if (msg.includes('table') || msg.includes('standings') || msg.includes('league table')) {
-        const table = calculateLeagueTable(data, teams)
-        const formattedTable = formatLeagueTable(table, league)
-        await sock.sendMessage(sender, { text: formattedTable })
-        return
-    }
-
-    if (msg.includes('list teams') || msg.includes('show teams') || msg.includes('teams list') || msg === 'teams') {
-        const teamsList = listAllTeams(teams, league)
-        await sock.sendMessage(sender, { text: teamsList })
-        return
-    }
-
-    // Find teams mentioned in the message
-    const foundTeams = findTeamsInMessage(msg, teams)
-
-    if (foundTeams.length === 0) {
-        await sock.sendMessage(sender, {
-            text: "❌ Sorry, we couldn't recognise any teams in your question.\n\n" +
-            "💡 Type 'list teams' to see all available team names.\n" +
-            "📝 Or type 'help' to see example questions."
-        })
-        return
-    }
-
-    if (msg.includes('matches') || msg.includes('played')) {
-        const matchCount = data.filter(row =>
-            row['HomeTeam'] === foundTeams[0] || row['AwayTeam'] === foundTeams[0]
-        ).length
-
-        const teamName = foundTeams[0].charAt(0).toUpperCase() + foundTeams[0].slice(1)
-        await sock.sendMessage(sender, { text: `${leagueInfo.flag} *${teamName}* played *${matchCount} matches* in the ${leagueInfo.season} season.` })
-        return
-    }
-
-    if (msg.includes('goals')) {
-        let result = 0
-        let reply = ''
-        const teamName = foundTeams[0].charAt(0).toUpperCase() + foundTeams[0].slice(1)
-
-        if (msg.includes('away')) {
-            result = data
-                .filter(row => row['AwayTeam'] === foundTeams[0])
-                .reduce((sum, row) => sum + parseInt(row['FTAG'] || '0'), 0)
-            reply = `${leagueInfo.flag} *${teamName}* scored *${result} goals* away from home.`
-        } else if (msg.includes('home')) {
-            result = data
-                .filter(row => row['HomeTeam'] === foundTeams[0])
-                .reduce((sum, row) => sum + parseInt(row['FTHG'] || '0'), 0)
-            reply = `🏠 *${teamName}* scored *${result} goals* at home.`
-        } else {
-            const homeGoals = data
-                .filter(row => row['HomeTeam'] === foundTeams[0])
-                .reduce((sum, row) => sum + parseInt(row['FTHG'] || '0'), 0)
-            const awayGoals = data
-                .filter(row => row['AwayTeam'] === foundTeams[0])
-                .reduce((sum, row) => sum + parseInt(row['FTAG'] || '0'), 0)
-            result = homeGoals + awayGoals
-            reply = `${leagueInfo.flag} *${teamName}* scored *${result} goals* overall (${homeGoals} home, ${awayGoals} away).`
-        }
-
-        await sock.sendMessage(sender, { text: reply })
-        return
-    }
-
-    if (msg.includes('shots')) {
-        let result = 0
-        let reply = ''
-        const teamName = foundTeams[0].charAt(0).toUpperCase() + foundTeams[0].slice(1)
-
-        if (msg.includes('concede')) {
-            const awayShots = data
-                .filter(row => row['AwayTeam'] === foundTeams[0])
-                .reduce((sum, row) => sum + parseInt(row['HS'] || '0'), 0)
-            const homeShots = data
-                .filter(row => row['HomeTeam'] === foundTeams[0])
-                .reduce((sum, row) => sum + parseInt(row['AS'] || '0'), 0)
-            result = awayShots + homeShots
-            reply = `🎯 *${teamName}* conceded *${result} shots* in total.`
-        } else {
-            const homeShots = data
-                .filter(row => row['HomeTeam'] === foundTeams[0])
-                .reduce((sum, row) => sum + parseInt(row['HS'] || '0'), 0)
-            const awayShots = data
-                .filter(row => row['AwayTeam'] === foundTeams[0])
-                .reduce((sum, row) => sum + parseInt(row['AS'] || '0'), 0)
-            result = homeShots + awayShots
-            reply = `🎯 *${teamName}* had *${result} shots* in total.`
-        }
-
-        await sock.sendMessage(sender, { text: reply })
-        return
-    }
-
-    if (foundTeams.length === 2) {
-        const matches = data.filter(row =>
-            (row['HomeTeam'] === foundTeams[0] && row['AwayTeam'] === foundTeams[1]) ||
-            (row['HomeTeam'] === foundTeams[1] && row['AwayTeam'] === foundTeams[0])
-        )
-
-        if (matches.length > 0) {
-            let result = ''
-
-            matches.forEach((match, index) => {
-                const homeTeam = match['HomeTeam'].charAt(0).toUpperCase() + match['HomeTeam'].slice(1)
-                const awayTeam = match['AwayTeam'].charAt(0).toUpperCase() + match['AwayTeam'].slice(1)
-
-                const roundLabel = matches.length > 1 ? `*${index === 0 ? 'First' : 'Second'} Fixture:*\n` : ''
-
-                result += `${roundLabel}🏟️ *${homeTeam} ${match['FTHG']} - ${match['FTAG']} ${awayTeam}*\n` +
-                         `📅 Date: ${match['Date']}\n` +
-                         `👨‍⚖️ Referee: ${match['Referee']}\n` +
-                         `🎯 Shots: ${match['HS']} - ${match['AS']}\n` +
-                         `🚩 Corners: ${match['HC']} - ${match['AC']}\n` +
-                         `🟨 Yellow cards: ${match['HY']} - ${match['AY']}\n` +
-                         `🟥 Red cards: ${match['HR']} - ${match['AR']}`
-
-                if (index < matches.length - 1) {
-                    result += '\n\n'
-                }
-            })
-
-            await sock.sendMessage(sender, { text: result })
-        } else {
-            const team1 = foundTeams[0].charAt(0).toUpperCase() + foundTeams[0].slice(1)
-            const team2 = foundTeams[1].charAt(0).toUpperCase() + foundTeams[1].slice(1)
-            await sock.sendMessage(sender, { text: `❌ No matches found between *${team1}* and *${team2}*.` })
-        }
-        return
-    }
-
-    await sock.sendMessage(sender, {
-        text: "❓ I'm sorry but I don't understand your question.\n\n" +
-        "💡 Type 'help' to see example questions you can ask."
-    })
-}
-
-
-// Helper functions for examples
-function getExampleTeam(league: string, index: number): string {
-    const examples: { [key: string]: string[] } = {
-        epl: ['Liverpool', 'Arsenal', 'Brighton', 'West Ham'],
-        laliga: ['Barcelona', 'Real Madrid', 'Valencia', 'Sevilla'],
-        seriea: ['Juventus', 'AC Milan', 'Napoli', 'Roma'],
-        bundesliga: ['Bayern Munich', 'Borussia Dortmund', 'RB Leipzig', 'Bayer Leverkusen'],
-        ligue1: ['Paris Saint-Germain', 'Lyon', 'Marseille', 'Monaco'],
-        eredivisie: ['Ajax', 'PSV', 'Feyenoord', 'AZ'],
-        primeiraliga: ['Porto', 'Benfica', 'Sporting', 'Braga'],
-        proleague: ['Club Brugge', 'Genk', 'Standard Liège', 'Anderlecht'],
-        spl: ['Celtic', 'Rangers', 'Aberdeen', 'Hearts'],
-        superlig: ['Galatasaray', 'Fenerbahçe', 'Beşiktaş', 'Trabzonspor']
-    }
-    return examples[league]?.[index] || 'Example Team'
-}
-
-function getExampleMatchup(league: string): string {
-    const matchups: { [key: string]: string } = {
-        epl: 'Chelsea vs Everton',
-        laliga: 'Barcelona vs Real Madrid',
-        seriea: 'Juventus vs Inter',
-        bundesliga: 'Bayern Munich vs Borussia Dortmund',
-        ligue1: 'PSG vs Lyon',
-        eredivisie: 'Ajax vs PSV',
-        primeiraliga: 'Porto vs Benfica',
-        proleague: 'Club Brugge vs Genk',
-        spl: 'Celtic vs Rangers',
-        superlig: 'Galatasaray vs Fenerbahçe'
-    }
-    return matchups[league] || 'Team A vs Team B'
-}
-
-
-// Quadratic solver types mapping
-const QUADRATIC_SOLVERS = {
-    '1': { type: 'standard_form', name: 'Standard Form (ax² + bx + c = 0)', description: 'Solve basic quadratic equations' },
-    '2': { type: 'quadratic_formula', name: 'Quadratic Formula', description: 'Demonstrate quadratic formula usage' },
-    '3': { type: 'completing_square', name: 'Completing the Square', description: 'Solve by completing the square method' },
-    '4': { type: 'factoring', name: 'Factoring Method', description: 'Solve by factoring quadratics' },
-    '5': { type: 'vertex_form', name: 'Vertex Form Analysis', description: 'Analyze vertex form y = a(x-h)² + k' },
-    '6': { type: 'discriminant', name: 'Discriminant Analysis', description: 'Analyze discriminant and root types' },
-    '7': { type: 'inequality', name: 'Quadratic Inequalities', description: 'Solve quadratic inequalities' },
-    '8': { type: 'projectile_motion', name: 'Projectile Motion', description: 'Solve projectile motion problems' },
-    '9': { type: 'area_optimization', name: 'Area Optimization', description: 'Solve area optimization problems' },
-    '10': { type: 'fractional_quadratic', name: 'Fractional Quadratics', description: 'Solve equations with 1/x terms' },
-    '11': { type: 'parametric_quadratic', name: 'Parametric Quadratics', description: 'Quadratics with parameter coefficients' },
-    '12': { type: 'linear_quadratic_system', name: 'Linear-Quadratic Systems', description: 'Systems with linear and quadratic equations' }
-}
-
-// Parameter validation function
-const validateQuadraticParameters = (solverType: string, parameters: any): { valid: boolean, errors: string[] } => {
-    const errors: string[] = []
-    
-    switch (solverType) {
-        case 'standard_form':
-        case 'completing_square':
-        case 'factoring':
-        case 'discriminant':
-            if (parameters.a === undefined || parameters.a === null) errors.push('Parameter "a" is required')
-            if (parameters.b === undefined || parameters.b === null) errors.push('Parameter "b" is required')
-            if (parameters.c === undefined || parameters.c === null) errors.push('Parameter "c" is required')
-            if (parameters.a === 0) errors.push('Parameter "a" cannot be zero for quadratic equations')
-            break
-
-        case 'vertex_form':
-            if (parameters.a === undefined || parameters.a === null) errors.push('Parameter "a" is required')
-            if (parameters.h === undefined || parameters.h === null) errors.push('Parameter "h" is required')
-            if (parameters.k === undefined || parameters.k === null) errors.push('Parameter "k" is required')
-            if (parameters.a === 0) errors.push('Parameter "a" cannot be zero')
-            break
-
-        case 'projectile_motion':
-            if (parameters.initialVelocity === undefined) errors.push('Initial velocity is required')
-            if (parameters.initialHeight === undefined) parameters.initialHeight = 0 // Default value
-            if (parameters.gravity === undefined) parameters.gravity = -16 // Default value
-            break
-
-        case 'inequality':
-            if (parameters.a === undefined || parameters.a === null) errors.push('Parameter "a" is required')
-            if (parameters.b === undefined || parameters.b === null) errors.push('Parameter "b" is required')
-            if (parameters.c === undefined || parameters.c === null) errors.push('Parameter "c" is required')
-            if (parameters.operator === undefined) parameters.operator = '>' // Default operator
-            break
-    }
-
-    return { valid: errors.length === 0, errors }
-}
-
-// Parse parameters from user input
-const parseParameterInput = (input: string, solverType: string): any => {
-    const params: any = {}
-    
-    // Remove extra spaces and split by common separators
-    const cleanInput = input.replace(/\s+/g, ' ').trim()
-    const parts = cleanInput.split(/[,;]/)
-
-    for (const part of parts) {
-        const trimmedPart = part.trim()
-        
-        // Match patterns like "a: 1", "a = 1", "a:1", etc.
-        const match = trimmedPart.match(/([a-zA-Z_][a-zA-Z0-9_]*)\s*[:=]\s*([+-]?\d*\.?\d+)/)
-        if (match) {
-            const [, key, value] = match
-            params[key] = parseFloat(value)
-        }
-    }
-
-    return params
-}
-
-// Generate filename for quadratic image
-const generateQuadraticImagePath = (sessionId: string): string => {
-    const timestamp = Date.now()
-    return path.join(quadraticTempDir, `quadratic_${sessionId}_${timestamp}.png`)
-}
-
-// Clean up old quadratic images
-const cleanupQuadraticImages = (): void => {
-    try {
-        const files = fs.readdirSync(quadraticTempDir)
-        const now = Date.now()
-        const maxAge = 30 * 60 * 1000 // 30 minutes
-
-        files.forEach(file => {
-            const filePath = path.join(quadraticTempDir, file)
-            const stats = fs.statSync(filePath)
-            
-            if (now - stats.mtime.getTime() > maxAge) {
-                fs.unlinkSync(filePath)
-                console.log(`🗑️ Cleaned up old quadratic image: ${file}`)
-            }
-        })
-    } catch (error) {
-        console.error('Error cleaning up quadratic images:', error)
-    }
-}
-
-// Set up periodic cleanup
-setInterval(cleanupQuadraticImages, 10 * 60 * 1000) // Every 10 minutes
-
-// Quadratic solver handlers
-const handleQuadraticCommand = async (
-    text: string,
-    from: string,
-    sendMessage: (msg: AnyMessageContent, jid: string) => Promise<void>
-): Promise<boolean> => {
-    const session = getUserSession(from)
-    const lowerText = text.toLowerCase().trim()
-
-    // Initialize quadratic solver
-    if (lowerText === 'quadratic') {
-        session.awaitingQuadraticInput = true
-        session.quadraticSession = {
-            currentStep: 'selecting_solver'
-        }
-
-        let solversList = '🧮 **QUADRATIC EQUATION SOLVERS**\n\n'
-        solversList += 'Choose a solver by typing the number or name:\n\n'
-        
-        Object.entries(QUADRATIC_SOLVERS).forEach(([key, solver]) => {
-            solversList += `${key}. **${solver.name}**\n   ${solver.description}\n\n`
-        })
-
-        solversList += '📝 Type the number (1-12) or solver name to continue\n'
-        solversList += '❌ Type "cancel" to exit'
-
-        await sendMessage({ text: solversList }, from)
-        return true
-    }
-
-    // Handle quadratic session inputs
-    if (session.awaitingQuadraticInput && session.quadraticSession) {
-        return await handleQuadraticSessionInput(text, from, session, sendMessage)
-    }
-    
-    return false
-}
-
-const handleQuadraticSessionInput = async (
-    text: string,
-    from: string,
-    session: UserSession,
-    sendMessage: (msg: AnyMessageContent, jid: string) => Promise<void>
-): Promise<boolean> => {
-    const quadSession = session.quadraticSession!
-    const input = text.trim()
-
-    // Handle cancel command
-    if (input.toLowerCase() === 'cancel' || input.toLowerCase() === 'stop') {
-        resetUserSession(from)
-        await sendMessage({ text: '❌ Quadratic solver session cancelled.' }, from)
-        return true
-    }
-    
-    try {
-        console.log(`🔍 Current step: ${quadSession.currentStep}, Input: "${input}" for user: ${from.slice(-4)}`)
-        
-        switch (quadSession.currentStep) {
-            case 'selecting_solver':
-                return await handleSolverSelection(input, from, session, sendMessage)
-                
-            case 'entering_equation':
-                return await handleEquationInput(input, from, session, sendMessage)
-                
-            case 'entering_scenario':
-                return await handleScenarioInput(input, from, session, sendMessage)
-                
-            case 'entering_parameters':
-                return await handleParametersInput(input, from, session, sendMessage)
-                
-            default:
-                console.error(`❌ Unknown step: ${quadSession.currentStep}`)
-                await sendMessage({ text: '❌ Invalid session state. Type "quadratic" to start over.' }, from)
-                resetUserSession(from)
-                return true
-        }
-    } catch (error) {
-        console.error('Error in quadratic session:', error)
-        await sendMessage({
-            text: '❌ An error occurred. Please try again or type "quadratic" to restart.'
-        }, from)
-        resetUserSession(from)
-        return true
-    }
-}
-
-const handleSolverSelection = async (
-    input: string,
-    from: string,
-    session: UserSession,
-    sendMessage: (msg: AnyMessageContent, jid: string) => Promise<void>
-): Promise<boolean> => {
-    const quadSession = session.quadraticSession!
-    
-    // Check if input is a number
-    let selectedSolver = null
-    if (/^\d+$/.test(input) && QUADRATIC_SOLVERS[input]) {
-        selectedSolver = QUADRATIC_SOLVERS[input]
-    } else {
-        // Check if input matches solver name
-        const solverEntry = Object.entries(QUADRATIC_SOLVERS).find(([, solver]) =>
-            solver.name.toLowerCase().includes(input.toLowerCase()) ||
-            solver.type === input.toLowerCase().replace(/\s+/g, '_')
-        )
-        if (solverEntry) {
-            selectedSolver = solverEntry[1]
-        }
-    }
-    
-    if (!selectedSolver) {
-        await sendMessage({
-            text: '❌ Invalid selection. Please type a number (1-12) or solver name from the list above.'
-        }, from)
-        return true
-    }
-    
-    quadSession.solverType = selectedSolver.type
-    quadSession.currentStep = 'entering_equation'
-    
-    let prompt = `✅ Selected: **${selectedSolver.name}**\n\n`
-    prompt += '📝 **Step 1: Enter the equation**\n\n'
-    
-    switch (selectedSolver.type) {
-        case 'standard_form':
-            prompt += 'Enter a quadratic equation in standard form:\n'
-            prompt += 'Example: "x² - 5x + 6 = 0" or "2x² + 3x - 1 = 0"'
-            break
-        case 'vertex_form':
-            prompt += 'Enter a quadratic in vertex form:\n'
-            prompt += 'Example: "y = 2(x - 3)² + 1" or "y = -(x + 1)² - 4"'
-            break
-        case 'projectile_motion':
-            prompt += 'Enter a projectile motion scenario:\n'
-            prompt += 'Example: "Ball thrown from 10 feet with 30 ft/s velocity"'
-            break
-        default:
-            prompt += 'Enter the quadratic equation or expression:\n'
-            prompt += 'Example: "x² - 4x + 3 = 0"'
-    }
-
-    await sendMessage({ text: prompt }, from)
-    return true
-}
-
-const handleEquationInput = async (
-    input: string,
-    from: string,
-    session: UserSession,
-    sendMessage: (msg: AnyMessageContent, jid: string) => Promise<void>
-): Promise<boolean> => {
-    const quadSession = session.quadraticSession!
-
-    quadSession.equation = input
-    quadSession.currentStep = 'entering_scenario'
-    
-    let prompt = `✅ Equation saved: "${input}"\n\n`
-    prompt += '📝 **Step 2: Enter the scenario/description**\n\n'
-    prompt += 'Describe what you want to solve or find:\n\n'
-    
-    switch (quadSession.solverType) {
-        case 'standard_form':
-            prompt += 'Example: "Find the roots of the quadratic equation"\n'
-            prompt += 'Or: "Solve for x values where the equation equals zero"'
-            break
-        case 'vertex_form':
-            prompt += 'Example: "Analyze the vertex and transformations"\n'
-            prompt += 'Or: "Find the vertex coordinates and axis of symmetry"'
-            break
-        case 'projectile_motion':
-            prompt += 'Example: "Find when the projectile hits the ground"\n'
-            prompt += 'Or: "Calculate maximum height and time to reach it"'
-            break
-        default:
-            prompt += 'Example: "Solve the quadratic equation"\n'
-            prompt += 'Or: "Find all solutions and analyze the results"'
-    }
-
-    console.log(`📝 Moving to scenario input for ${from.slice(-4)}`)
-    await sendMessage({ text: prompt }, from)
-    return true
-}
-
-const handleScenarioInput = async (
-    input: string,
-    from: string,
-    session: UserSession,
-    sendMessage: (msg: AnyMessageContent, jid: string) => Promise<void>
-): Promise<boolean> => {
-    const quadSession = session.quadraticSession!
-
-    quadSession.scenario = input
-    quadSession.currentStep = 'entering_parameters'
-
-    let prompt = `✅ Scenario saved: "${input}"\n\n`
-    prompt += '📝 **Step 3: Enter the parameters**\n\n'
-    
-    switch (quadSession.solverType) {
-        case 'standard_form':
-        case 'completing_square':
-        case 'factoring':
-        case 'discriminant':
-            prompt += 'Enter coefficients for ax² + bx + c = 0:\n'
-            prompt += 'Format: "a: 1, b: -5, c: 6"\n'
-            prompt += 'Example: "a: 2, b: -7, c: 3"'
-            break
-        case 'vertex_form':
-            prompt += 'Enter parameters for a(x-h)² + k:\n'
-            prompt += 'Format: "a: 1, h: 2, k: -3"\n'
-            prompt += 'Example: "a: 2, h: 1, k: 4"'
-            break
-        case 'projectile_motion':
-            prompt += 'Enter motion parameters:\n'
-            prompt += 'Format: "initialVelocity: 30, initialHeight: 10, gravity: -16"\n'
-            prompt += 'Example: "initialVelocity: 25, initialHeight: 5"'
-            break
-        case 'inequality':
-            prompt += 'Enter coefficients and operator:\n'
-            prompt += 'Format: "a: 1, b: -2, c: -3, operator: >"\n'
-            prompt += 'Operators: >, <, >=, <='
-            break
-        default:
-            prompt += 'Enter the required parameters for your problem.\n'
-            prompt += 'Format: "parameter: value, parameter2: value2"'
-    }
-
-    console.log(`📊 Moving to parameters input for ${from.slice(-4)}`)
-    await sendMessage({ text: prompt }, from)
-    return true
-}
-
-const handleParametersInput = async (
-    input: string,
-    from: string,
-    session: UserSession,
-    sendMessage: (msg: AnyMessageContent, jid: string) => Promise<void>
-): Promise<boolean> => {
-    const quadSession = session.quadraticSession!
-
-    // Parse parameters
-    const parameters = parseParameterInput(input, quadSession.solverType!)
-    
-    // Validate parameters
-    const validation = validateQuadraticParameters(quadSession.solverType!, parameters)
-
-    if (!validation.valid) {
-        let errorMsg = '❌ **Parameter validation failed:**\n\n'
-        validation.errors.forEach(error => {
-            errorMsg += `• ${error}\n`
-        })
-        errorMsg += '\nPlease correct the parameters and try again.'
-
-        await sendMessage({ text: errorMsg }, from)
-        return true
-    }
-
-    quadSession.parameters = parameters
-    
-    // Show processing message
-    await sendMessage({ text: '🔄 Processing your quadratic problem...' }, from)
-
-    // Generate the solution
-    try {
-        const workbook = new QuadraticMathematicalWorkbook({
-            theme: "excel",
-            includeVerificationInSteps: true,
-            verificationDetail: "detailed"
-        })
-        
-        const result = workbook.solveQuadraticProblem({
-            equation: quadSession.equation!,
-            scenario: quadSession.scenario!,
-            parameters: parameters,
-            problemType: quadSession.solverType!
-        })
-
-        // Generate image
-        const imagePath = generateQuadraticImagePath(session.sessionId)
-        const imageInfo = workbook.generateImage(imagePath)
-
-        // Send result summary
-        let resultMsg = '✅ **SOLUTION COMPLETED**\n\n'
-
-        if (result.solutions) {
-            resultMsg += `🔢 **Solutions:** ${Array.isArray(result.solutions) ? result.solutions.join(', ') : result.solutions}\n`
-        }
-        
-        if (result.discriminant !== undefined) {
-            resultMsg += `📊 **Discriminant:** ${result.discriminant}\n`
-        }
-
-        if (result.solutionType) {
-            resultMsg += `📝 **Type:** ${result.solutionType}\n`
-        }
-        
-        resultMsg += '\n📊 **Detailed spreadsheet solution attached below**'
-        
-        await sendMessage({ text: resultMsg }, from)
-
-        // Send the spreadsheet image
-        if (fs.existsSync(imagePath)) {
-            await sendMessage({
-                image: { url: imagePath },
-                caption: `📊 Quadratic Solution Spreadsheet\n\n` +
-                        `Problem: ${quadSession.solverType}\n` +
-                        `Equation: ${quadSession.equation}\n` +
-                        `Generated: ${new Date().toLocaleString()}`
-            }, from)
-
-            // Clean up the image after a delay
-            setTimeout(() => {
-                if (fs.existsSync(imagePath)) {
-                    fs.unlinkSync(imagePath)
-                    console.log(`🗑️ Cleaned up quadratic image: ${path.basename(imagePath)}`)
-                }
-            }, 60000) // Delete after 1 minute
-        }
-
-        // Send workbook summary
-        const summary = workbook.getWorkbookSummary()
-        if (summary && summary.length > 100) {
-            const truncatedSummary = summary.length > 1000 ?
-                summary.substring(0, 1000) + '\n...\n\n📊 Full details in the spreadsheet above!' :
-                summary
-
-            await sendMessage({ text: `📋 **SOLUTION SUMMARY:**\n\n${truncatedSummary}` }, from)
-        }
-        
-        // Reset session
-        resetUserSession(from)
-
-        await sendMessage({
-            text: '🎉 Solution complete! Type "quadratic" to solve another problem.'
-        }, from)
-        
-    } catch (error) {
-        console.error('Error generating quadratic solution:', error)
-        await sendMessage({
-            text: '❌ Error generating solution. Please check your parameters and try again.\n\nType "quadratic" to start over.'
-        }, from)
-        resetUserSession(from)
-    }
-    
-    return true
-}
-
-
-
-
-
-
-
-// Create a distribution registry object that works with EnhancedStatisticalWorkbook
-const DistributionRegistry = {
-    distributions: {
-        normal: {
-            name: 'Normal Distribution',
-            params: ['mean', 'std'],
-            paramNames: ['Mean (μ)', 'Standard Deviation (σ)'],
-            defaultParams: [0, 1],
-            continuous: true
-        },
-        t: {
-            name: 'T-Distribution',
-            params: ['df'],
-            paramNames: ['Degrees of Freedom'],
-            defaultParams: [10],
-            continuous: true
-        },
-        exponential: {
-            name: 'Exponential Distribution',
-            params: ['lambda'],
-            paramNames: ['Rate Parameter (λ)'],
-            defaultParams: [1],
-            continuous: true
-        },
-        gamma: {
-            name: 'Gamma Distribution',
-            params: ['shape', 'scale'],
-            paramNames: ['Shape (α)', 'Scale (β)'],
-            defaultParams: [2, 1],
-            continuous: true
-        },
-        beta: {
-            name: 'Beta Distribution',
-            params: ['alpha', 'beta'],
-            paramNames: ['Alpha (α)', 'Beta (β)'],
-            defaultParams: [2, 2],
-            continuous: true
-        },
-        chisquare: {
-            name: 'Chi-Square Distribution',
-            params: ['df'],
-            paramNames: ['Degrees of Freedom'],
-            defaultParams: [5],
-            continuous: true
-        },
-        f: {
-            name: 'F-Distribution',
-            params: ['df1', 'df2'],
-            paramNames: ['Numerator DF', 'Denominator DF'],
-            defaultParams: [5, 10],
-            continuous: true
-        },
-        uniform: {
-            name: 'Uniform Distribution',
-            params: ['min', 'max'],
-            paramNames: ['Minimum', 'Maximum'],
-            defaultParams: [0, 1],
-            continuous: true
-        },
-        binomial: {
-            name: 'Binomial Distribution',
-            params: ['n', 'p'],
-            paramNames: ['Number of Trials (n)', 'Success Probability (p)'],
-            defaultParams: [10, 0.5],
-            continuous: false
-        },
-        bernoulli: {
-            name: 'Bernoulli Distribution',
-            params: ['p'],
-            paramNames: ['Success Probability (p)'],
-            defaultParams: [0.5],
-            continuous: false
-        },
-        poisson: {
-            name: 'Poisson Distribution',
-            params: ['lambda'],
-            paramNames: ['Rate Parameter (λ)'],
-            defaultParams: [3],
-            continuous: false
-        },
-        geometric: {
-            name: 'Geometric Distribution',
-            params: ['p'],
-            paramNames: ['Success Probability (p)'],
-            defaultParams: [0.3],
-            continuous: false
-        }
-    },
-
-    getDistribution: function(key) {
-        return this.distributions[key] || null;
-    },
-
-    getAllDistributions: function() {
-        return Object.keys(this.distributions);
-    }
-}
-
-// Statistical Analysis Utilities
-const getDistributionList = (): string => {
-    const distributions = DistributionRegistry.getAllDistributions()
-    let message = "📊 *Available Statistical Distributions:*\n\n"
-    
-    message += "*Continuous Distributions:*\n"
-    const continuousDistributions = [
-        { key: 'normal', name: 'Normal Distribution', desc: 'Bell curve, symmetric' },
-        { key: 't', name: 'T-Distribution', desc: 'Small samples, heavy tails' },
-        { key: 'exponential', name: 'Exponential Distribution', desc: 'Time between events' },
-        { key: 'gamma', name: 'Gamma Distribution', desc: 'Waiting times, positive values' },
-        { key: 'beta', name: 'Beta Distribution', desc: 'Proportions, rates (0-1)' },
-        { key: 'chisquare', name: 'Chi-Square Distribution', desc: 'Variance testing' },
-        { key: 'f', name: 'F-Distribution', desc: 'ANOVA, variance comparison' },
-        { key: 'uniform', name: 'Uniform Distribution', desc: 'Equal probability' }
-    ]
-
-    continuousDistributions.forEach((dist, index) => {
-        message += `${index + 1}. *${dist.name}* - ${dist.desc}\n`
-    })
-
-    message += "\n*Discrete Distributions:*\n"
-    const discreteDistributions = [
-        { key: 'binomial', name: 'Binomial Distribution', desc: 'Fixed trials, success count' },
-        { key: 'bernoulli', name: 'Bernoulli Distribution', desc: 'Single trial (0/1)' },
-        { key: 'poisson', name: 'Poisson Distribution', desc: 'Rare events count' },
-        { key: 'geometric', name: 'Geometric Distribution', desc: 'Trials until success' }
-    ]
-
-    discreteDistributions.forEach((dist, index) => {
-        message += `${index + 9}. *${dist.name}* - ${dist.desc}\n`
-    })
-
-    message += "\n📝 Reply with the *number* or *name* of the distribution you want to analyze."
-    return message
-}
-
-const validateNumericInput = (input: string): { isValid: boolean; value?: number; error?: string } => {
-    const trimmed = input.trim()
-    if (!trimmed) {
-        return { isValid: false, error: "Input cannot be empty" }
-    }
-
-    const num = parseFloat(trimmed)
-    if (isNaN(num) || !isFinite(num)) {
-        return { isValid: false, error: "Please enter a valid number" }
-    }
-
-    return { isValid: true, value: num }
-}
-
-const validateDataArray = (input: string): { isValid: boolean; values?: number[]; error?: string } => {
-    try {
-        // Clean the input - remove brackets, split by commas/spaces/newlines
-        const cleanInput = input.replace(/[\[\]]/g, '').trim()
-        const values = cleanInput.split(/[,\s\n]+/).filter(v => v.length > 0)
-
-        if (values.length < 3) {
-            return { isValid: false, error: "Please provide at least 3 data points" }
-        }
-
-        const numericValues = values.map(v => {
-            const num = parseFloat(v.trim())
-            if (isNaN(num) || !isFinite(num)) {
-                throw new Error(`"${v}" is not a valid number`)
-            }
-            return num
-        })
-
-        if (numericValues.length > 1000) {
-            return { isValid: false, error: "Maximum 1000 data points allowed" }
-        }
-
-        return { isValid: true, values: numericValues }
-    } catch (error) {
-        return { isValid: false, error: error.message }
-    }
-}
-
-const getDistributionByInput = (input: string): string | null => {
-    const distributionMap = {
-        '1': 'normal', 'normal': 'normal',
-        '2': 't', 't': 't', 't-distribution': 't',
-        '3': 'exponential', 'exponential': 'exponential',
-        '4': 'gamma', 'gamma': 'gamma',
-        '5': 'beta', 'beta': 'beta',
-        '6': 'chisquare', 'chisquare': 'chisquare', 'chi-square': 'chisquare',
-        '7': 'f', 'f': 'f', 'f-distribution': 'f',
-        '8': 'uniform', 'uniform': 'uniform',
-        '9': 'binomial', 'binomial': 'binomial',
-        '10': 'bernoulli', 'bernoulli': 'bernoulli',
-        '11': 'poisson', 'poisson': 'poisson',
-        '12': 'geometric', 'geometric': 'geometric'
-    }
-
-    return distributionMap[input.toLowerCase()] || null
-}
-
-const getParameterPrompt = (distribution: string): string => {
-    const dist = DistributionRegistry.getDistribution(distribution)
-    if (!dist) return "Invalid distribution"
-
-    let prompt = `📋 *${dist.name} - Parameter Setup*\n\n`
-    prompt += "You'll need to provide the following information:\n\n"
-    prompt += "1. *Sample Name* (e.g., 'Quality Control Data')\n"
-    prompt += "2. *Variable Name* (e.g., 'Temperature')\n"
-    prompt += "3. *Unit Name* (e.g., '°C', 'mm', 'seconds')\n"
-    prompt += "4. *Description* (brief scenario description)\n"
-    prompt += "5. *Data Points* (your actual measurements/observations)\n"
-    prompt += "6. *Target Value* (optional - specific value to analyze)\n\n"
-
-    if (dist.params.length > 0) {
-        prompt += "*Distribution Parameters:*\n"
-        dist.params.forEach((param, index) => {
-            prompt += `• ${dist.paramNames[index]}: ${dist.defaultParams[index]}\n`
-        })
-        prompt += "\n(Parameters will be estimated from your data if not specified)\n\n"
-    }
-
-    prompt += "Let's start! Please provide your *Sample Name*:"
-    return prompt
-}
-
-// Statistical Analysis Handler
-const handleStatisticalAnalysis = async (
-    message: string,
-    from: string,
-    sock: any,
-    sendMessageWithTyping: Function
-) => {
-    const session = getUserSession(from)
-
-    try {
-        if (session.awaitingDistributionSelection) {
-            const distribution = getDistributionByInput(message)
-            if (!distribution) {
-                await sendMessageWithTyping(
-                    { text: "❌ Invalid distribution selection. Please choose a number (1-12) or distribution name from the list above." },
-                    from
-                )
-                return
-            }
-
-            session.currentDistribution = distribution
-            session.awaitingDistributionSelection = false
-            session.awaitingDataInput = true
-            session.dataInputStep = 'sampleName'
-            session.statisticalConfig = { distribution }
-
-            const prompt = getParameterPrompt(distribution)
-            await sendMessageWithTyping({ text: prompt }, from)
-            return
-        }
-
-        if (session.awaitingDataInput) {
-            await handleDataInput(message, from, session, sock, sendMessageWithTyping)
-            return
-        }
-
-    } catch (error) {
-        console.error('Statistical analysis error:', error)
-        await sendMessageWithTyping(
-            { text: "❌ An error occurred during statistical analysis. Please try again or contact support." },
-            from
-        )
-        resetUserSession(from)
-    }
-}
-
-const handleDataInput = async (
-    message: string,
-    from: string,
-    session: UserSession,
-    sock: any,
-    sendMessageWithTyping: Function
-) => {
-    const config = session.statisticalConfig
-
-    switch (session.dataInputStep) {
-        case 'sampleName':
-            if (message.trim().length < 2) {
-                await sendMessageWithTyping(
-                    { text: "❌ Sample name must be at least 2 characters long. Please try again:" },
-                    from
-                )
-                return
-            }
-            config.sampleName = message.trim()
-            session.dataInputStep = 'variableName'
-            await sendMessageWithTyping(
-                { text: "✅ Sample name saved!\n\nNow provide your *Variable Name* (what you're measuring):" },
-                from
-            )
-            break
-
-        case 'variableName':
-            if (message.trim().length < 1) {
-                await sendMessageWithTyping(
-                    { text: "❌ Variable name cannot be empty. Please try again:" },
-                    from
-                )
-                return
-            }
-            config.variableName = message.trim()
-            session.dataInputStep = 'unitName'
-            await sendMessageWithTyping(
-                { text: "✅ Variable name saved!\n\nNow provide your *Unit Name* (e.g., 'mm', '°C', 'seconds', 'count'):" },
-                from
-            )
-            break
-
-        case 'unitName':
-            config.unitName = message.trim() || 'units'
-            session.dataInputStep = 'scenarioDescription'
-            await sendMessageWithTyping(
-                { text: "✅ Unit name saved!\n\nNow provide a *brief description* of your scenario or study:" },
-                from
-            )
-            break
-
-        case 'scenarioDescription':
-            config.scenarioDescription = message.trim() || 'Statistical analysis'
-            session.dataInputStep = 'samples'
-            await sendMessageWithTyping(
-                { text: "✅ Description saved!\n\nNow provide your *data points*. You can:\n• List numbers separated by commas: `1.2, 3.4, 5.6, 7.8`\n• List numbers separated by spaces: `1.2 3.4 5.6 7.8`\n• Put each number on a new line\n\n*Minimum 3 data points required*:" },
-                from
-            )
-            break
-
-        case 'samples':
-            const dataValidation = validateDataArray(message)
-            if (!dataValidation.isValid) {
-                await sendMessageWithTyping(
-                    { text: `❌ ${dataValidation.error}\n\nPlease provide your data points again:` },
-                    from
-                )
-                return
-            }
-            config.samples = dataValidation.values
-            session.dataInputStep = 'targetValue'
-            await sendMessageWithTyping(
-                { text: `✅ Data saved! Found ${dataValidation.values.length} data points.\n\nFinally, provide a *target value* for analysis (optional). This could be:\n• A specification limit\n• A target performance value\n• A threshold to analyze\n\nType 'skip' to skip this step:` },
-                from
-            )
-            break
-
-        case 'targetValue':
-            if (message.toLowerCase().trim() !== 'skip') {
-                const targetValidation = validateNumericInput(message)
-                if (!targetValidation.isValid) {
-                    await sendMessageWithTyping(
-                        { text: `❌ ${targetValidation.error}\n\nPlease enter a target value or type 'skip':` },
-                        from
-                    )
-                    return
-                }
-                config.targetValue = targetValidation.value
-                config.targetAnalysisType = 'value'
-            }
-            
-            session.dataInputStep = 'complete'
-            await performStatisticalAnalysis(config, from, session, sock, sendMessageWithTyping)
-            break
-    }
-}
-
-// Simple statistical calculation functions using StatisticalDistributions
-const calculateBasicStats = (data: number[]) => {
-    const n = data.length
-    const mean = data.reduce((sum, x) => sum + x, 0) / n
-    const variance = data.reduce((sum, x) => sum + Math.pow(x - mean, 2), 0) / (n - 1)
-    const standardDeviation = Math.sqrt(variance)
-    const min = Math.min(...data)
-    const max = Math.max(...data)
-    
-    // Sort data for percentiles
-    const sorted = [...data].sort((a, b) => a - b)
-    const q1 = sorted[Math.floor(n * 0.25)]
-    const median = sorted[Math.floor(n * 0.5)]
-    const q3 = sorted[Math.floor(n * 0.75)]
-    
-    return {
-        n,
-        mean,
-        variance,
-        standardDeviation,
-        min,
-        max,
-        q1,
-        median,
-        q3
-    }
-}
-
-const performStatisticalAnalysis = async (
-    config: any,
-    from: string,
-    session: UserSession,
-    sock: any,
-    sendMessageWithTyping: Function
-) => {
-    try {
-        console.log('🔄 Starting statistical analysis for user:', from.slice(-4));
-        console.log('📊 Config:', JSON.stringify(config, null, 2));
-
-        await sendMessageWithTyping(
-            { text: "🔄 *Processing Statistical Analysis...*\n\nThis may take a few moments. Analyzing your data and generating reports..." },
-            from
-        );
-
-        // Step 1: Test basic statistics first
-        console.log('📈 Calculating basic statistics...');
-        const stats = calculateBasicStats(config.samples);
-        console.log('📈 Basic stats calculated:', stats);
-
-        await sendMessageWithTyping(
-            { text: `✅ *Basic Statistics Calculated*\n\n• Mean: ${stats.mean.toFixed(4)}\n• Std Dev: ${stats.standardDeviation.toFixed(4)}\n• Sample Size: ${stats.n}\n\n⏳ Creating workbook...` },
-            from
-        );
-
-        // Step 2: Try creating workbook
-        console.log('📊 Creating workbook instance...');
-        let workbook;
-        try {
-            workbook = new EnhancedStatisticalWorkbook({
-                width: 1200,
-                height: 2000,
-                theme: 'excel'
-            });
-            console.log('✅ Workbook created successfully');
-        } catch (error) {
-            console.error('❌ Workbook creation failed:', error);
-            throw new Error(`Workbook creation failed: ${error.message}`);
-        }
-
-        await sendMessageWithTyping(
-            { text: "✅ *Workbook Created*\n\n⏳ Analyzing distribution..." },
-            from
-        );
-
-        // Step 3: Add comparison distributions
-        if (!config.compareDistributions) {
-            const baseDistributions = [config.distribution];
-            switch (config.distribution) {
-                case 'normal':
-                    baseDistributions.push('t');
-                    break;
-                case 'exponential':
-                    baseDistributions.push('gamma');
-                    break;
-                case 'gamma':
-                    baseDistributions.push('exponential');
-                    break;
-                case 'beta':
-                    baseDistributions.push('uniform');
-                    break;
-                default:
-                    baseDistributions.push('normal');
-            }
-            config.compareDistributions = baseDistributions;
-        }
-
-        // Step 4: Try distribution analysis
-        console.log('📊 Running distribution analysis...');
-        try {
-            workbook.analyzeDistribution(config);
-            console.log('✅ Distribution analysis completed');
-        } catch (error) {
-            console.error('❌ Distribution analysis failed:', error);
-            throw new Error(`Distribution analysis failed: ${error.message}`);
-        }
-
-        await sendMessageWithTyping(
-            { text: "✅ *Distribution Analysis Complete*\n\n⏳ Generating files..." },
-            from
-        );
-
-        // Step 5: Generate files
-        const timestamp = Date.now();
-        const userIdentifier = from.replace(/[^a-zA-Z0-9]/g, '_').slice(-8);
-        
-        const imageFilename = `statistical_analysis_${userIdentifier}_${timestamp}.png`;
-        const xlsxFilename = `statistical_analysis_${userIdentifier}_${timestamp}.xlsx`;
-        
-        const imagePath = path.join(statisticalOutputDir, imageFilename);
-        const xlsxPath = path.join(statisticalOutputDir, xlsxFilename);
-
-        console.log('📊 Generating image:', imagePath);
-        try {
-            await workbook.generateImage(imagePath);
-            console.log('✅ Image generated successfully');
-        } catch (error) {
-            console.error('❌ Image generation failed:', error);
-            // Continue without image
-        }
-
-        console.log('📊 Generating Excel file:', xlsxPath);
-        try {
-            await workbook.generateXLSX(xlsxPath);
-            console.log('✅ Excel file generated successfully');
-        } catch (error) {
-            console.error('❌ Excel generation failed:', error);
-            // Continue without Excel file
-        }
-
-        // Step 6: Generate summary message
-        const workbookStats = workbook.statistics || stats;
-        const dist = DistributionRegistry.getDistribution(config.distribution);
-        
-        let summaryMessage = `📊 *Statistical Analysis Complete!*\n\n`;
-        summaryMessage += `*Dataset:* ${config.sampleName}\n`;
-        summaryMessage += `*Variable:* ${config.variableName} (${config.unitName})\n`;
-        summaryMessage += `*Distribution:* ${dist.name}\n`;
-        summaryMessage += `*Sample Size:* ${workbookStats.n}\n\n`;
-        summaryMessage += `*Key Statistics:*\n`;
-        summaryMessage += `• Mean: ${workbookStats.mean.toFixed(4)} ${config.unitName}\n`;
-        summaryMessage += `• Std Dev: ${workbookStats.standardDeviation.toFixed(4)} ${config.unitName}\n`;
-        summaryMessage += `• Min: ${workbookStats.min.toFixed(4)} ${config.unitName}\n`;
-        summaryMessage += `• Max: ${workbookStats.max.toFixed(4)} ${config.unitName}\n`;
-
-        if (config.targetValue) {
-            try {
-                const targetAnalysis = workbook.targetAnalysis;
-                if (targetAnalysis && targetAnalysis.probabilities) {
-                    summaryMessage += `\n*Target Analysis (${config.targetValue} ${config.unitName}):*\n`;
-                    summaryMessage += `• P(X ≤ ${config.targetValue}) = ${(targetAnalysis.probabilities.lessThan * 100).toFixed(2)}%\n`;
-                    summaryMessage += `• P(X > ${config.targetValue}) = ${(targetAnalysis.probabilities.greaterThan * 100).toFixed(2)}%\n`;
-                }
-            } catch (error) {
-                console.error('Target analysis error:', error);
-                // Continue without target analysis
-            }
-        }
-
-        // Send summary message first
-        await sendMessageWithTyping({ text: summaryMessage }, from);
-
-        // Step 7: Send files if they exist
-        if (fs.existsSync(imagePath)) {
-            console.log('📤 Sending image file...');
-            try {
-                await sendMessageWithTyping({
-                    image: { url: imagePath },
-                    caption: `📊 Statistical Analysis Visualization\n${config.sampleName} - ${config.variableName}`
-                }, from);
-                console.log('✅ Image sent successfully');
-            } catch (error) {
-                console.error('❌ Failed to send image:', error);
-            }
-        } else {
-            console.log('⚠️ Image file not found, skipping...');
-        }
-
-        if (fs.existsSync(xlsxPath)) {
-            console.log('📤 Sending Excel file...');
-            try {
-                await sendMessageWithTyping({
-                    document: { url: xlsxPath },
-                    mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    fileName: xlsxFilename,
-                    caption: `📋 Complete Statistical Analysis Workbook\n${config.sampleName} - Detailed Results`
-                }, from);
-                console.log('✅ Excel file sent successfully');
-            } catch (error) {
-                console.error('❌ Failed to send Excel file:', error);
-            }
-        } else {
-            console.log('⚠️ Excel file not found, skipping...');
-        }
-
-        // Step 8: Clean up files after 10 minutes
-        setTimeout(() => {
-            [imagePath, xlsxPath].forEach(filePath => {
-                if (fs.existsSync(filePath)) {
-                    try {
-                        fs.unlinkSync(filePath);
-                        console.log(`🗑️ Cleaned up: ${filePath}`);
-                    } catch (error) {
-                        console.error(`❌ Failed to clean up ${filePath}:`, error);
-                    }
-                }
-            });
-        }, 10 * 60 * 1000);
-
-        // Reset session
-        resetUserSession(from);
-        
-        await sendMessageWithTyping(
-            { text: "✅ *Analysis Complete!*\n\nType 'distribution' to analyze another dataset or 'help' for other commands." },
-            from
-        );
-
-        console.log('✅ Statistical analysis completed successfully for user:', from.slice(-4));
-
-    } catch (error) {
-        console.error('❌ Statistical analysis error for user:', from.slice(-4), error);
-        console.error('Stack trace:', error.stack);
-        
-        await sendMessageWithTyping(
-            { text: `❌ *Analysis Failed*\n\nThere was an error processing your statistical analysis:\n\n*Error:* ${error.message}\n\nPlease check your data and try again, or contact support if the issue persists.` },
-            from
-        );
-        resetUserSession(from);
-    }
-};
-
 
 
 // Calculator-specific helper functions
@@ -5377,8 +2482,6 @@ const generateCalculatorHistory = (calculator: GraphingCalculatorGame): string =
 
 // Updated spreadsheet handler functions with shopping list integration
 
-// Updated spreadsheet handler functions with normal distribution integration
-
 const handleSpreadsheetStart = async (sock: any, from: string) => {
     const sendMessageWithTyping = async (msg: AnyMessageContent) => {
         await sock.presenceSubscribe(from);
@@ -5396,20 +2499,16 @@ const handleSpreadsheetStart = async (sock: any, from: string) => {
     const spreadsheetMenu = `📊 *Spreadsheet Calculator Menu*
 
 Choose a calculation type:
-1. 📊 *Normal Distribution* - Comprehensive statistical analysis
-2. 📈 *Custom Normal* - Custom normal distribution with your data
-3. 🎲 *Betting Analysis* - Comprehensive betting probability
-4. 📉 *Linear Function* - Analyze y = mx + b
-5. 🔄 *Custom Linear* - Parse custom linear equation
-6. 📐 *Quadratic Formula* - Solve ax² + bx + c = 0
-7. 🔄 *Custom Quadratic* - Parse custom quadratic equation
-8. 💰 *Compound Interest* - Calculate future value
-9. 🛒 *Shopping List* - Comprehensive shopping analysis
-10. 🛍️ *Custom Shopping* - Parse custom shopping data
+1. 📈 *Betting Analysis* - Comprehensive betting probability
+2. 📉 *Linear Function* - Analyze y = mx + b
+3. 🔄 *Custom Linear* - Parse custom linear equation
+4. 📐 *Quadratic Formula* - Solve ax² + bx + c = 0
+5. 🔄 *Custom Quadratic* - Parse custom quadratic equation
+6. 💰 *Compound Interest* - Calculate future value
+7. 🛒 *Shopping List* - Comprehensive shopping analysis
+8. 🛍️ *Custom Shopping* - Parse custom shopping data
 
-Reply with number (1-10) or type:
-• normal_distribution
-• custom_normal
+Reply with number (1-8) or type:
 • bet_analysis
 • linearfunction
 • customlinear
@@ -5438,22 +2537,14 @@ const handleSpreadsheetType = async (sock: any, from: string, text: string) => {
     const cleanText = text.toLowerCase().trim();
 
     const typeMap = {
-        '1': 'normal_distribution',
-        '2': 'custom_normal',
-        '3': 'bet_analysis',
-        '4': 'linearfunction',
-        '5': 'customlinear',
-        '6': 'quadraticformula',
-        '7': 'customquadratic',
-        '8': 'compoundinterest',
-        '9': 'shopping_list',
-        '10': 'custom_shopping',
-        'normal_distribution': 'normal_distribution',
-        'normal': 'normal_distribution',
-        'distribution': 'normal_distribution',
-        'statistics': 'normal_distribution',
-        'custom_normal': 'custom_normal',
-        'customnormal': 'custom_normal',
+        '1': 'bet_analysis',
+        '2': 'linearfunction',
+        '3': 'customlinear',
+        '4': 'quadraticformula',
+        '5': 'customquadratic',
+        '6': 'compoundinterest',
+        '7': 'shopping_list',
+        '8': 'custom_shopping',
         'bet_analysis': 'bet_analysis',
         'betting': 'bet_analysis',
         'linearfunction': 'linearfunction',
@@ -5481,20 +2572,6 @@ const handleSpreadsheetType = async (sock: any, from: string, text: string) => {
         let paramsPrompt = `📝 *Enter parameters for ${selectedType.toUpperCase()}:*\n\n`;
 
         switch (selectedType) {
-            case 'normal_distribution':
-                paramsPrompt += `*Default normal distribution will be used, or customize with:*\n\n`;
-                paramsPrompt += `Format: mean:100, standardDeviation:15, sampleSize:1000, confidenceLevel:0.95\n\n`;
-                paramsPrompt += `Example: mean:75, standardDeviation:10, sampleSize:500, confidenceLevel:0.99\n\n`;
-                paramsPrompt += `*Or type "default" for default normal distribution (μ=100, σ=15)*\n\n❌ Reply "cancel" to exit`;
-                break;
-            case 'custom_normal':
-                paramsPrompt += `*Multiple formats supported:*\n\n`;
-                paramsPrompt += `**Simple Format:** mean:100, standardDeviation:15, sampleSize:1000\n\n`;
-                paramsPrompt += `**Comma Separated:** 100, 15, 1000, 0.95\n\n`;
-                paramsPrompt += `**Object Format:** {mean:100, standardDeviation:15, sampleSize:1000, confidenceLevel:0.95}\n\n`;
-                paramsPrompt += `**Parameters:**\n• mean: Population mean (any number)\n• standardDeviation: Population std dev (positive)\n• sampleSize: Sample size (10-10000)\n• confidenceLevel: Confidence level (0.8-0.99)\n\n`;
-                paramsPrompt += `❌ Reply "cancel" to exit`;
-                break;
             case 'bet_analysis':
                 paramsPrompt += `Format: betAmount:100, odds:2.5, oddsFormat:decimal, winProbability:0.45, bankroll:1000\n\nExample: betAmount:50, odds:1.8, oddsFormat:decimal, winProbability:0.55, bankroll:500\n\n❌ Reply "cancel" to exit`;
                 break;
@@ -5534,18 +2611,13 @@ const handleSpreadsheetType = async (sock: any, from: string, text: string) => {
         resetUserSession(from);
         await sendMessageWithTyping({ text: '❌ Spreadsheet operation cancelled.' });
     } else {
-        await sendMessageWithTyping({ text: '❌ Invalid selection. Please choose 1-10 or a valid type.' });
+        await sendMessageWithTyping({ text: '❌ Invalid selection. Please choose 1-8 or a valid type.' });
     }
 };
 
 // Updated parameter parsing function
 const parseParamsString = (paramsStr: string, type: string): any => {
     const params: any = {};
-
-    // Handle normal distribution special cases
-    if (type === 'normal_distribution' || type === 'custom_normal') {
-        return parseNormalDistributionParams(paramsStr, type);
-    }
 
     // Handle shopping list special cases
     if (type === 'shopping_list' || type === 'custom_shopping') {
@@ -5564,118 +2636,7 @@ const parseParamsString = (paramsStr: string, type: string): any => {
     return params;
 };
 
-// New function to parse normal distribution parameters
-const parseNormalDistributionParams = (paramsStr: string, type: string): any => {
-    const cleanStr = paramsStr.trim();
-
-    // Handle default case for normal_distribution
-    if (type === 'normal_distribution' && (cleanStr.toLowerCase() === 'default' || cleanStr === '')) {
-        return {
-            mean: 100,
-            standardDeviation: 15,
-            sampleSize: 1000,
-            confidenceLevel: 0.95,
-            dataPoints: null
-        };
-    }
-
-    // Try to parse JSON format
-    if (cleanStr.startsWith('{') && cleanStr.endsWith('}')) {
-        try {
-            const parsed = JSON.parse(cleanStr);
-            return validateNormalDistributionParams(parsed);
-        } catch (e) {
-            // Fall through to other parsing methods
-        }
-    }
-
-    // Parse comma-separated values (mean, stdDev, sampleSize, confidenceLevel)
-    if (!cleanStr.includes(':') && cleanStr.includes(',')) {
-        const values = cleanStr.split(',').map(v => v.trim());
-        if (values.length >= 2) {
-            return validateNormalDistributionParams({
-                mean: parseFloat(values[0]) || 100,
-                standardDeviation: parseFloat(values[1]) || 15,
-                sampleSize: parseInt(values[2]) || 1000,
-                confidenceLevel: parseFloat(values[3]) || 0.95
-            });
-        }
-    }
-
-    // Parse parameter format (key:value pairs)
-    if (cleanStr.includes(':')) {
-        const result = {
-            mean: 100,
-            standardDeviation: 15,
-            sampleSize: 1000,
-            confidenceLevel: 0.95,
-            dataPoints: null
-        };
-
-        const pairs = cleanStr.split(',').map(s => s.trim());
-        for (const pair of pairs) {
-            if (pair.includes(':')) {
-                const [key, value] = pair.split(':').map(s => s.trim());
-                const lowerKey = key.toLowerCase();
-
-                switch (lowerKey) {
-                    case 'mean':
-                    case 'mu':
-                    case 'μ':
-                        result.mean = parseFloat(value) || result.mean;
-                        break;
-                    case 'standarddeviation':
-                    case 'stddev':
-                    case 'sigma':
-                    case 'σ':
-                        result.standardDeviation = Math.max(0.01, parseFloat(value) || result.standardDeviation);
-                        break;
-                    case 'samplesize':
-                    case 'n':
-                    case 'size':
-                        result.sampleSize = Math.max(10, Math.min(10000, parseInt(value) || result.sampleSize));
-                        break;
-                    case 'confidencelevel':
-                    case 'confidence':
-                    case 'cl':
-                        result.confidenceLevel = Math.max(0.8, Math.min(0.99, parseFloat(value) || result.confidenceLevel));
-                        break;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    // Try to extract numbers from text
-    const numbers = cleanStr.match(/[\d.-]+/g);
-    if (numbers && numbers.length >= 2) {
-        return validateNormalDistributionParams({
-            mean: parseFloat(numbers[0]) || 100,
-            standardDeviation: parseFloat(numbers[1]) || 15,
-            sampleSize: parseInt(numbers[2]) || 1000,
-            confidenceLevel: parseFloat(numbers[3]) || 0.95
-        });
-    }
-
-    // Default fallback
-    return parseNormalDistributionParams('default', 'normal_distribution');
-};
-
-// Helper function to validate normal distribution parameters
-const validateNormalDistributionParams = (params: any): any => {
-    const result = {
-        mean: typeof params.mean === 'number' ? params.mean : 100,
-        standardDeviation: Math.max(0.01, parseFloat(params.standardDeviation) || 15),
-        sampleSize: Math.max(10, Math.min(10000, parseInt(params.sampleSize) || 1000)),
-        confidenceLevel: Math.max(0.8, Math.min(0.99, parseFloat(params.confidenceLevel) || 0.95)),
-        dataPoints: params.dataPoints || null
-    };
-
-    return result;
-};
-
-// New function to parse shopping parameters (existing function)
+// New function to parse shopping parameters
 const parseShoppingParams = (paramsStr: string, type: string): any => {
     const cleanStr = paramsStr.trim();
 
@@ -5729,7 +2690,7 @@ const parseShoppingParams = (paramsStr: string, type: string): any => {
     return parseShoppingParams('default', 'shopping_list');
 };
 
-// Helper functions for shopping parameter parsing (existing functions)
+// Helper functions for shopping parameter parsing
 const parseTableFormatShopping = (text: string): any => {
     const items = [];
     const lines = text.split('\n').filter(line => line.trim());
@@ -5920,12 +2881,6 @@ const handleSpreadsheetParams = async (sock: any, from: string, text: string) =>
     let validationMessage = '';
 
     switch (session.spreadsheetType) {
-        case 'normal_distribution':
-        case 'custom_normal':
-            isValid = params.mean !== undefined && params.standardDeviation > 0 && 
-                     params.sampleSize >= 10 && params.confidenceLevel > 0 && params.confidenceLevel < 1;
-            validationMessage = 'Invalid normal distribution parameters. Check mean, standard deviation (>0), sample size (≥10), and confidence level (0-1)';
-            break;
         case 'bet_analysis':
             isValid = params.betAmount && params.odds && params.oddsFormat && params.winProbability && params.bankroll;
             validationMessage = 'Missing required betting parameters';
@@ -5997,13 +2952,6 @@ const handleSpreadsheetParams = async (sock: any, from: string, text: string) =>
         const statsText = `📈 *Calculation Statistics:*\n\n${stats.join('\n')}`;
         await sendMessageWithTyping({ text: statsText });
 
-        // Send additional insights for normal distribution
-        if (session.spreadsheetType === 'normal_distribution' || session.spreadsheetType === 'custom_normal') {
-            const insights = generateNormalDistributionInsights(params, calc.calculateNormalDistributionMetrics(params));
-            const insightsText = `🔍 *Statistical Insights:*\n\n${insights.join('\n')}`;
-            await sendMessageWithTyping({ text: insightsText });
-        }
-
         // Cleanup temp files
         await new Promise(resolve => setTimeout(() => {
             cleanupTempFile(pngPath);
@@ -6019,118 +2967,6 @@ const handleSpreadsheetParams = async (sock: any, from: string, text: string) =>
         resetUserSession(from);
     }
 };
-
-
-// Helper function to generate insights for normal distribution
-const generateNormalDistributionInsights = (params: any, metrics: any): string[] => {
-    const insights = [];
-
-    // Sample quality assessment
-    const meanDifference = Math.abs(metrics.sampleMean - params.mean);
-    if (meanDifference < params.standardDeviation * 0.1) {
-        insights.push('✅ Sample mean very close to population mean - Excellent quality');
-    } else if (meanDifference < params.standardDeviation * 0.2) {
-        insights.push('✅ Sample mean reasonably close to population mean - Good quality');
-    } else {
-        insights.push('⚠️ Sample mean differs significantly - Consider larger sample');
-    }
-
-    // Normality assessment
-    if (Math.abs(metrics.skewness) < 0.5 && Math.abs(metrics.kurtosis - 3) < 1) {
-        insights.push('✅ Data appears normally distributed - Good for statistical inference');
-    } else {
-        let issues = [];
-        if (Math.abs(metrics.skewness) >= 0.5) {
-            issues.push(`${metrics.skewness > 0 ? 'right' : 'left'}-skewed`);
-        }
-        if (Math.abs(metrics.kurtosis - 3) >= 1) {
-            issues.push(`${metrics.kurtosis > 3 ? 'heavy' : 'light'}-tailed`);
-        }
-        insights.push(`⚠️ Data shows ${issues.join(' and ')} characteristics`);
-    }
-
-    // Sample size adequacy
-    if (params.sampleSize >= 1000) {
-        insights.push('✅ Large sample - Excellent statistical power');
-    } else if (params.sampleSize >= 100) {
-        insights.push('✅ Good sample size for most analyses');
-    } else if (params.sampleSize >= 30) {
-        insights.push('✅ Adequate for basic normal distribution analyses');
-    } else {
-        insights.push('⚠️ Small sample - Consider increasing for reliability');
-    }
-
-    // Confidence interval precision
-    const precisionPercentage = (metrics.marginOfError / params.mean * 100);
-    if (precisionPercentage <= 5) {
-        insights.push(`✅ Excellent precision - Margin of error ${precisionPercentage.toFixed(1)}% of mean`);
-    } else if (precisionPercentage <= 10) {
-        insights.push(`✅ Good precision - Margin of error ${precisionPercentage.toFixed(1)}% of mean`);
-    } else {
-        insights.push(`⚠️ Limited precision - Margin of error ${precisionPercentage.toFixed(1)}% of mean`);
-    }
-
-    // Practical recommendations
-    if (Math.abs(metrics.skewness) >= 1.0) {
-        insights.push('📊 Consider data transformation to reduce skewness');
-    }
-
-    if (params.sampleSize < 100) {
-        insights.push('📈 Increase sample size for more robust statistical inferences');
-    }
-
-    // Range analysis
-    const theoreticalRange = 6 * params.standardDeviation; // ±3σ covers ~99.7%
-    const rangeRatio = metrics.range / theoreticalRange;
-
-    if (rangeRatio >= 0.8 && rangeRatio <= 1.2) {
-        insights.push('✅ Data range consistent with normal distribution expectations');
-    } else if (rangeRatio < 0.8) {
-        insights.push('⚠️ Data range smaller than expected - May indicate limited variability');
-    } else {
-        insights.push('⚠️ Data range larger than expected - Check for outliers');
-    }
-
-    // Outlier detection insight
-    const lowerFence = params.mean - 3 * params.standardDeviation;
-    const upperFence = params.mean + 3 * params.standardDeviation;
-    const outlierCount = Math.max(0, Math.floor(params.sampleSize * 0.003)); // Expected ~0.3% outliers
-
-    if (outlierCount === 0) {
-        insights.push('✅ No extreme outliers expected within ±3σ');
-    } else {
-        insights.push(`⚠️ ~${outlierCount} outliers expected - Review for data quality`);
-    }
-
-    // Central Limit Theorem applicability
-    if (params.sampleSize >= 30) {
-        insights.push('✅ Sample size adequate for Central Limit Theorem');
-    } else {
-        insights.push('⚠️ Small sample - Central Limit Theorem may not fully apply');
-    }
-
-    // Statistical power insight
-    const effectSize = Math.abs(metrics.sampleMean - params.mean) / params.standardDeviation;
-    if (effectSize < 0.2) {
-        insights.push('📐 Small effect size detected - May need larger sample for significance');
-    } else if (effectSize < 0.5) {
-        insights.push('📐 Medium effect size detected - Good for statistical testing');
-    } else {
-        insights.push('📐 Large effect size detected - High statistical power');
-    }
-
-    // Confidence level interpretation
-    insights.push(`🎯 ${(params.confidenceLevel * 100).toFixed(1)}% confident population mean is within confidence interval`);
-
-    // Practical interpretation
-    const standardError = params.standardDeviation / Math.sqrt(params.sampleSize);
-    insights.push(`📏 Standard error: ${standardError.toFixed(4)} - Measures sampling variability`);
-
-    return insights;
-};
-
-
-
 
 
 // YouTube Handlers
@@ -6863,34 +3699,12 @@ const convertToSticker = async (sock: any, msg: any, from: string) => {
 }
 
 
-// Heartbeat variables
-let lastHeartbeat = Date.now()
-let isConnected = false
 
-// Heartbeat function to check connection health
-const startHeartbeat = (sock: any) => {
-    setInterval(async () => {
-        if (isConnected && Date.now() - lastHeartbeat > 30000) { // 30 seconds
-            console.log('💓 Sending heartbeat...')
-            try {
-                await sock.sendPresenceUpdate('available')
-                lastHeartbeat = Date.now()
-                console.log('✅ Heartbeat sent')
-            } catch (error) {
-                console.error('❌ Heartbeat failed:', error.message)
-            }
-        }
-    }, 15000) // Check every 15 seconds
-}
 
-// Main socket connection function
 const startSock = async () => {
     const { state, saveCreds } = await useMultiFileAuthState('baileys_auth_info')
-
-    // Fetch latest WhatsApp Web version
     const { version, isLatest } = await fetchLatestBaileysVersion()
     console.log(`Using WA v${version.join('.')}, isLatest: ${isLatest}`)
-
     const sock = makeWASocket({
         version,
         logger,
@@ -6905,37 +3719,25 @@ const startSock = async () => {
             return { conversation: 'Hello' }
         }
     })
-
-    // Helper function to send message with typing indicator
     const sendMessageWithTyping = async (msg: AnyMessageContent, jid: string) => {
         await sock.presenceSubscribe(jid)
         await delay(500)
-
         await sock.sendPresenceUpdate('composing', jid)
         await delay(2000)
-
         await sock.sendPresenceUpdate('paused', jid)
         await sock.sendMessage(jid, msg)
     }
-
-    // Event handlers
     sock.ev.process(async (events) => {
-
-        // Connection updates
         if (events['connection.update']) {
             const update = events['connection.update']
             const { connection, lastDisconnect, qr } = update
-
             if (qr && !usePairingCode) {
                 console.log('\n📱 QR Code:')
                 QRCode.generate(qr, { small: true })
                 console.log('Scan the QR code above with WhatsApp on your phone\n')
             }
-
             if (connection === 'close') {
-                isConnected = false // Update heartbeat status
                 const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
-
                 if (shouldReconnect) {
                     console.log('Connection closed, reconnecting...')
                     setTimeout(() => startSock(), 3000)
@@ -6945,30 +3747,19 @@ const startSock = async () => {
                 }
             } else if (connection === 'open') {
                 console.log('✅ Connected to WhatsApp!')
-                isConnected = true // Update heartbeat status
-                lastHeartbeat = Date.now() // Reset heartbeat timer
-                
-                // Start heartbeat monitoring
-                startHeartbeat(sock)
             } else if (connection === 'connecting') {
                 console.log('🔄 Connecting to WhatsApp...')
-                isConnected = false // Update heartbeat status
             }
-
             console.log('Connection update:', { connection, lastDisconnect: lastDisconnect?.error })
         }
-
-        // Handle pairing code
         if (events['connection.update'] && usePairingCode && !sock.authState.creds.registered) {
             try {
                 const phoneNumber = await question('📞 Please enter your phone number (with country code, e.g., +1234567890): ')
                 const cleanNumber = phoneNumber.replace(/[^0-9]/g, '')
-
                 if (cleanNumber.length < 10) {
                     console.log('❌ Invalid phone number format')
                     return
                 }
-
                 console.log('🔄 Requesting pairing code...')
                 const code = await sock.requestPairingCode(cleanNumber)
                 console.log(`\n🔐 Pairing code: ${code}`)
@@ -6980,38 +3771,25 @@ const startSock = async () => {
                 setTimeout(() => startSock(), 2000)
             }
         }
-
         if (events['creds.update']) {
             await saveCreds()
             console.log('💾 Credentials saved')
         }
-
-        // Handle incoming messages and poll responses
         if (events['messages.upsert']) {
             const upsert = events['messages.upsert']
-
-            // Update heartbeat on message activity
-            if (isConnected) {
-                lastHeartbeat = Date.now()
-            }
-
             if (upsert.type === 'notify') {
                 for (const msg of upsert.messages) {
-                    // Handle poll responses
                     if (msg.message?.pollUpdateMessage) {
                         const pollUpdate = msg.message.pollUpdateMessage
                         const selectedOptions = pollUpdate.vote?.selectedOptions || []
-
                         if (selectedOptions.length > 0) {
                             const from = msg.key.remoteJid
                             if (from) {
-                                // Map poll option to command
                                 const optionIndex = selectedOptions[0]
                                 const pollCommands = [
                                     'help', 'time', 'info', 'random', 'ping',
                                     'image', 'video', 'audio', 'document', 'contact', 'location', 'welcome'
                                 ]
-
                                 if (optionIndex < pollCommands.length) {
                                     const command = pollCommands[optionIndex]
                                     console.log(`🗳️ Poll response: ${command} from ${from}`)
@@ -7021,23 +3799,15 @@ const startSock = async () => {
                         }
                         continue
                     }
-
-                    // Handle regular text messages
                     const text = msg.message?.conversation ||
-                                msg.message?.extendedTextMessage?.text ||
-                                ''
-
+                        msg.message?.extendedTextMessage?.text || ''
                     if (text) {
                         const from = msg.key.remoteJid
                         const isFromMe = msg.key.fromMe
-
                         console.log(`📨 ${isFromMe ? 'You' : from}: ${text}`)
-
                         if (!isFromMe && from) {
                             await sock.readMessages([msg.key])
-
                             const isCommand = await handleCommand(text, from, msg, sock, sendMessageWithTyping)
-
                             if (!isCommand && doReplies) {
                                 console.log('🤖 Sending auto-reply...')
                                 await sendMessageWithTyping(
@@ -7050,167 +3820,58 @@ const startSock = async () => {
                 }
             }
         }
-
-        // Handle other events
         if (events['messages.update']) {
             console.log('📬 Message updates:', events['messages.update'].length)
         }
-
         if (events['message-receipt.update']) {
             console.log('📨 Receipt updates:', events['message-receipt.update'].length)
         }
-
         if (events['messages.reaction']) {
             console.log('😊 Reactions:', events['messages.reaction'].length)
         }
-
         if (events['presence.update']) {
             const presence = events['presence.update']
             console.log(`👤 ${presence.id} is ${presence.presences?.[presence.id]?.lastKnownPresence || 'unknown'}`)
-            
-            // Update heartbeat on presence activity
-            if (isConnected) {
-                lastHeartbeat = Date.now()
-            }
         }
-
         if (events['chats.update']) {
             console.log('💬 Chat updates:', events['chats.update'].length)
         }
-
         if (events['contacts.update']) {
             console.log('👥 Contact updates:', events['contacts.update'].length)
         }
     })
-
     return sock
 }
 
 
-
-// Enhanced Command handler function with YouTube, Football, Statistical Analysis, Calculator, and Quadratic support
+// Enhanced Command handler function with YouTube, Football, and Calculator support
 const handleCommand = async (text: string, from: string, msg: any, sock: any, sendMessageWithTyping: Function): Promise<boolean> => {
     const cleanText = text.toLowerCase().trim()
     const command = cleanText.startsWith('/') ? cleanText.split(' ')[0] : cleanText.split(' ')[0]
     const args = text.split(' ').slice(1)
-    
-    // Get user session for all functionality
+
+    // Get user session for YouTube, Football, and Calculator functionality
     const session = getUserSession(from)
- 
-    if (session.awaitingRPGAnswer) {
-        const result = await handleRPGAnswer(text, from, sock, sendMessageWithTyping)
-        if (result) {
-            await sendMessageWithTyping({ text: result }, from)
-        }
-        return true
-    }
 
-    if (session.awaitingChessMove && session.chessGameActive) {
-        if (command === 'cancel' || command === 'stop' || command === 'exit') {
-            session.chessGameActive = false
-            session.awaitingChessMove = false
-            await sendMessageWithTyping({
-                text: "🚫 Chess game cancelled. Type **chess** to start a new game."
-            }, from)
-            return true
-        }
-        await handleChessMove(sock, from, text, sendMessageWithTyping)
-        return true
-    }
-
-        // Handle Multi-League Football session states (PRIORITY: Check league-specific sessions first)
-    if (session.awaitingEPLQuery) {
-        await processLeagueMessage(from, text, 'epl', sock)
-        return true
-    }
-    if (session.awaitingLaLigaQuery) {
-        await processLeagueMessage(from, text, 'laliga', sock)
-        return true
-    }
-    if (session.awaitingSerieAQuery) {
-        await processLeagueMessage(from, text, 'seriea', sock)
-        return true
-    }
-    if (session.awaitingBundesligaQuery) {
-        await processLeagueMessage(from, text, 'bundesliga', sock)
-        return true
-    }
-    if (session.awaitingLigue1Query) {
-        await processLeagueMessage(from, text, 'ligue1', sock)
-        return true
-    }
-    if (session.awaitingEredivisieQuery) {
-        await processLeagueMessage(from, text, 'eredivisie', sock)
-        return true
-    }
-    if (session.awaitingPrimeiraLigaQuery) {
-        await processLeagueMessage(from, text, 'primeiraliga', sock)
-        return true
-    }
-    if (session.awaitingProLeagueQuery) {
-        await processLeagueMessage(from, text, 'proleague', sock)
-        return true
-    }
-    if (session.awaitingSPLQuery) {
-        await processLeagueMessage(from, text, 'spl', sock)
-        return true
-    }
-    if (session.awaitingSuperLigQuery) {
-        await processLeagueMessage(from, text, 'superlig', sock)
-        return true
-    }
-   
-    // Handle Statistical Analysis session states FIRST (highest priority after cancel)
-    if (session.awaitingDistributionSelection || session.awaitingDataInput) {
-        if (command === 'cancel' || command === 'stop') {
-            resetUserSession(from)
-            await sendMessageWithTyping(
-                { text: "🚫 Statistical analysis cancelled. Type 'help' for available commands." },
-                from
-            )
-            return true
-        }
-        await handleStatisticalAnalysis(text, from, sock, sendMessageWithTyping)
-        return true
-    }
-    
-    // Handle Quadratic session states (second priority)
-    // Handle Quadratic session states (second priority)
-    if (session.awaitingQuadraticInput) {
-        if (command === 'cancel' || command === 'stop') {
-            resetUserSession(from)
-            await sendMessageWithTyping(
-                { text: "❌ Quadratic solver session cancelled. Type 'help' for available commands." },
-                from
-            )
-            return true
-        }
-        // Call the quadratic session handler directly
-        const handled = await handleQuadraticSessionInput(text, from, session, sendMessageWithTyping)
-        if (handled) return true
-    }
-
-
-    
-    // Handle Calculator session states (third priority)
+    // Handle Calculator session states FIRST (highest priority)
     if (session.awaitingCalculatorInput) {
         const handled = await handleCalculatorInput(sock, from, text, sendMessageWithTyping)
         if (handled) return true
     }
-    
+
     // Handle pending resolves for Football questions
     if (session.pendingResolve) {
         session.pendingResolve(text)
         session.pendingResolve = null
         return true
     }
-    
+
     // Handle YouTube session states
     if (session.awaitingYouTubeQuery) {
         await handleYouTubeSearch(sock, from, text)
         return true
     }
-    
+
     if (session.awaitingYouTubeAction) {
         const action = cleanText
         const { videoInfo, relatedVideos } = session.youtubeContext
@@ -7220,7 +3881,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
             case 'audio':
                 await downloadYouTubeAudio(sock, from, videoInfo)
                 break
-                
+
             case 'mp4':
             case 'video':
                 await downloadYouTubeVideo(sock, from, videoInfo)
@@ -7229,17 +3890,17 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
             case 'related':
                 await showRelatedVideos(sock, from, relatedVideos)
                 break
-                
+
             case 'thumbnail':
             case 'thumb':
                 await extractThumbnail(sock, from, videoInfo)
                 break
-                
+
             case 'cancel':
                 resetUserSession(from)
                 await sendMessageWithTyping({ text: '❌ YouTube operation cancelled.' }, from)
                 break
-                
+
             default:
                 await sendMessageWithTyping({
                     text: `❌ Invalid option. Please choose:\n\n` +
@@ -7275,7 +3936,6 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
         const explorer = session.footballExplorer
         session.outputLines = []
         let exit = false
-        
         switch (choice) {
             case '1':
                 await explorer.showTeams()
@@ -7317,12 +3977,10 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 await sendMessageWithTyping({ text: 'Invalid choice. Please choose from the menu.' }, from)
                 break
         }
-        
         if (session.outputLines.length > 0) {
             await sendMessageWithTyping({ text: session.outputLines.join('\n') }, from)
             session.outputLines = []
         }
-        
         if (exit) {
             session.awaitingFootballInput = false
             session.footballExplorer = null
@@ -7337,7 +3995,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
         return true
     }
 
-    // Define valid commands including Statistical Analysis and Quadratic
+    // Define valid commands including YouTube, Football, and Calculator
     const validCommands = [
         'help', 'menu', 'time', 'echo', 'info', 'status', 'random', 'ping',
         'sticker', 'contact', 'image', 'video', 'audio', 'document', 'file',
@@ -7346,146 +4004,20 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
         'spreadsheet', 'calc', 'sheet',
         // Calculator commands
         'calculator', 'graph', 'math', 'equation', 'triangle', 'vector',
-        'formulas', 'calchelp', 'calcstatus', 'calchistory', 'calcclear', 'calcexit',
-        // Statistical Analysis commands
-        'distribution', 'distributions', 'statistics', 'stats', 'analysis', 'analyze',
-        // Quadratic commands
-        'quadratic', 'quad', 'quadratics', 'equation-solver', 'solver',
-        // RPG commands
-        'adventure', 'rpg', 'blacksmith', 'inventory', 'heal', 'shop', 'transfer', 
-        'profile', 'leaderboard', 'reset',
-        // RPG location commands
-        'forest', 'desert', 'mountain', 'ocean', 'cave', 'city',
-        // Chess commands
-        'chess', 'chessgame', 'play', 'move', 'board', 'history', 'resign',
-        // Multi-League Football commands
-        'epl', 'premierleague', 'premier', 'english',
-        'laliga', 'liga', 'spanish', 'spain',
-        'seriea', 'seria', 'italian', 'italy',
-        'bundesliga', 'bundes', 'german', 'germany',
-        'ligue1', 'ligue', 'french', 'france',
-        'eredivisie', 'erediv', 'dutch', 'netherlands',
-        'primeiraliga', 'primeira', 'portuguese', 'portugal',
-        'proleague', 'belgian', 'belgium',
-        'spl', 'scottish', 'scotland',
-        'superlig', 'super', 'turkish', 'turkey'
+        'formulas', 'calchelp', 'calcstatus', 'calchistory', 'calcclear', 'calcexit'
     ]
     
     const isValidCommand = validCommands.includes(command.replace('/', ''))
-    
+
     if (!isValidCommand) {
         return false
     }
 
-    // Update heartbeat on command activity
-    if (isConnected) {
-        lastHeartbeat = Date.now()
-    }
-
-    
     console.log(`🎯 Command received: ${command} from ${from.slice(-4)}`)
-    
+
     const cleanCommand = command.replace('/', '')
 
-
-
-    const sender = from.split('@')[0]
-    const pushName = msg.pushName || 'User'
-    
-    
     switch (cleanCommand) {
-
-        // RPG Commands
-        case 'rpg':
-        case 'adventure':
-            if (args.length === 0) {
-                const { rpg } = await findUserRpg(sender)
-                let response = `🎮 **RPG Game System**\n\n`
-                response += `Welcome to the Adventure RPG! Test your knowledge across different locations and difficulties.\n\n`
-                response += `**Your Progress:**\n`
-                response += `⮕ Current Location: ${(rpg.currentLocation || 'forest').charAt(0).toUpperCase() + (rpg.currentLocation || 'forest').slice(1)}\n`
-                response += `⮕ Current Difficulty: ${(rpg.currentDifficulty || 'easy').charAt(0).toUpperCase() + (rpg.currentDifficulty || 'easy').slice(1)}\n`
-                response += `⮕ Health: ${rpg.health || 100}/100\n`
-                response += `⮕ Money: $${rpg.money || 0}\n`
-                response += `⮕ Experience: ${rpg.exp || 0}\n\n`
-                response += `**Available Commands:**\n`
-                response += `• *adventure [location]* - Start adventure\n`
-                response += `• *inventory* - View your items\n`
-                response += `• *blacksmith* - Craft equipment\n`
-                response += `• *heal* - Restore health ($300)\n`
-                response += `• *shop* - Browse items\n`
-                response += `• *profile* - View full profile\n`
-                response += `• *transfer* - Transfer money/exp\n\n`
-                response += `**Locations:** ${LOCATION_ORDER.join(', ')}\n\n`
-                response += `Start with: *adventure ${rpg.currentLocation || 'forest'}*`
-                await sendMessageWithTyping({ text: response }, from)
-            } else {
-                const location = args[0].toLowerCase()
-                if (LOCATION_ORDER.includes(location)) {
-                    const result = await handleRPGAdventure({ sender, location }, args, sock, sendMessageWithTyping, from)
-                    if (result) {
-                        await sendMessageWithTyping({ text: result }, from)
-                    }
-                } else {
-                    await sendMessageWithTyping({ 
-                        text: `Unknown location: ${location}. Available: ${LOCATION_ORDER.join(', ')}` 
-                    }, from)
-                }
-            }
-            break
-            
-        case 'blacksmith':
-            const blacksmithResult = await rpgCommands.blacksmith({ sender }, args)
-            await sendMessageWithTyping({ text: blacksmithResult }, from)
-            break
-            
-        case 'inventory':
-            const inventoryResult = await rpgCommands.inventory({ sender, pushName })
-            await sendMessageWithTyping({ text: inventoryResult }, from)
-            break
-            
-        case 'heal':
-            const healResult = await rpgCommands.heal({ sender }, args)
-            await sendMessageWithTyping({ text: healResult }, from)
-            break
-            
-        case 'shop':
-            const shopResult = await rpgCommands.shop({ sender }, args)
-            await sendMessageWithTyping({ text: shopResult }, from)
-            break
-            
-        case 'transfer':
-            const transferResult = await rpgCommands.transfer({ sender, pushName }, args)
-            await sendMessageWithTyping({ text: transferResult }, from)
-            break
-            
-        case 'profile':
-            const profileResult = await rpgCommands.profile({ sender, pushName })
-            await sendMessageWithTyping({ text: profileResult }, from)
-            break
-            
-        case 'leaderboard':
-            const leaderboardResult = await rpgCommands.leaderboard({ sender })
-            await sendMessageWithTyping({ text: leaderboardResult }, from)
-            break
-            
-        case 'reset':
-            const resetResult = await rpgCommands.reset({ sender })
-            await sendMessageWithTyping({ text: resetResult }, from)
-            break
-            
-        // RPG Location shortcuts
-        case 'forest':
-        case 'desert':
-        case 'mountain':
-        case 'ocean':
-        case 'cave':
-        case 'city':
-            const locationResult = await handleSpecificAdventure(cleanCommand, { sender }, args, sock, sendMessageWithTyping, from)
-            if (locationResult) {
-                await sendMessageWithTyping({ text: locationResult }, from)
-            }
-            break
         case 'help':
         case 'menu':
             const pollMessage = {
@@ -7507,15 +4039,13 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                         '🎬 YouTube Downloader',
                         '⚽ Football Data Explorer',
                         '📊 Spreadsheet Calculator',
-                        '🧮 Graphing Calculator',
-                        '📈 Statistical Analysis',
-                        '🧮 Quadratic Solver'
+                        '🧮 Graphing Calculator'
                     ],
                     selectableCount: 1
                 }
             }
             await sendMessageWithTyping(pollMessage, from)
-            
+
             const helpText = `🤖 *Bot Menu & Commands:*
 
 *📝 Basic Commands:*
@@ -7525,46 +4055,6 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
 • *status* - Check bot status
 • *random* - Random number (1-100)
 • *ping* - Test response time
-
-*🧮 Quadratic Equation Solver:*
-• *quadratic* - Start quadratic equation solver
-• *quad* - Same as quadratic
-• *quadratics* - Same as quadratic
-• *equation-solver* - Same as quadratic
-• *solver* - Same as quadratic
-  - Supports 12+ solver types (Standard Form, Quadratic Formula, Completing Square, etc.)
-  - Generates step-by-step solutions with visualizations
-  - Creates comprehensive Excel workbooks
-  - Handles projectile motion, area optimization, and inequality problems
-
-
-*🎮 RPG Adventure Game:*
-• *rpg/adventure* - Start RPG game
-• *adventure [location]* - Adventure in specific location
-• *inventory* - View your items
-• *blacksmith* - Craft weapons and armor
-• *heal* - Restore health ($300)
-• *shop* - Browse and buy items
-• *profile* - View detailed profile
-• *transfer* - Transfer money/exp to others
-• *leaderboard* - View top players
-• *reset* - Reset RPG progress
-- Available locations: forest, desert, mountain, ocean, cave, city
-- Progress through difficulties: easy → medium → hard → nightmare
-- Answer questions correctly to advance and earn rewards
-- Craft equipment at blacksmith for second chances
-
-*📈 Statistical Analysis:*
-• *distribution* - Start statistical distribution analysis
-• *distributions* - Same as distribution
-• *statistics* - Same as distribution
-• *stats* - Same as distribution
-• *analysis* - Same as distribution
-• *analyze* - Same as distribution
-  - Supports 12+ distributions (Normal, T, Exponential, Gamma, Beta, etc.)
-  - Generates comprehensive statistical reports
-  - Creates visualizations and Excel workbooks
-  - Provides probability calculations and confidence intervals
 
 *🧮 Graphing Calculator:*
 • *calculator* - Start advanced graphing calculator
@@ -7587,18 +4077,6 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
 • *music [query]* - Search & download music
 • *songs [query]* - Same as music command
 
-**♟️ Chess Game:**
-• **chess** - Start a new chess game
-• **move** [from] [to] - Make a chess move (e.g., move e2 e4)
-• **board** - Show current chess position
-• **history** - Show game move history
-• **status** - Check chess game status
-• **resign** - End current game
-  - Play as White against computer (Black)
-  - Real-time board visualization
-  - Move annotations and game analysis
-
-
 *📊 Spreadsheet Calculator:*
 • *spreadsheet* - Start spreadsheet calculation
 • *calc* - Same as spreadsheet
@@ -7620,19 +4098,6 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
 • *document* - Send sample document
 • *demo* - Full media demonstration
 
-*🏆 Football League Analysis (2018/19 Season):*
-• *epl/premierleague* - English Premier League 🏴󠁧󠁢󠁥󠁮󠁧󠁿
-• *laliga/liga* - Spanish La Liga 🇪🇸
-• *seriea/seria* - Italian Serie A 🇮🇹
-• *bundesliga/bundes* - German Bundesliga 🇩🇪
-• *ligue1/ligue* - French Ligue 1 🇫🇷
-• *eredivisie/erediv* - Dutch Eredivisie 🇳🇱
-• *primeiraliga/primeira* - Portuguese Primeira Liga 🇵🇹
-• *proleague* - Belgian Pro League 🇧🇪
-• *spl/scottish* - Scottish Premier League 🏴󠁧󠁢󠁳󠁣󠁴󠁿
-• *superlig/turkish* - Turkish Süper Lig 🇹🇷
-
-
 *📞 Contacts & Location:*
 • *contact* - Browse contact directory
 • *location* - Send demo location
@@ -7646,200 +4111,9 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
 📱 *Tap poll options above for quick access!*
 🎬 *YouTube downloads support MP3/MP4 formats!*
 ⚽ *Football Explorer provides detailed team/league analysis!*
-🧮 *Calculator generates graphs with detailed mathematical analysis!*
-📈 *Statistical Analysis supports 12+ probability distributions with comprehensive reporting!*
-🧮 *Quadratic Solver handles 12+ equation types with step-by-step solutions and Excel reports!*`
-            
+🧮 *Calculator generates graphs with detailed mathematical analysis!*`
+
             await sendMessageWithTyping({ text: helpText }, from)
-            break
-            
-        // Quadratic Solver Commands
-        // Quadratic Solver Commands
-        case 'quadratic':
-        case 'quad':
-        case 'quadratics':
-        case 'equation-solver':
-        case 'solver':
-            if (!session.awaitingQuadraticInput) {
-                // Start new quadratic solver session
-                console.log(`🧮 Starting new quadratic solver session for ${from.slice(-4)}`)
-                const handled = await handleQuadraticCommand('quadratic', from, sendMessageWithTyping)
-                return handled
-            } else {
-                // Already in session, inform user
-                await sendMessageWithTyping(
-                    { text: "🧮 Quadratic solver session already in progress. Please complete the current problem or type 'cancel' to start over." },
-                    from
-                )
-                return true
-            }
-            break
-
-        // Multi-League Football Commands
-        case 'epl':
-        case 'premierleague':
-        case 'premier':
-        case 'english':
-            resetUserSession(from) // Clear any existing sessions
-            session.awaitingEPLQuery = true
-            session.currentLeague = 'epl'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'epl', sock)
-            break
-
-        case 'laliga':
-        case 'liga':
-        case 'spanish':
-        case 'spain':
-            resetUserSession(from)
-            session.awaitingLaLigaQuery = true
-            session.currentLeague = 'laliga'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'laliga', sock)
-            break
-
-        case 'seriea':
-        case 'seria':
-        case 'italian':
-        case 'italy':
-            resetUserSession(from)
-            session.awaitingSerieAQuery = true
-            session.currentLeague = 'seriea'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'seriea', sock)
-            break
-
-        case 'bundesliga':
-        case 'bundes':
-        case 'german':
-        case 'germany':
-            resetUserSession(from)
-            session.awaitingBundesligaQuery = true
-            session.currentLeague = 'bundesliga'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'bundesliga', sock)
-            break
-
-        case 'ligue1':
-        case 'ligue':
-        case 'french':
-        case 'france':
-            resetUserSession(from)
-            session.awaitingLigue1Query = true
-            session.currentLeague = 'ligue1'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'ligue1', sock)
-            break
-
-        case 'eredivisie':
-        case 'erediv':
-        case 'dutch':
-        case 'netherlands':
-            resetUserSession(from)
-            session.awaitingEredivisieQuery = true
-            session.currentLeague = 'eredivisie'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'eredivisie', sock)
-            break
-
-        case 'primeiraliga':
-        case 'primeira':
-        case 'portuguese':
-        case 'portugal':
-            resetUserSession(from)
-            session.awaitingPrimeiraLigaQuery = true
-            session.currentLeague = 'primeiraliga'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'primeiraliga', sock)
-            break
-
-        case 'proleague':
-        case 'belgian':
-        case 'belgium':
-            resetUserSession(from)
-            session.awaitingProLeagueQuery = true
-            session.currentLeague = 'proleague'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'proleague', sock)
-            break
-
-        case 'spl':
-        case 'scottish':
-        case 'scotland':
-            resetUserSession(from)
-            session.awaitingSPLQuery = true
-            session.currentLeague = 'spl'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'spl', sock)
-            break
-
-        case 'superlig':
-        case 'super':
-        case 'turkish':
-        case 'turkey':
-            resetUserSession(from)
-            session.awaitingSuperLigQuery = true
-            session.currentLeague = 'superlig'
-            session.lastActivity = Date.now()
-            await processLeagueMessage(from, 'hello', 'superlig', sock)
-            break
-
-
-        // Chess command
-        case 'chess':
-        case 'chessgame':
-        case 'play':
-            await startChessGame(sock, from, sendMessageWithTyping)
-            break
-
-        // Chess move commands (if no active game, suggest starting one)
-        case 'move':
-        case 'board':
-        case 'history':
-        case 'resign':
-            if (session.chessGameActive) {
-                await handleChessMove(sock, from, text, sendMessageWithTyping)
-            } else {
-                await sendMessageWithTyping({
-                    text: `❌ No active chess game.\n\nType **chess** to start a new game!`
-                }, from)
-            }
-            break
-
-            
-        // Statistical Analysis Commands
-        case 'distribution':
-        case 'distributions':
-        case 'statistics':
-        case 'stats':
-        case 'analysis':
-        case 'analyze':
-            if (!session.awaitingDistributionSelection && !session.awaitingDataInput) {
-                // Start new statistical analysis session
-                resetUserSession(from) // Clear any existing sessions
-                session.awaitingDistributionSelection = true
-                session.lastActivity = Date.now()
-                
-                const distributionList = getDistributionList()
-                await sendMessageWithTyping({
-                    text: `📈 *Statistical Distribution Analysis*\n\n` +
-                          `Welcome to the Enhanced Statistical Workbook! This tool provides comprehensive analysis of your data using various probability distributions.\n\n` +
-                          `✨ *Features:*\n` +
-                          `• 12+ probability distributions\n` +
-                          `• Parameter estimation from data\n` +
-                          `• Probability calculations\n` +
-                          `• Confidence intervals\n` +
-                          `• Goodness-of-fit testing\n` +
-                          `• Visual charts and graphs\n` +
-                          `• Complete Excel workbook output\n\n` +
-                          distributionList
-                }, from)
-            } else {
-                await sendMessageWithTyping(
-                    { text: "📈 Statistical analysis session already in progress. Please complete the current analysis or type 'cancel' to start over." },
-                    from
-                )
-            }
             break
 
         // Calculator Commands
@@ -7848,7 +4122,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
         case 'math':
             await startCalculatorSession(sock, from, sendMessageWithTyping)
             break
-            
+
         case 'equation':
             if (args.length > 0) {
                 const equation = args.join(' ')
@@ -7882,7 +4156,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 }, from)
             }
             break
-            
+
         case 'vector':
             if (args.length > 0) {
                 const vectorInput = 'vector ' + args.join(' ')
@@ -7899,7 +4173,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 }, from)
             }
             break
-            
+
         case 'formulas':
             if (session.calculatorInstance) {
                 await handleCalculatorInput(sock, from, 'formulas', sendMessageWithTyping)
@@ -7908,7 +4182,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 await sendMessageWithTyping({ text: formulasText }, from)
             }
             break
-            
+
         case 'calchelp':
             if (session.calculatorInstance) {
                 await handleCalculatorInput(sock, from, 'help', sendMessageWithTyping)
@@ -7917,7 +4191,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 await sendMessageWithTyping({ text: helpText }, from)
             }
             break
-            
+
         case 'calcstatus':
             if (session.calculatorInstance) {
                 await handleCalculatorInput(sock, from, 'status', sendMessageWithTyping)
@@ -7927,7 +4201,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 }, from)
             }
             break
-            
+
         case 'calchistory':
             if (session.calculatorInstance) {
                 await handleCalculatorInput(sock, from, 'history', sendMessageWithTyping)
@@ -7937,7 +4211,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 }, from)
             }
             break
-            
+
         case 'calcclear':
             if (session.calculatorInstance) {
                 await handleCalculatorInput(sock, from, 'clear', sendMessageWithTyping)
@@ -7947,7 +4221,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 }, from)
             }
             break
-            
+
         case 'calcexit':
             if (session.calculatorInstance) {
                 await handleCalculatorInput(sock, from, 'exit', sendMessageWithTyping)
@@ -7982,7 +4256,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
             session.outputLines = []
             await sendMessageWithTyping({ text: 'Enter your choice:' }, from)
             break
-            
+
         case 'youtube':
         case 'yt':
             if (args.length > 0) {
@@ -8002,7 +4276,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 }, from)
             }
             break
-            
+
         case 'ytdl':
             if (args.length > 0) {
                 const url = args[0]
@@ -8026,7 +4300,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 }, from)
             }
             break
-            
+
         case 'music':
         case 'songs':
             if (args.length > 0) {
@@ -8049,14 +4323,14 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
                 }, from)
             }
             break
-            
+
         // Spreadsheet Command
         case 'spreadsheet':
         case 'calc':
         case 'sheet':
             await handleSpreadsheetStart(sock, from);
             break;
-            
+
         case 'time':
             const now = new Date()
             const timeText = `🕒 *Current Time:*
@@ -8065,10 +4339,10 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
 ⏰ Time: ${now.toLocaleTimeString()}
 🌍 Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}
 📊 Unix: ${Math.floor(now.getTime() / 1000)}`
-            
+
             await sendMessageWithTyping({ text: timeText }, from)
             break
-            
+
         case 'echo':
             if (args.length > 0) {
                 const echoMessage = `🔊 *Echo Response:*\n\n"${args.join(' ')}"`
@@ -8089,13 +4363,11 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
 🔢 *Message Type:* Text Message
 🎬 *YouTube Session:* ${session.awaitingYouTubeQuery || session.awaitingYouTubeAction || session.awaitingRelatedSelection ? 'Active' : 'Inactive'}
 ⚽ *Football Session:* ${session.awaitingFootballInput ? 'Active' : 'Inactive'}
-🧮 *Calculator Session:* ${session.awaitingCalculatorInput ? 'Active' : 'Inactive'}
-📈 *Statistical Session:* ${session.awaitingDistributionSelection || session.awaitingDataInput ? 'Active' : 'Inactive'}
-🧮 *Quadratic Session:* ${session.awaitingQuadraticInput ? 'Active' : 'Inactive'}`
-            
+🧮 *Calculator Session:* ${session.awaitingCalculatorInput ? 'Active' : 'Inactive'}`
+
             await sendMessageWithTyping({ text: chatInfo }, from)
             break
-            
+
         case 'status':
             const uptime = process.uptime()
             const totalSessions = userSessions.size
@@ -8108,13 +4380,7 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
             const activeCalculatorSessions = Array.from(userSessions.values()).filter(
                 s => s.awaitingCalculatorInput
             ).length
-            const activeStatisticalSessions = Array.from(userSessions.values()).filter(
-                s => s.awaitingDistributionSelection || s.awaitingDataInput
-            ).length
-            const activeQuadraticSessions = Array.from(userSessions.values()).filter(
-                s => s.awaitingQuadraticInput
-            ).length
-            
+
             const statusText = `✅ *Bot Status: Online*
 
 🚀 *Uptime:* ${Math.floor(uptime / 60)}m ${Math.floor(uptime % 60)}s
@@ -8123,16 +4389,13 @@ const handleCommand = async (text: string, from: string, msg: any, sock: any, se
 ⚡ *Performance:* Optimal
 📱 *Platform:* WhatsApp Web
 🤖 *Version:* 2.0.0
-
 👥 *Total Sessions:* ${totalSessions}
 🎬 *Active YouTube Sessions:* ${activeYouTubeSessions}
 ⚽ *Active Football Sessions:* ${activeFootballSessions}
 🧮 *Active Calculator Sessions:* ${activeCalculatorSessions}
-📈 *Active Statistical Sessions:* ${activeStatisticalSessions}
-🧮 *Active Quadratic Sessions:* ${activeQuadraticSessions}
 
 All systems operational! 🎯`
-            
+
             await sendMessageWithTyping({ text: statusText }, from)
             break
 
@@ -8143,10 +4406,10 @@ All systems operational! 🎯`
 🔢 Your number: *${randomNum}*
 📊 Range: 1-100
 🎯 Generated at: ${new Date().toLocaleTimeString()}`
-            
+
             await sendMessageWithTyping({ text: randomText }, from)
             break
-            
+
         case 'ping':
             const startTime = Date.now()
             await sendMessageWithTyping({ text: '🏓 Calculating ping...' }, from)
@@ -8161,15 +4424,15 @@ All systems operational! 🎯`
 📡 *Connection:* Active`
             }, from)
             break
-            
+
         case 'welcome':
             await sendWelcomePackage(sock, from)
             break
-            
+
         case 'gallery':
             await sendGalleryOptions(sock, from)
             break
-            
+
         case 'image':
             if (args.length > 0 && args[0].startsWith('http')) {
                 await sendImageFromUrl(sock, from, args[0])
@@ -8177,7 +4440,7 @@ All systems operational! 🎯`
                 await sendGalleryOptions(sock, from)
             }
             break
-            
+
         case 'video':
             if (args.length > 0 && args[0].startsWith('http')) {
                 await sendVideoFromUrl(sock, from, args[0])
@@ -8185,7 +4448,7 @@ All systems operational! 🎯`
                 await sendPreConfiguredVideo(sock, from)
             }
             break
-            
+
         case 'audio':
             if (args.length > 0 && args[0].startsWith('http')) {
                 await sendAudioFromUrl(sock, from, args[0])
@@ -8242,20 +4505,13 @@ All systems operational! 🎯`
     return true // Command was handled
 }
 
-
-console.log('🚀 Starting WhatsApp Bot with Pairing Code...')
+console.log('🚀 Starting WhatsApp Bot...')
 console.log('📋 Available commands:')
+console.log('  --use-pairing-code : Use pairing code instead of QR code')
 console.log('  --do-reply        : Enable auto-replies to messages')
-console.log('📱 This bot will ONLY use pairing codes (no QR codes)')
 console.log('')
 
 startSock().catch(error => {
     console.error('❌ Failed to start bot:', error)
     process.exit(1)
 })
-
-app.listen(PORT, () => {
-  console.log('App listened on port:', PORT)
-})
-
-

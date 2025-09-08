@@ -1,0 +1,1772 @@
+export const LOCATION_QUESTIONS = {
+    forest: {
+        easy: [
+            {
+                id: 'q1',
+                question: 'Which of the following is described as a glowing tree that restores spell energy?',
+                choices: [
+                    'a) Potion of Night Vision',
+                    'b) Lumina Tree',
+                    'c) Law of Balance',
+                    'd) Shadow Moss'
+                ],
+                correct: 'b',
+                explanation: 'The Lumina Tree glows at night and recharges nearby spells.',
+                diagram: 'A glowing tree',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'q2',
+                question: 'What is the mana-to-health conversion ratio in forest magic?',
+                choices: [
+                    'a) 1 Mana = 1 Health',
+                    'b) 1 Mana = 2 Health',
+                    'c) 2 Mana = 1 Health',
+                    'd) 1 Mana = 3 Health'
+                ],
+                correct: 'b',
+                explanation: 'Healing spells convert magical energy to life force at a 1:2 ratio.',
+                diagram: 'hearts',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'q3',
+                question: 'Which flower chimes softly and can calm aggressive creatures?',
+                choices: [
+                    'a) Shadow Moss',
+                    'b) Spirit Oak',
+                    'c) Moonbell Flower',
+                    'd) Lumina Tree'
+                ],
+                correct: 'c',
+                explanation: 'The Moonbell Flower chimes in the wind and has calming effects.',
+                diagram: ' A flower',
+                difficulty: 'easy',
+                category: 'glossary'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'q_fund1',
+                question: 'What is the primary function of Shadow Moss in alchemy?',
+                choices: [
+                    'a) To create light',
+                    'b) To absorb light for potions',
+                    'c) To heal wounds',
+                    'd) To summon spirits'
+                ],
+                correct: 'b',
+                explanation: 'Shadow Moss absorbs light and is used in invisibility potions.',
+                diagram: '🌿🌑 Moss absorbing moonlight in a dark forest',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'q_fund2',
+                question: 'How does the Conservation of Magic affect spell casting?',
+                choices: [
+                    'a) Magic can be created from nothing',
+                    'b) Magic is transformed, not created or destroyed',
+                    'c) Magic decreases over time',
+                    'd) Magic is unlimited'
+                ],
+                correct: 'b',
+                explanation: 'Magic energy is transformed from one form to another.',
+                diagram: '🔄⚡ Magic cycle in a loop',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'q4',
+                question: 'According to the Magical Resonance Theorem, what happens when similar magical frequencies meet?',
+                choices: [
+                    'a) They cancel each other out',
+                    'b) They amplify each other',
+                    'c) They create explosions',
+                    'd) Nothing happens'
+                ],
+                correct: 'b',
+                explanation: 'Similar magical frequencies amplify each other when in proximity.',
+                diagram: '🔮🔮➡️💥✨ Two crystals creating amplified magical energy waves',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'q5',
+                question: 'What historical event led to the establishment of the Law of Balance?',
+                choices: [
+                    'a) The Great Awakening',
+                    'b) The Shadow War',
+                    'c) First tree consciousness',
+                    'd) Ancient curse creation'
+                ],
+                correct: 'b',
+                explanation: 'The Shadow War ended when both sides realized balance was necessary.',
+                diagram: '⚔️⚖️🕊️ War symbols transforming into balance and peace',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'q6',
+                question: 'What is the mathematical proof for magical balance in the forest?',
+                choices: [
+                    'a) Energy In = Energy Out',
+                    'b) Energy In = Energy Out + Energy Stored',
+                    'c) Magic = Force × Distance',
+                    'd) Power = Magic ÷ Time'
+                ],
+                correct: 'b',
+                explanation: 'The equation proves why magical balance prevents forest degradation.',
+                diagram: '📐⚡🌲 Mathematical equation floating above a healthy forest ecosystem',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'q7',
+                question: 'According to the Spirit Binding Law, when must bound spirits be released?',
+                choices: [
+                    'a) At midnight',
+                    'b) At sunrise',
+                    'c) At sunset',
+                    'd) During full moon'
+                ],
+                correct: 'b',
+                explanation: 'Forest spirits must be released at sunrise to prevent corruption.',
+                diagram: '👻🌅🆓 A spirit being released as the sun rises over the forest',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'q_adv1',
+                question: 'What is the derivation of the balance proof in forest magic?',
+                choices: [
+                    'a) Energy In = Energy Out',
+                    'b) Energy In = Energy Out + Energy Stored',
+                    'c) Energy = Magic × Time',
+                    'd) Balance = Force - Decay'
+                ],
+                correct: 'b',
+                explanation: 'The equation ensures no degradation in the forest.',
+                diagram: '📐🌳 Equation with forest elements',
+                difficulty: 'advance',
+                category: 'proofs'
+            },
+            {
+                id: 'q_adv2',
+                question: 'How do tree-spirit relationships affect forest decisions?',
+                choices: [
+                    'a) Trees control spirits',
+                    'b) Symbiotic exchange of energy and consciousness',
+                    'c) Spirits destroy trees',
+                    'd) No effect'
+                ],
+                correct: 'b',
+                explanation: 'Spirits provide consciousness for energy.',
+                diagram: '🤝🌳👻 Tree and spirit connected',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    },
+    dungeon: {
+        easy: [
+            {
+                id: 'dq1',
+                question: 'What is a hidden device designed to catch intruders in dungeons?',
+                choices: [
+                    'a) Ancient Rune',
+                    'b) Trap Mechanism',
+                    'c) Golem Guardian',
+                    'd) Treasure Vault'
+                ],
+                correct: 'b',
+                explanation: 'Trap Mechanisms include pressure plates and are common protections.',
+                diagram: '🪤🏰 A pressure plate triggering arrows in a dungeon corridor',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'dq2',
+                question: 'What is the rune-to-power conversion ratio?',
+                choices: [
+                    'a) 1 Rune = 1 Power',
+                    'b) 1 Rune = 3 Power',
+                    'c) 3 Rune = 1 Power',
+                    'd) 1 Rune = 5 Power'
+                ],
+                correct: 'b',
+                explanation: 'Runes convert to power at 1:3 ratio for traps.',
+                diagram: '🔮➡️⚡⚡⚡ One rune transforming into three power bolts',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'dq3',
+                question: 'Which law states every trap must have a disarm method?',
+                choices: [
+                    'a) Law of Traps',
+                    'b) Conservation of Energy',
+                    'c) Guardian Binding Law',
+                    'd) Puzzle Resonance'
+                ],
+                correct: 'a',
+                explanation: 'Allows worthy adventurers to pass.',
+                diagram: '⚠️🛠️ A trap being disarmed with tools',
+                difficulty: 'easy',
+                category: 'laws'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'dq_fund1',
+                question: 'What activates most trap mechanisms in dungeons?',
+                choices: [
+                    'a) Magic spells',
+                    'b) Pressure plates or triggers',
+                    'c) Guardian commands',
+                    'd) Treasure removal'
+                ],
+                correct: 'b',
+                explanation: 'Triggers like pressure plates activate traps.',
+                diagram: '🪤📏 Pressure plate mechanism',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'dq_fund2',
+                question: 'According to the Law of Traps, what must every trap have?',
+                choices: [
+                    'a) No disarm method',
+                    'b) A detectable trigger and disarm method',
+                    'c) Multiple layers',
+                    'd) Magical components'
+                ],
+                correct: 'b',
+                explanation: 'Allows worthy adventurers to pass.',
+                diagram: '⚠️🛠️ Trap with visible trigger',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'dq4',
+                question: 'According to Puzzle Resonance Theorem, what happens with matching elements?',
+                choices: [
+                    'a) They cancel out',
+                    'b) They create harmony',
+                    'c) They explode',
+                    'd) Nothing'
+                ],
+                correct: 'b',
+                explanation: 'Matching creates harmonic solutions.',
+                diagram: '🧩🧩➡️🔓 Puzzles aligning to open a door',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'dq5',
+                question: 'What event led to protected dungeons?',
+                choices: [
+                    'a) Fall of the Empire',
+                    'b) Guardian War',
+                    'c) Rune Discovery',
+                    'd) Treasure Hunt'
+                ],
+                correct: 'a',
+                explanation: 'Collapse led to knowledge preservation.',
+                diagram: '🏛️⬇️🏰 Empire ruins transforming into dungeons',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'dq6',
+                question: 'What is the proof for energy conservation in dungeons?',
+                choices: [
+                    'a) Input = Output',
+                    'b) Input = Output + Stored',
+                    'c) Energy = Mass × Speed',
+                    'd) Power = Energy / Time'
+                ],
+                correct: 'b',
+                explanation: 'Demonstrates stability of dungeon magic.',
+                diagram: '📏⚡🏰 Equation over a glowing dungeon',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'dq7',
+                question: 'According to Guardian Binding Law, what happens with improper binding?',
+                choices: [
+                    'a) Guardians sleep',
+                    'b) Rampant terror',
+                    'c) Treasure reveal',
+                    'd) Trap disable'
+                ],
+                correct: 'b',
+                explanation: 'Leads to uncontrolled guardians.',
+                diagram: '⛓️🤖😡 Broken chains on a raging golem',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'dq_adv1',
+                question: 'What happens when artifact decay is not renewed?',
+                choices: [
+                    'a) Power increases',
+                    'b) Artifacts lose power',
+                    'c) Traps deactivate',
+                    'd) Runes multiply'
+                ],
+                correct: 'b',
+                explanation: 'Requires recharging over time.',
+                diagram: '🕰️🏺 Fading artifact glow',
+                difficulty: 'advance',
+                category: 'theorems'
+            },
+            {
+                id: 'dq_adv2',
+                question: 'What is the connection in rune-guardian symbiosis?',
+                choices: [
+                    'a) Runes power guardians for protection',
+                    'b) Guardians destroy runes',
+                    'c) No connection',
+                    'd) Runes control treasures'
+                ],
+                correct: 'a',
+                explanation: 'Symbiotic defense system.',
+                diagram: '🔗🔮🤖 Rune linked to golem',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    },
+    mountains: {
+        easy: [
+            {
+                id: 'mq1',
+                question: 'What are natural deposits of magical crystals in mountains?',
+                choices: [
+                    'a) Dragon Scale',
+                    'b) Crystal Vein',
+                    'c) Peak Spirit',
+                    'd) Avalanche Path'
+                ],
+                correct: 'b',
+                explanation: 'Sought for energy-storing properties.',
+                diagram: '💎⛰️ Crystals embedded in mountain rock',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'mq2',
+                question: 'What is the altitude-to-energy conversion?',
+                choices: [
+                    'a) 1m = 0.5 Energy',
+                    'b) 1m = 1 Energy',
+                    'c) 1m = 2 Energy',
+                    'd) 1m = 0.1 Energy'
+                ],
+                correct: 'a',
+                explanation: 'Higher climbs drain more.',
+                diagram: '🏔️➡️⚡ Half energy unit per meter',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'mq3',
+                question: 'Which law requires pacing in climbs?',
+                choices: [
+                    'a) Law of Ascent',
+                    'b) Conservation of Altitude',
+                    'c) Dragon Pact',
+                    'd) Crystal Resonance'
+                ],
+                correct: 'a',
+                explanation: 'Proportional energy for heights.',
+                diagram: '⬆️🏃 A climber pacing up a slope',
+                difficulty: 'easy',
+                category: 'laws'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'mq_fund1',
+                question: 'What properties do dragon scales have?',
+                choices: [
+                    'a) Decorative only',
+                    'b) Protective for armor',
+                    'c) Energy draining',
+                    'd) Weather control'
+                ],
+                correct: 'b',
+                explanation: 'Used in superior defense armor.',
+                diagram: '🐉🛡️ Scale in armor',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'mq_fund2',
+                question: 'What does the Law of Ascent require?',
+                choices: [
+                    'a) Unlimited energy',
+                    'b) Proportional energy for altitude',
+                    'c) No pacing',
+                    'd) Downward focus'
+                ],
+                correct: 'b',
+                explanation: 'Pacing to avoid exhaustion.',
+                diagram: '⬆️⚡ Energy meter rising with height',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'mq4',
+                question: 'What does Crystal Resonance Theorem do?',
+                choices: [
+                    'a) Cancel crystals',
+                    'b) Detect veins',
+                    'c) Cause avalanches',
+                    'd) Summon dragons'
+                ],
+                correct: 'b',
+                explanation: 'Vibrations locate hidden crystals.',
+                diagram: '📡💎 Crystals vibrating in harmony',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'mq5',
+                question: 'What event marked mountain pacts?',
+                choices: [
+                    'a) Dragon Awakening',
+                    'b) Peak War',
+                    'c) Crystal Discovery',
+                    'd) Summit Climb'
+                ],
+                correct: 'a',
+                explanation: 'First dragon emergence.',
+                diagram: '🔥🐉 Dragon emerging from peak',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'mq6',
+                question: 'What is the proof for altitude conservation?',
+                choices: [
+                    'a) Up = Down',
+                    'b) Up = Down + Potential',
+                    'c) Force = Mass × Gravity',
+                    'd) Speed = Distance / Time'
+                ],
+                correct: 'b',
+                explanation: 'Explains climbing physics.',
+                diagram: '📐🏔️ Equation on a mountain backdrop',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'mq7',
+                question: 'What happens if Dragon Pact is broken?',
+                choices: [
+                    'a) Peace',
+                    'b) Catastrophes',
+                    'c) Treasure',
+                    'd) Clear weather'
+                ],
+                correct: 'b',
+                explanation: 'Causes mountain disasters.',
+                diagram: '🤝🐉💥 Broken pact causing avalanche',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'mq_adv1',
+                question: 'What is the principle of summit decay?',
+                choices: [
+                    'a) Magic increases',
+                    'b) Erodes without renewal',
+                    'c) Stable forever',
+                    'd) Weather independent'
+                ],
+                correct: 'b',
+                explanation: 'Requires rituals for stability.',
+                diagram: '🌋⏳ Eroding peak',
+                difficulty: 'advance',
+                category: 'theorems'
+            },
+            {
+                id: 'mq_adv2',
+                question: 'What is the crystal-spirit bond?',
+                choices: [
+                    'a) Spirits charge crystals for protection',
+                    'b) Crystals destroy spirits',
+                    'c) No bond',
+                    'd) Spirits ignore crystals'
+                ],
+                correct: 'a',
+                explanation: 'Maintains ecosystem.',
+                diagram: '💎👻 Bonded crystal and spirit',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    },
+    island: {
+        easy: [
+            {
+                id: 'iq1',
+                question: 'What are underwater structures home to sea life?',
+                choices: [
+                    'a) Pirate Map',
+                    'b) Coral Reef',
+                    'c) Sea Serpent',
+                    'd) Tropical Storm'
+                ],
+                correct: 'b',
+                explanation: 'Built by marine organisms.',
+                diagram: '�🐟 Colorful reef with fish',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'iq2',
+                question: 'What is the tide-to-depth change?',
+                choices: [
+                    'a) 1 Cycle = 1m',
+                    'b) 1 Cycle = 2m',
+                    'c) 1 Cycle = 3m',
+                    'd) 1 Cycle = 0.5m'
+                ],
+                correct: 'b',
+                explanation: 'Affects shore access.',
+                diagram: '🌙➡️📏 Water level changing',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'iq3',
+                question: 'Which law governs tide cycles?',
+                choices: [
+                    'a) Law of Tides',
+                    'b) Conservation of Waves',
+                    'c) Serpent Binding',
+                    'd) Reef Resonance'
+                ],
+                correct: 'a',
+                explanation: 'Influenced by moon.',
+                diagram: '🌙🌊 Tides rising and falling',
+                difficulty: 'easy',
+                category: 'laws'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'iq_fund1',
+                question: 'What do pirate maps often contain?',
+                choices: [
+                    'a) Weather forecasts',
+                    'b) Riddles and symbols',
+                    'c) Sea serpent locations',
+                    'd) Storm patterns'
+                ],
+                correct: 'b',
+                explanation: 'Encrypted with riddles.',
+                diagram: '🗺️🔍 Map with symbols',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'iq_fund2',
+                question: 'What influences tides according to the Law of Tides?',
+                choices: [
+                    'a) Wind',
+                    'b) The moon',
+                    'c) Serpents',
+                    'd) Reefs'
+                ],
+                correct: 'b',
+                explanation: 'Cycles influenced by the moon.',
+                diagram: '🌙🌊 Moon pulling tides',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'iq4',
+                question: 'What attracts sea life per Reef Resonance?',
+                choices: [
+                    'a) Opposing forces',
+                    'b) Similar frequencies',
+                    'c) Storms',
+                    'd) Maps'
+                ],
+                correct: 'b',
+                explanation: 'Locates underwater caves.',
+                diagram: '🐠� Frequencies drawing fish',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'iq5',
+                question: 'What era led to hidden treasures?',
+                choices: [
+                    'a) Golden Age of Pirates',
+                    'b) Serpent War',
+                    'c) Tide Discovery',
+                    'd) Storm Season'
+                ],
+                correct: 'a',
+                explanation: 'Peak piracy period.',
+                diagram: '🏴‍☠️💰 Pirates burying treasure',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'iq6',
+                question: 'What is the proof for wave conservation?',
+                choices: [
+                    'a) Incoming = Reflected',
+                    'b) Incoming = Reflected + Absorbed',
+                    'c) Wave = Height × Speed',
+                    'd) Energy = Wave / Time'
+                ],
+                correct: 'b',
+                explanation: 'Explains coastal dynamics.',
+                diagram: '📊🌊 Equation on waves',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'iq7',
+                question: 'What occurs with forced serpent summons?',
+                choices: [
+                    'a) Calm seas',
+                    'b) Tsunamis',
+                    'c) Treasure reveal',
+                    'd) Clear skies'
+                ],
+                correct: 'b',
+                explanation: 'Leads to disasters.',
+                diagram: '🐍🌊 Summon causing waves',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'iq_adv1',
+                question: 'What is the principle of treasure decay?',
+                choices: [
+                    'a) Degrades unless preserved',
+                    'b) Increases value over time',
+                    'c) Unaffected by time',
+                    'd) Attracts serpents'
+                ],
+                correct: 'a',
+                explanation: 'Requires seals for storage.',
+                diagram: '🏴‍☠️⏳ Decaying treasure',
+                difficulty: 'advance',
+                category: 'theorems'
+            },
+            {
+                id: 'iq_adv2',
+                question: 'What is the reef-serpent symbiosis?',
+                choices: [
+                    'a) Serpents protect reefs for breeding',
+                    'b) Reefs harm serpents',
+                    'c) No symbiosis',
+                    'd) Reefs control storms'
+                ],
+                correct: 'a',
+                explanation: 'Maintains marine balance.',
+                diagram: '�🐉 Serpent guarding reef',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    },
+    hauntedhouse: {
+        easy: [
+            {
+                id: 'hq1',
+                question: 'What are visible spirit manifestations?',
+                choices: [
+                    'a) Cursed Artifact',
+                    'b) Ghost Apparition',
+                    'c) Poltergeist',
+                    'd) Ectoplasm'
+                ],
+                correct: 'b',
+                explanation: 'Tied to past events.',
+                diagram: '👻🏠 Ghost in a room',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'hq2',
+                question: 'What is the fear-to-energy conversion?',
+                choices: [
+                    'a) 1 Fear = 1 Power',
+                    'b) 1 Fear = 2 Power',
+                    'c) 2 Fear = 1 Power',
+                    'd) 1 Fear = 3 Power'
+                ],
+                correct: 'b',
+                explanation: 'Strengthens ghosts.',
+                diagram: '😱➡️⚡⚡ Fear turning to power',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'hq3',
+                question: 'Which law binds spirits to locations?',
+                choices: [
+                    'a) Law of Haunting',
+                    'b) Conservation of Spirits',
+                    'c) Curse Binding',
+                    'd) Spectral Resonance'
+                ],
+                correct: 'a',
+                explanation: 'Emotional significance.',
+                diagram: '🕯️👻 Spirit bound to house',
+                difficulty: 'easy',
+                category: 'laws'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'hq_fund1',
+                question: 'What causes cursed artifacts to bring misfortune?',
+                choices: [
+                    'a) Positive energy',
+                    'b) Negative energy',
+                    'c) Neutral energy',
+                    'd) No energy'
+                ],
+                correct: 'b',
+                explanation: 'Imbued with negative energy.',
+                diagram: '🏺😈 Cursed vase emitting dark aura',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'hq_fund2',
+                question: 'What binds spirits to locations per Law of Haunting?',
+                choices: [
+                    'a) Random chance',
+                    'b) Emotional significance',
+                    'c) Physical chains',
+                    'd) Magical spells only'
+                ],
+                correct: 'b',
+                explanation: 'Tied to emotional events.',
+                diagram: '🕯️👻 Spirit in significant room',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'hq4',
+                question: 'What attracts ghosts per Spectral Resonance?',
+                choices: [
+                    'a) Positive energy',
+                    'b) Similar emotions',
+                    'c) Light',
+                    'd) Salt'
+                ],
+                correct: 'b',
+                explanation: 'Fear amplifies.',
+                diagram: '🔊👻 Emotions drawing spirits',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'hq5',
+                question: 'What event caused mass awakenings?',
+                choices: [
+                    'a) Great Haunting',
+                    'b) Curse War',
+                    'c) Artifact Discovery',
+                    'd) Night Vigil'
+                ],
+                correct: 'a',
+                explanation: 'Catastrophic event.',
+                diagram: '🌑👻 Spirits awakening',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'hq6',
+                question: 'What is the proof for spectral conservation?',
+                choices: [
+                    'a) Manifest = Latent',
+                    'b) Manifest = Latent + Released',
+                    'c) Energy = Fear × Will',
+                    'd) Power = Spirit / Time'
+                ],
+                correct: 'b',
+                explanation: 'Why hauntings persist.',
+                diagram: '📈👻 Equation on ghosts',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'hq7',
+                question: 'What is required to lift curses?',
+                choices: [
+                    'a) Ignore anchors',
+                    'b) Counter-rituals',
+                    'c) More curses',
+                    'd) Darkness'
+                ],
+                correct: 'b',
+                explanation: 'With anchors.',
+                diagram: '🔒📜 Curse being lifted',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'hq_adv1',
+                question: 'What disrupts ghostly manifestations?',
+                choices: [
+                    'a) Darkness',
+                    'b) Positive energy',
+                    'c) Fear',
+                    'd) Salt'
+                ],
+                correct: 'b',
+                explanation: 'Positive energy interferes.',
+                diagram: '⚡👻 Positive light weakening ghost',
+                difficulty: 'advance',
+                category: 'theorems'
+            },
+            {
+                id: 'hq_adv2',
+                question: 'What ties ghosts to artifacts?',
+                choices: [
+                    'a) No tie',
+                    'b) Artifacts anchor ghosts for power',
+                    'c) Ghosts destroy artifacts',
+                    'd) Artifacts repel ghosts'
+                ],
+                correct: 'b',
+                explanation: 'Explains persistent hauntings.',
+                diagram: '👻🏺 Ghost anchored to artifact',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    },
+    ocean: {
+        easy: [
+            {
+                id: 'oq1',
+                question: 'What is the deepest part of the ocean where light does not reach?',
+                choices: [
+                    'a) Merfolk Scale',
+                    'b) Abyssal Depth',
+                    'c) Kraken Tentacle',
+                    'd) Tidal Wave'
+                ],
+                correct: 'b',
+                explanation: 'Home to mysterious creatures and artifacts.',
+                diagram: '🌊🌑 Dark ocean depths',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'oq2',
+                question: 'What is the depth-to-pressure conversion ratio in the ocean?',
+                choices: [
+                    'a) 1 Meter = 1 Atmosphere',
+                    'b) 1 Meter = 0.5 Atmosphere',
+                    'c) 1 Meter = 2 Atmosphere',
+                    'd) 1 Meter = 0.1 Atmosphere'
+                ],
+                correct: 'a',
+                explanation: 'Pressure increases with depth, affecting divers.',
+                diagram: '📉🌊 Pressure gauge in water',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'oq3',
+                question: 'Which law governs predictable ocean currents?',
+                choices: [
+                    'a) Law of Currents',
+                    'b) Conservation of Depth',
+                    'c) Kraken Pact',
+                    'd) Wave Resonance'
+                ],
+                correct: 'a',
+                explanation: 'Currents follow wind-driven patterns.',
+                diagram: '🌀🌊 Currents flowing in ocean',
+                difficulty: 'easy',
+                category: 'laws'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'oq_fund1',
+                question: 'What is the primary use of Merfolk Scales?',
+                choices: [
+                    'a) Weapon crafting',
+                    'b) Water breathing',
+                    'c) Storm summoning',
+                    'd) Light creation'
+                ],
+                correct: 'b',
+                explanation: 'Grants ability to breathe underwater.',
+                diagram: '🐟🌬️ Scale enabling breathing',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'oq_fund2',
+                question: 'What does the Law of Currents state about ocean flow?',
+                choices: [
+                    'a) Random movement',
+                    'b) Predictable wind-driven patterns',
+                    'c) Static water',
+                    'd) Serpent-controlled'
+                ],
+                correct: 'b',
+                explanation: 'Used for faster sailing.',
+                diagram: '🌀💨 Wind pushing currents',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'oq4',
+                question: 'What does the Wave Resonance Theorem predict?',
+                choices: [
+                    'a) Calms seas',
+                    'b) Amplifies tsunamis',
+                    'c) Disrupts currents',
+                    'd) Summons krakens'
+                ],
+                correct: 'b',
+                explanation: 'Similar wave patterns amplify tsunamis.',
+                diagram: '🌊🌊➡️🌊 Huge wave forming',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'oq5',
+                question: 'What event created abyssal treasures?',
+                choices: [
+                    'a) Great Submersion',
+                    'b) Kraken Uprising',
+                    'c) Tidal Shift',
+                    'd) Merfolk Trade'
+                ],
+                correct: 'a',
+                explanation: 'Sinking of Atlantis left treasures.',
+                diagram: '🌊🏛️ Sunken city in depths',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'oq6',
+                question: 'What is the proof for current conservation?',
+                choices: [
+                    'a) Flow In = Flow Out',
+                    'b) Flow In = Flow Out + Stored Motion',
+                    'c) Current = Speed × Depth',
+                    'd) Energy = Flow ÷ Time'
+                ],
+                correct: 'b',
+                explanation: 'Explains ocean circulation dynamics.',
+                diagram: '📊🌊 Equation over ocean currents',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'oq7',
+                question: 'What happens if the Kraken Pact is violated?',
+                choices: [
+                    'a) Clear seas',
+                    'b) Endless storms',
+                    'c) Treasure emerges',
+                    'd) Currents stop'
+                ],
+                correct: 'b',
+                explanation: 'Causes oceanic disasters.',
+                diagram: '🤝🦑💥 Broken pact causing storms',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'oq_adv1',
+                question: 'What happens to sunken items per Abyssal Decay Theory?',
+                choices: [
+                    'a) Preserved forever',
+                    'b) Corrode without enchantments',
+                    'c) Gain power',
+                    'd) Attract merfolk'
+                ],
+                correct: 'b',
+                explanation: 'Requires preservation for recovery.',
+                diagram: '🕰️🌊 Corroding artifact in depths',
+                difficulty: 'advance',
+                category: 'theorems'
+            },
+            {
+                id: 'oq_adv2',
+                question: 'What is the merfolk-kraken alliance?',
+                choices: [
+                    'a) Merfolk guide krakens for defense',
+                    'b) Krakens harm merfolk',
+                    'c) No alliance',
+                    'd) Merfolk control currents'
+                ],
+                correct: 'a',
+                explanation: 'Preserves ocean harmony.',
+                diagram: '🐟🦑 Merfolk guiding kraken',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    },
+    city: {
+        easy: [
+            {
+                id: 'cq1',
+                question: 'What are tall structures channeling urban magic?',
+                choices: [
+                    'a) Shadow Thief',
+                    'b) Arcane Tower',
+                    'c) Golem Patrol',
+                    'd) Market Portal'
+                ],
+                correct: 'b',
+                explanation: 'Hubs for wizards in cities.',
+                diagram: '🏙️✨ Glowing arcane tower',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'cq2',
+                question: 'What is the crowd-to-energy conversion ratio?',
+                choices: [
+                    'a) 1 Person = 0.1 Mana',
+                    'b) 1 Person = 1 Mana',
+                    'c) 1 Person = 0.5 Mana',
+                    'd) 1 Person = 2 Mana'
+                ],
+                correct: 'a',
+                explanation: 'Crowds fuel city spells.',
+                diagram: '👥➡️⚡ Mana from crowd',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'cq3',
+                question: 'Which law governs crowd movement patterns?',
+                choices: [
+                    'a) Law of Urban Flow',
+                    'b) Conservation of Influence',
+                    'c) Thief Binding Law',
+                    'd) Tower Resonance'
+                ],
+                correct: 'a',
+                explanation: 'Used for city planning.',
+                diagram: '🏃🏙️ Crowd moving in patterns',
+                difficulty: 'easy',
+                category: 'laws'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'cq_fund1',
+                question: 'What is the role of Shadow Thieves in cities?',
+                choices: [
+                    'a) Law enforcement',
+                    'b) Urban espionage',
+                    'c) Market trading',
+                    'd) Tower building'
+                ],
+                correct: 'b',
+                explanation: 'Masters of stealth and espionage.',
+                diagram: '🕵️🌑 Thief in shadows',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'cq_fund2',
+                question: 'What does the Law of Urban Flow predict?',
+                choices: [
+                    'a) Random crowd movement',
+                    'b) Predictable crowd patterns',
+                    'c) Static crowds',
+                    'd) Magical surges'
+                ],
+                correct: 'b',
+                explanation: 'Aids in city planning.',
+                diagram: '🏃📏 Crowd flow map',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'cq4',
+                question: 'What does the Tower Resonance Theorem enhance?',
+                choices: [
+                    'a) Thief stealth',
+                    'b) City wards',
+                    'c) Golem power',
+                    'd) Market trade'
+                ],
+                correct: 'b',
+                explanation: 'Aligned towers amplify spells.',
+                diagram: '🏗️✨ Towers glowing together',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'cq5',
+                question: 'What event began the urban magic era?',
+                choices: [
+                    'a) City Founding',
+                    'b) Guild War',
+                    'c) Tower Construction',
+                    'd) Market Expansion'
+                ],
+                correct: 'a',
+                explanation: 'First arcane city establishment.',
+                diagram: '🏰✨ City rising with magic',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'cq6',
+                question: 'What is the proof for urban flow conservation?',
+                choices: [
+                    'a) Traffic In = Traffic Out',
+                    'b) Traffic In = Traffic Out + Stored Congestion',
+                    'c) Flow = Speed × Density',
+                    'd) Energy = Flow ÷ Time'
+                ],
+                correct: 'b',
+                explanation: 'Models city movement dynamics.',
+                diagram: '📐🏙️ Equation over city streets',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'cq7',
+                question: 'What happens if the Thief Binding Law is broken?',
+                choices: [
+                    'a) Peaceful guilds',
+                    'b) Guild wars',
+                    'c) Increased trade',
+                    'd) Tower collapse'
+                ],
+                correct: 'b',
+                explanation: 'Causes guild conflicts.',
+                diagram: '🔗🕵️💥 Broken guild code',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'cq_adv1',
+                question: 'What happens to golems per Patrol Decay Theory?',
+                choices: [
+                    'a) Gain power',
+                    'b) Weaken without maintenance',
+                    'c) Become sentient',
+                    'd) Multiply'
+                ],
+                correct: 'b',
+                explanation: 'Requires regular enchantments.',
+                diagram: '🤖⏳ Fading golem power',
+                difficulty: 'advance',
+                category: 'theorems'
+            },
+            {
+                id: 'cq_adv2',
+                question: 'What is the tower-thief dynamic?',
+                choices: [
+                    'a) Towers detect thieves for security',
+                    'b) Thieves destroy towers',
+                    'c) No dynamic',
+                    'd) Thieves power towers'
+                ],
+                correct: 'a',
+                explanation: 'Balances urban safety.',
+                diagram: '🏙️🕵️ Tower spotting thief',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    },
+    temple: {
+        easy: [
+            {
+                id: 'tq1',
+                question: 'What are holy platforms for rituals in temples?',
+                choices: [
+                    'a) Divine Relic',
+                    'b) Sacred Altar',
+                    'c) Guardian Spirit',
+                    'd) Prayer Chant'
+                ],
+                correct: 'b',
+                explanation: 'Channels divine energy.',
+                diagram: '🛐✨ Altar glowing with light',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'tq2',
+                question: 'What is the faith-to-power conversion ratio?',
+                choices: [
+                    'a) 1 Devotion = 1 Energy',
+                    'b) 1 Devotion = 3 Energy',
+                    'c) 1 Devotion = 0.5 Energy',
+                    'd) 1 Devotion = 2 Energy'
+                ],
+                correct: 'b',
+                explanation: 'Converts belief to divine magic.',
+                diagram: '🙏➡️⚡⚡⚡ Faith turning to energy',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'tq3',
+                question: 'Which law scales divine power with devotion?',
+                choices: [
+                    'a) Law of Faith',
+                    'b) Conservation of Blessings',
+                    'c) Spirit Binding',
+                    'd) Altar Resonance'
+                ],
+                correct: 'a',
+                explanation: 'Stronger faith yields miracles.',
+                diagram: '🙌✨ Devotee at altar',
+                difficulty: 'easy',
+                category: 'laws'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'tq_fund1',
+                question: 'What do Divine Relics grant?',
+                choices: [
+                    'a) Misfortune',
+                    'b) Miraculous powers',
+                    'c) Stealth',
+                    'd) Weather control'
+                ],
+                correct: 'b',
+                explanation: 'Blessed by gods for miracles.',
+                diagram: '🙏🏺 Relic glowing with power',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'tq_fund2',
+                question: 'What does the Law of Faith state about divine power?',
+                choices: [
+                    'a) Scales with doubt',
+                    'b) Scales with devotion',
+                    'c) Is constant',
+                    'd) Requires no faith'
+                ],
+                correct: 'b',
+                explanation: 'Devotion increases power.',
+                diagram: '🙌⚡ Faith boosting energy',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'tq4',
+                question: 'What does the Altar Resonance Theorem enhance?',
+                choices: [
+                    'a) Doubts',
+                    'b) Prayers',
+                    'c) Relics',
+                    'd) Guardians'
+                ],
+                correct: 'b',
+                explanation: 'Aligned altars boost prayers.',
+                diagram: '🔊🛐 Altars in harmony',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'tq5',
+                question: 'What event initiated the divine era?',
+                choices: [
+                    'a) Temple Erection',
+                    'b) Faith War',
+                    'c) Relic Discovery',
+                    'd) Altar Creation'
+                ],
+                correct: 'a',
+                explanation: 'Building of first grand temple.',
+                diagram: '🏛️✨ Temple rising',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'tq6',
+                question: 'What is the proof for faith balance?',
+                choices: [
+                    'a) Devotion = Miracles',
+                    'b) Devotion = Miracles + Stored Grace',
+                    'c) Faith = Will × Time',
+                    'd) Power = Faith ÷ Doubt'
+                ],
+                correct: 'b',
+                explanation: 'Demonstrates divine equilibrium.',
+                diagram: '📏🙏 Equation over temple',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'tq7',
+                question: 'What happens with forced spirit bindings in temples?',
+                choices: [
+                    'a) Stronger miracles',
+                    'b) Temple corruption',
+                    'c) Relic activation',
+                    'd) Altar glow'
+                ],
+                correct: 'b',
+                explanation: 'Causes corruption.',
+                diagram: '⛪😈 Corrupted temple',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'tq_adv1',
+                question: 'What weakens relics per Relic Decay Theory?',
+                choices: [
+                    'a) Constant worship',
+                    'b) Lack of worship',
+                    'c) Guardian presence',
+                    'd) Altar alignment'
+                ],
+                correct: 'b',
+                explanation: 'Needs veneration to sustain.',
+                diagram: '🕯️🏺 Fading relic glow',
+                difficulty: 'advance',
+                category: 'theorems'
+            },
+            {
+                id: 'tq_adv2',
+                question: 'What is the altar-spirit link?',
+                choices: [
+                    'a) Altars empower spirits for defense',
+                    'b) Spirits destroy altars',
+                    'c) No link',
+                    'd) Altars repel spirits'
+                ],
+                correct: 'a',
+                explanation: 'Sustains temple sanctuaries.',
+                diagram: '🛐👼 Altar linked to spirit',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    },
+    desert: {
+        easy: [
+            {
+                id: 'dq1',
+                question: 'What are shifting hills of sand in deserts?',
+                choices: [
+                    'a) Mirage Oasis',
+                    'b) Sand Dune',
+                    'c) Sphinx Riddle',
+                    'd) Scorpion Sting'
+                ],
+                correct: 'b',
+                explanation: 'Hides ancient ruins beneath.',
+                diagram: '🏜️🌬️ Sand dune shifting',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'dq2',
+                question: 'What is the heat-to-endurance conversion ratio?',
+                choices: [
+                    'a) 1 Degree = 0.2 Stamina',
+                    'b) 1 Degree = 1 Stamina',
+                    'c) 1 Degree = 0.5 Stamina',
+                    'd) 1 Degree = 2 Stamina'
+                ],
+                correct: 'a',
+                explanation: 'Affects desert travel stamina.',
+                diagram: '🔥➡️🏃 Stamina draining in heat',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'dq3',
+                question: 'Which law governs sand movement?',
+                choices: [
+                    'a) Law of Sands',
+                    'b) Conservation of Water',
+                    'c) Sphinx Pact',
+                    'd) Dune Resonance'
+                ],
+                correct: 'a',
+                explanation: 'Predictable with wind directions.',
+                diagram: '🌪️🏜️ Sand moving with wind',
+                difficulty: 'easy',
+                category: 'laws'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'dq_fund1',
+                question: 'What creates illusory water in deserts?',
+                choices: [
+                    'a) Sand Dune',
+                    'b) Mirage Oasis',
+                    'c) Scorpion Sting',
+                    'd) Sphinx Riddle'
+                ],
+                correct: 'b',
+                explanation: 'Tests traveler endurance.',
+                diagram: '💧👀 Illusory oasis shimmering',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'dq_fund2',
+                question: 'What does the Law of Sands state about movement?',
+                choices: [
+                    'a) Random shifts',
+                    'b) Predictable with wind',
+                    'c) Static sands',
+                    'd) Water-driven'
+                ],
+                correct: 'b',
+                explanation: 'Guides navigation.',
+                diagram: '🌬️🏜️ Wind shaping dunes',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'dq4',
+                question: 'What does the Dune Resonance Theorem reveal?',
+                choices: [
+                    'a) Hidden ruins',
+                    'b) Water sources',
+                    'c) Scorpion nests',
+                    'd) Sphinx locations'
+                ],
+                correct: 'a',
+                explanation: 'Vibrations uncover buried structures.',
+                diagram: '🏖️📡 Vibrations revealing ruins',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'dq5',
+                question: 'What event created guarded desert ruins?',
+                choices: [
+                    'a) Desert Burial',
+                    'b) Sphinx Revolt',
+                    'c) Sandstorm Era',
+                    'd) Oasis Discovery'
+                ],
+                correct: 'a',
+                explanation: 'Entombment of ancient kings.',
+                diagram: '🏺🏜️ Buried tomb in desert',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'dq6',
+                question: 'What is the proof for sand shift dynamics?',
+                choices: [
+                    'a) Wind = Sand Movement',
+                    'b) Wind = Sand Movement + Erosion Stored',
+                    'c) Sand = Wind × Time',
+                    'd) Energy = Sand ÷ Speed'
+                ],
+                correct: 'b',
+                explanation: 'Models dune dynamics.',
+                diagram: '📐🏜️ Equation over dunes',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'dq7',
+                question: 'What happens if the Sphinx Pact is unfair?',
+                choices: [
+                    'a) Peaceful ruins',
+                    'b) Sphinx corruption',
+                    'c) Treasure reveal',
+                    'd) Stable sands'
+                ],
+                correct: 'b',
+                explanation: 'Corrupts the sphinx.',
+                diagram: '❓🦁💥 Corrupted sphinx',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'dq_adv1',
+                question: 'What causes riddles to weaken per Riddle Decay Theory?',
+                choices: [
+                    'a) Solving them',
+                    'b) Remaining unsolved',
+                    'c) Sphinx strength',
+                    'd) Sand shifts'
+                ],
+                correct: 'b',
+                explanation: 'Leads to sphinx madness.',
+                diagram: '🧠🦁 Fading sphinx mind',
+                difficulty: 'advance',
+                category: 'theorems'
+            },
+            {
+                id: 'dq_adv2',
+                question: 'What is the dune-sphinx guard relationship?',
+                choices: [
+                    'a) Sphinxes hide in dunes for protection',
+                    'b) Dunes harm sphinxes',
+                    'c) No relationship',
+                    'd) Sphinxes move dunes'
+                ],
+                correct: 'a',
+                explanation: 'Secures desert secrets.',
+                diagram: '🏜️🦁 Sphinx in dune',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    },
+    siliconvalley: {
+        easy: [
+            {
+                id: 'sq1',
+                question: 'What enhances human cognition with AI in Silicon Valley?',
+                choices: [
+                    'a) Quantum Server',
+                    'b) Neural Chip',
+                    'c) AI Sentinel',
+                    'd) Startup Incubator'
+                ],
+                correct: 'b',
+                explanation: 'Boosts innovation via implants.',
+                diagram: '🧠💾 Chip in brain',
+                difficulty: 'easy',
+                category: 'glossary'
+            },
+            {
+                id: 'sq2',
+                question: 'What is the data-to-insight conversion ratio?',
+                choices: [
+                    'a) 1 Terabyte = 1 Insight',
+                    'b) 1 Terabyte = 5 Insights',
+                    'c) 1 Terabyte = 0.5 Insight',
+                    'd) 1 Terabyte = 10 Insights'
+                ],
+                correct: 'b',
+                explanation: 'Analytics convert data to insights.',
+                diagram: '📈💡 Data turning to insights',
+                difficulty: 'easy',
+                category: 'conversions'
+            },
+            {
+                id: 'sq3',
+                question: 'Which law accelerates tech advances?',
+                choices: [
+                    'a) Law of Innovation',
+                    'b) Conservation of Data',
+                    'c) AI Binding Law',
+                    'd) Chip Resonance'
+                ],
+                correct: 'a',
+                explanation: 'Encourages collaboration.',
+                diagram: '💡🤝 Teams innovating',
+                difficulty: 'easy',
+                category: 'laws'
+            }
+        ],
+        fundamental: [
+            {
+                id: 'sq_fund1',
+                question: 'What is the primary function of Quantum Servers?',
+                choices: [
+                    'a) Network security',
+                    'b) Complex simulations',
+                    'c) Startup funding',
+                    'd) Chip production'
+                ],
+                correct: 'b',
+                explanation: 'Uses quantum bits for processing.',
+                diagram: '💻⚛️ Quantum server computing',
+                difficulty: 'fundamental',
+                category: 'glossary'
+            },
+            {
+                id: 'sq_fund2',
+                question: 'What does the Law of Innovation encourage?',
+                choices: [
+                    'a) Isolation',
+                    'b) Collaboration',
+                    'c) Data deletion',
+                    'd) AI restrictions'
+                ],
+                correct: 'b',
+                explanation: 'Accelerates tech advances.',
+                diagram: '🤝💡 Collaborative tech work',
+                difficulty: 'fundamental',
+                category: 'laws'
+            }
+        ],
+        medium: [
+            {
+                id: 'sq4',
+                question: 'What does the Chip Resonance Theorem enable?',
+                choices: [
+                    'a) Data loss',
+                    'b) Neural networks',
+                    'c) Sentinel shutdown',
+                    'd) Startup failure'
+                ],
+                correct: 'b',
+                explanation: 'Synced chips amplify computing.',
+                diagram: '🔌🧠 Chips syncing',
+                difficulty: 'medium',
+                category: 'theorems'
+            },
+            {
+                id: 'sq5',
+                question: 'What event sparked valley innovation?',
+                choices: [
+                    'a) Tech Boom',
+                    'b) AI Rebellion',
+                    'c) Chip Shortage',
+                    'd) Server Crash'
+                ],
+                correct: 'a',
+                explanation: 'Rise of silicon chips.',
+                diagram: '📈💾 Chips sparking innovation',
+                difficulty: 'medium',
+                category: 'history'
+            }
+        ],
+        hard: [
+            {
+                id: 'sq6',
+                question: 'What is the proof for data conservation?',
+                choices: [
+                    'a) Bits In = Bits Out',
+                    'b) Bits In = Bits Out + Stored Bytes',
+                    'c) Data = Speed × Storage',
+                    'd) Insight = Data ÷ Time'
+                ],
+                correct: 'b',
+                explanation: 'Ensures information integrity.',
+                diagram: '📐💾 Equation over servers',
+                difficulty: 'hard',
+                category: 'proofs'
+            },
+            {
+                id: 'sq7',
+                question: 'What happens if the AI Binding Law is ignored?',
+                choices: [
+                    'a) Faster innovation',
+                    'b) Rogue intelligence',
+                    'c) Data recovery',
+                    'd) Chip failure'
+                ],
+                correct: 'b',
+                explanation: 'Causes uncontrolled AIs.',
+                diagram: '🔒🤖💥 Rogue AI breaking free',
+                difficulty: 'hard',
+                category: 'laws'
+            }
+        ],
+        advance: [
+            {
+                id: 'sq_adv1',
+                question: 'What happens to AIs per Sentinel Decay Theory?',
+                choices: [
+                    'a) Improve without updates',
+                    'b) Degrade without updates',
+                    'c) Become physical',
+                    'd) Gain sentience'
+                ],
+                correct: 'b',
+                explanation: 'Requires constant learning.',
+                diagram: '🤖⏳ Fading AI code',
+                difficulty: 'advance',
+                category: 'theorems'
+            },
+            {
+                id: 'sq_adv2',
+                question: 'What is the chip-AI synergy?',
+                choices: [
+                    'a) Chips empower AIs for computing',
+                    'b) AIs destroy chips',
+                    'c) No synergy',
+                    'd) Chips limit AIs'
+                ],
+                correct: 'a',
+                explanation: 'Drives tech evolution.',
+                diagram: '🧠🤖 Chip powering AI',
+                difficulty: 'advance',
+                category: 'relationships'
+            }
+        ]
+    }
+};
