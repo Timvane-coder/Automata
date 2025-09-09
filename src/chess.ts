@@ -8,6 +8,7 @@ import GIFEncoder from "gifencoder";
 import path from "path";
 import { PassThrough } from "stream";
 import { fileURLToPath } from "url";
+import { dirname } from 'path';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
